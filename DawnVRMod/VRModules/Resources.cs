@@ -2,7 +2,7 @@
 using Valve.VR;
 using UnityEngine;
 
-namespace VRMod
+namespace DawnVR
 {
     internal static class Resources
     {

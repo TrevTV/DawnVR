@@ -4,7 +4,7 @@ using MelonLoader;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace VRMod
+namespace DawnVR
 {
     internal static class HarmonyPatches
     {

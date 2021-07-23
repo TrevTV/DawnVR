@@ -7,8 +7,8 @@
     <ProjectGuid>{8A76BD49-E37F-4A13-A9BC-3C01E54BEACB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VRMod</RootNamespace>
-    <AssemblyName>VRMod</AssemblyName>
+    <RootNamespace>DawnVRMod</RootNamespace>
+    <AssemblyName>DawnVRMod</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

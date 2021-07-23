@@ -7,8 +7,8 @@
     <ProjectGuid>{C33921DC-5778-4EEC-A2D0-E0AE522CC701}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VREnabler</RootNamespace>
-    <AssemblyName>VREnabler</AssemblyName>
+    <RootNamespace>DawnVREnabler</RootNamespace>
+    <AssemblyName>DawnVREnabler</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

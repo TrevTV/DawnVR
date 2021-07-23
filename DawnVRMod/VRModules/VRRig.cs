@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-namespace VRMod
+namespace DawnVR
 {
     internal class VRRig : MonoBehaviour
     {

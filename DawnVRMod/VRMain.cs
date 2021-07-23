@@ -5,11 +5,11 @@ using System.Linq;
 using Valve.VR;
 using System;
 
-namespace VRMod
+namespace DawnVR
 {
     public static class BuildInfo
     {
-        public const string Name = "VRMod";
+        public const string Name = "DawnVR";
         public const string Author = "trev";
         public const string Company = null;
         public const string Version = "0.1.0";

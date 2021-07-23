@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace VREnabler
+namespace DawnVREnabler
 {
     public static class BuildInfo
     {
-        public const string Name = "VREnabler";
+        public const string Name = "DawnVREnabler";
         public const string Author = "mrpurple & trev";
         public const string Company = null;
         public const string Version = "0.1.0";
