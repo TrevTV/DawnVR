@@ -1,0 +1,34 @@
+﻿ -- Important Looking Classes --
+T_1005C221 - contains settings info
+	- subclass T_542F8CA7 - contains some kind of controls
+
+T_12B4FFCA - seems to contain ui scripting
+
+T_C811E0CD::404 - tutorial text
+
+T_64B68373.eCurrentEpisode - current episode enum
+
+T_C3DD66D9 - hopefully contains the player controller
+	- line 735 - getting player movement axis
+
+T_A6E913D1 - data manager of some sort (non-obfucasted class name is "GameMaster", found on line 144)
+	- static var Instance.m_gameModeManager.CurrentMode - basic idea of where the player is
+	- static var Instance.m_inputManager.GetInputState - gets if a certain input was just pushed down or is being held
+
+T_C3DD66D9 - controls player movement and the camera - possibly use this to disable animations?
+
+T_884A92DB - actually controls the camera movement
+	- var _1D9C76B26 - has the actual camera component
+
+T_34182F31 - static class with some Camera variables
+	- static var MainUICamera - assumingly finds the NGUI camera? (needs more research)
+	- static var main - returns MainUICamera
+
+T_F8FE3E1C - inherits a few classes but ends up being a MonoBehaviour, seems to control the phone (or burner, as the code says)
+
+ -- Method Info --
+ExtendedViewBase.GrabExtendedView<T>(Camera, Camera, T) - updates the cached camera and then returns the component T and adds it to the object, if needed (T seems to nearly always be ExtendedViewThirdPerson and ExtendedViewFirstPerson)
+
+ -- Just Things I've Learned From Testing --
+ T_A6E913D1.Instance.m_mainCharacter becomes null during any cutscene, even if it's super simple like when Chloe is clearing out her locker (still exists, just not set in the datamanager)
+ Nearly all UI elements (loading screens n such) are in the main scene "StoryTellerMain"

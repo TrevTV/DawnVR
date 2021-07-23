@@ -1,0 +1,118 @@
+﻿using System.Collections;
+using UnityEngine;
+using MelonLoader;
+using System.Linq;
+using Valve.VR;
+using System;
+
+namespace VRMod
+{
+    public static class BuildInfo
+    {
+        public const string Name = "VRMod";
+        public const string Author = "trev";
+        public const string Company = null;
+        public const string Version = "0.1.0";
+        public const string DownloadLink = null;
+    }
+
+    public class VRMain : MelonMod
+    {
+        private bool vrEnabled;
+        private bool steamInitRunning;
+
+        public override void OnApplicationStart()
+        {
+            if (Environment.GetCommandLineArgs().Contains("OpenVR"))
+            {
+                vrEnabled = true;
+            }
+            else
+            {
+                MelonLogger.Msg("Launch parameter \"-vrmode\" not set to OpenVR, not loading VR patches!");
+                vrEnabled = false;
+                //HarmonyPatches.Init(HarmonyInstance);
+                return;
+            }
+
+            Resources.Init();
+            HarmonyPatches.Init(HarmonyInstance);
+        }
+
+        public override void OnSceneWasInitialized(int buildIndex, string sceneName)
+        {
+            if (!vrEnabled) return;
+
+            if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
+                MelonCoroutines.Start(InitSteamVR());
+            else
+                VRRig.Instance?.UpdateRigParent(sceneName);
+        }
+
+        public override void OnUpdate()
+        {
+            if (VRRig.Instance?.Input.RightController.IsButtonADown ?? false)
+                MelonLogger.Msg("Button A has been pressed");
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                MelonLogger.Msg(" ----- BEGINNING CAMERA STUFF ----- ");
+                foreach (Camera cam in GameObject.FindObjectsOfType<Camera>())
+                {
+                    string path = cam.name;
+                    Transform parent = cam.transform.parent;
+                    while (parent != null)
+                    {
+                        path = parent.name + "/" + path;
+                        parent = parent.parent;
+                    }
+                    path = "/" + path;
+                    MelonLogger.Msg(path);
+                }
+
+                /*MelonLogger.Msg(" ----- BEGINNING CANVAS STUFF ----- ");
+                foreach (Canvas can in GameObject.FindObjectsOfType<Canvas>())
+                {
+                    string path = can.name;
+                    Transform parent = can.transform.parent;
+                    while (parent != null)
+                    {
+                        path = parent.name + "/" + path;
+                        parent = parent.parent;
+                    }
+                    path = "/" + path;
+                    MelonLogger.Msg(path);
+                }*/
+            }
+        }
+
+        private IEnumerator InitSteamVR()
+        {
+            yield return new WaitForSeconds(1.25f);
+            steamInitRunning = true;
+            SteamVR.Initialize(false);
+
+            while (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess)
+            {
+                if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeFailure)
+                {
+                    MelonLogger.Error("[SteamVR] Initialization failure! Disabling VR modules as failsafe.");
+                    vrEnabled = false;
+                    yield break;
+                }
+                yield return null;
+            }
+
+            steamInitRunning = false;
+
+            CreateCameraRig();
+        }
+
+        private void CreateCameraRig()
+        {
+            GameObject rig = GameObject.Instantiate(Resources.VRCameraRig);
+            if (!VRRig.Instance)
+                VRRig.Instance = rig.AddComponent<VRRig>();
+        }
+    }
+}
