@@ -11,7 +11,7 @@ T_64B68373.eCurrentEpisode - current episode enum
 T_C3DD66D9 - hopefully contains the player controller
 	- line 735 - getting player movement axis
 
-T_A6E913D1 - data manager of some sort (non-obfucasted class name is "GameMaster", found on line 144)
+T_A6E913D1 - data manager of some sort (non-obfucasted class name is "GameMaster")
 	- static var Instance.m_gameModeManager.CurrentMode - basic idea of where the player is
 	- static var Instance.m_inputManager.GetInputState - gets if a certain input was just pushed down or is being held
 
@@ -25,6 +25,8 @@ T_34182F31 - static class with some Camera variables
 	- static var main - returns MainUICamera
 
 T_F8FE3E1C - inherits a few classes but ends up being a MonoBehaviour, seems to control the phone (or burner, as the code says)
+
+T_6FCAE66C - InputManager
 
  -- Method Info --
 ExtendedViewBase.GrabExtendedView<T>(Camera, Camera, T) - updates the cached camera and then returns the component T and adds it to the object, if needed (T seems to nearly always be ExtendedViewThirdPerson and ExtendedViewFirstPerson)

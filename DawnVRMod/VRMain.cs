@@ -24,14 +24,12 @@ namespace DawnVR
         public override void OnApplicationStart()
         {
             if (Environment.GetCommandLineArgs().Contains("OpenVR"))
-            {
                 vrEnabled = true;
-            }
             else
             {
                 MelonLogger.Msg("Launch parameter \"-vrmode\" not set to OpenVR, not loading VR patches!");
-                vrEnabled = false;
-                //HarmonyPatches.Init(HarmonyInstance);
+                HarmonyPatches.InitNoVR(HarmonyInstance);
+                vrEnabled = false;          
                 return;
             }
 
@@ -51,9 +49,6 @@ namespace DawnVR
 
         public override void OnUpdate()
         {
-            if (VRRig.Instance?.Input.RightController.IsButtonADown ?? false)
-                MelonLogger.Msg("Button A has been pressed");
-
             if (Input.GetKeyDown(KeyCode.L))
             {
                 MelonLogger.Msg(" ----- BEGINNING CAMERA STUFF ----- ");

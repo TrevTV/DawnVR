@@ -22,13 +22,16 @@ namespace DawnVR
         public void UpdateRigParent(string currentScene)
         {
             // todo: try using the .Where Linq thing to find the clone, not the prefab as that may be the issue
-            if (GameObject.FindObjectOfType<T_C3DD66D9>() != cachedChloe)
+            // maybe just patch CharController's awake or smth
+            MelonLoader.MelonLogger.Msg("Current CachedChloe: " + cachedChloe.name ?? "NULL");
+            MelonLoader.MelonLogger.Msg("Potential new CachedChloe: " + GameObject.FindObjectOfType<T_C3DD66D9>().name ?? "NULL");
+            if (cachedChloe != GameObject.FindObjectOfType<T_C3DD66D9>())
                 cachedChloe = GameObject.FindObjectOfType<T_C3DD66D9>();
 
             // todo: find the player more reliably, this will usually be null due to cutscenes
             if (cachedChloe != null)
             {
-                SetParent((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E").GetValue(T_A6E913D1.Instance.m_mainCharacter.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>()));
+                SetParent((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E").GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>()), new Vector3(0, -1, 0));
             }
             else if (currentScene.ToLower().Contains("menu"))
             {
@@ -39,7 +42,7 @@ namespace DawnVR
                             mainMenuCam = cam;
                 }
 
-                transform.rotation = Quaternion.Euler(9.68f, 90.84f, 0);
+                transform.rotation = Quaternion.Euler(0, 85, 0);
                 transform.position = mainMenuCam.transform.position;
             }
         }
