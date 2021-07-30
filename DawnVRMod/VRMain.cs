@@ -79,6 +79,11 @@ namespace DawnVR
                     MelonLogger.Msg(path);
                 }*/
             }
+
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                MelonLogger.Msg("Current Mode: " + T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
+            }
         }
 
         private IEnumerator InitSteamVR()

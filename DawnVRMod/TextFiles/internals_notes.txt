@@ -28,6 +28,11 @@ T_F8FE3E1C - inherits a few classes but ends up being a MonoBehaviour, seems to 
 
 T_6FCAE66C - InputManager
 
+--- Hotspot Object Class Info ---
+T_6FD30C1C - selectable objects (unob name "ST_Hotspot")
+T_244D769F - (unob name  "HotspotObject")
+T_E6DAC959 - (unob name  "ST_Tag")
+
  -- Method Info --
 ExtendedViewBase.GrabExtendedView<T>(Camera, Camera, T) - updates the cached camera and then returns the component T and adds it to the object, if needed (T seems to nearly always be ExtendedViewThirdPerson and ExtendedViewFirstPerson)
 

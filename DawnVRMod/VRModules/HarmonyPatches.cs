@@ -37,10 +37,7 @@ namespace DawnVR
             HarmonyInstance = hInstance;
             PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
-            // manual patches for these :P
-            // same method, different types (and the obfuscation only got one of em)
-            HarmonyInstance.Patch(typeof(T_C3DD66D9).GetMethod("ChangeAnimSet"), new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod("ChangeAnimSetP", new Type[] { typeof(T_59B7B63D), typeof(_19480244B.T_E1C2C083), typeof(Transform) })));
-            HarmonyInstance.Patch(typeof(T_C3DD66D9).GetMethod("_17E7DCA76", HarmonyLib.AccessTools.all), new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod("ChangeAnimSetP2", new Type[] { typeof(GameObject), typeof(_19480244B.T_E1C2C083), typeof(Transform) })));
+            PatchPre(typeof(T_C3DD66D9).GetMethod("UpdateBlendIdle"), "UpdateIdleAnim");
         }
 
         public static bool ReturnTrue(ref bool __result)
@@ -49,24 +46,43 @@ namespace DawnVR
             return false;
         }
 
-        // public void ChangeAnimSet(STCharAnimSet newAnimSet, PrefabData attachObj = null, Transform attachSocket = null)
-        public static bool ChangeAnimSetP(T_59B7B63D _12B92D0EA, _19480244B.T_E1C2C083 _1DC5545CD = null, Transform _167BD9A61 = null)
+        public static bool UpdateIdleAnim(T_C3DD66D9 __instance)
         {
-            MelonLogger.Msg("---- PUBLIC ANIM CHANGE ----");
-            MelonLogger.Msg("new anim set: " + _12B92D0EA.FullPathName);
-            MelonLogger.Msg("attachObj: " + _1DC5545CD?.FullPathName ?? "NULL");
-            MelonLogger.Msg("attachSocket: " + _167BD9A61?.name ?? "NULL");
-            return true;
-        }
-
-        // private void ChangeAnimSet(GameObject animSet, PrefabData attachObj = null, Transform attachSocket = null)
-        public static bool ChangeAnimSetP2(GameObject _14408D88A, _19480244B.T_E1C2C083 _1DC5545CD = null, Transform _167BD9A61 = null)
-        {
-            MelonLogger.Msg("---- PRIVATE ANIM CHANGE ----");
-            MelonLogger.Msg("anim set: " + _14408D88A.name);
-            MelonLogger.Msg("attachObj: " + _1DC5545CD?.FullPathName ?? "NULL");
-            MelonLogger.Msg("attachSocket: " + _167BD9A61?.name ?? "NULL");
-            return true;
+            if (__instance.IsWalking)
+            {
+                __instance.m_currProgression = (__instance.m_targetProgression = 0f);
+                if (__instance.m_targetProgression == 0f)
+                {
+                    float num = Mathf.Ceil(__instance.m_currProgression) * __instance.CurrentAnimSet.animSet.c_maxIdleFade * Time.deltaTime;
+                    __instance.m_currProgression = Mathf.Clamp(__instance.m_currProgression - num, 0f, 3f);
+                }
+                else
+                {
+                    float num2 = Mathf.Ceil(__instance.m_currProgression) * __instance.CurrentAnimSet.animSet.c_maxFade * Time.deltaTime;
+                    __instance.m_currProgression = Mathf.Clamp(__instance.m_currProgression - num2, 0f, 3f);
+                }
+                __instance.m_currentFade = __instance.m_currProgression - Mathf.Floor(__instance.m_currProgression);
+                __instance.m_currFadeSpeed = __instance.CurrentAnimSet.animSet.c_maxIdleFade;
+                __instance.m_charAnimState = T_7C97EEE2.eCharMoveAnim.kWalk;
+                __instance.UpdateWalkAnims();
+            }
+            else
+            {
+                /*for (int i = 1; i < __instance.m_animStates.Length; i++)
+                {
+                    __instance.ResetAnimState(i, false);
+                    typeof(T_C3DD66D9)
+                }
+                if (__instance.IsAnimValid(T_7C97EEE2.eCharMoveAnim.kIdle))
+                {
+                    __instance.m_animStates[0].weight = 1f;
+                    if (__instance.CurrentAnimSet.HasProp())
+                    {
+                        __instance.m_propAnimStates[0].weight = 1f;
+                    }
+                }*/
+            }
+            return false;
         }
 
         #endregion
