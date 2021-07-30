@@ -37,6 +37,7 @@ namespace DawnVR
             HarmonyInstance = hInstance;
             PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
+            PatchPre(typeof(T_C3DD66D9).GetMethod("SetupIdle"), "DontRunMe");
             PatchPre(typeof(T_C3DD66D9).GetMethod("UpdateBlendIdle"), "UpdateIdleAnim");
         }
 
@@ -48,6 +49,8 @@ namespace DawnVR
 
         public static bool UpdateIdleAnim(T_C3DD66D9 __instance)
         {
+            // todo: funfact, this leads to terrifying results, need to figure this out
+            typeof(T_C3DD66D9).GetField("_19C474D6C", HarmonyLib.AccessTools.all).SetValue(__instance, null);
             if (__instance.IsWalking)
             {
                 __instance.m_currProgression = (__instance.m_targetProgression = 0f);
@@ -82,6 +85,11 @@ namespace DawnVR
                     }
                 }*/
             }
+            return true;
+        }
+
+        public static bool DontRunMe()
+        {
             return false;
         }
 
