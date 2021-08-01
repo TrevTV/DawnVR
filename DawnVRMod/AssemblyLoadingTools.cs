@@ -12,7 +12,7 @@ namespace DawnVR
         public static AssetBundle GetAssetBundle(string name)
         {
             MemoryStream memoryStream;
-            using (Stream stream = CurrentAsm.GetManifestResourceStream("DawnVR.Resources." + name))
+            using (Stream stream = CurrentAsm.GetManifestResourceStream("DawnVRMod.Resources." + name))
             {
                 memoryStream = new MemoryStream((int)stream.Length);
                 byte[] buffer = new byte[stream.Length];
@@ -26,7 +26,7 @@ namespace DawnVR
         {
             try
             {
-                using (Stream manifestResourceStream = CurrentAsm.GetManifestResourceStream("DawnVR.Resources." + name))
+                using (Stream manifestResourceStream = CurrentAsm.GetManifestResourceStream("DawnVRMod.Resources." + name))
                 {
                     using (FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Delete))
                     {

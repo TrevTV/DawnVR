@@ -58,8 +58,6 @@ namespace DawnVR
             HarmonyInstance = hInstance;
             PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
-
-            
         }
 
         public static bool ReturnTrue(ref bool __result)
