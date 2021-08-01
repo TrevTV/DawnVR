@@ -16,6 +16,8 @@ T_A6E913D1 - data manager of some sort (non-obfucasted class name is "GameMaster
 	- static var Instance.m_inputManager.GetInputState - gets if a certain input was just pushed down or is being held
 
 T_C3DD66D9 - controls player movement and the camera - possibly use this to disable animations?
+ - m_animStates
+   - can disable idling by changing the time and weight variables of kIdle (index 0 it seems) to 0
 
 T_884A92DB - actually controls the camera movement
 	- var _1D9C76B26 - has the actual camera component
