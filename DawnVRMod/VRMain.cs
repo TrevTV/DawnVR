@@ -43,8 +43,8 @@ namespace DawnVR
 
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
                 MelonCoroutines.Start(InitSteamVR());
-            else
-                VRRig.Instance?.UpdateRigParent(sceneName);
+            /*else
+                VRRig.Instance?.UpdateRigParent(sceneName);*/
         }
 
         public override void OnUpdate()
@@ -88,7 +88,7 @@ namespace DawnVR
 
         private IEnumerator InitSteamVR()
         {
-            yield return new WaitForSeconds(1.25f);
+            yield return new WaitForSeconds(1f);
             steamInitRunning = true;
             SteamVR.Initialize(false);
 

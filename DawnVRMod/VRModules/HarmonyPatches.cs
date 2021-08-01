@@ -18,6 +18,8 @@ namespace DawnVR
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+            // rig parent updating
+            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
         }
 
         private static void PatchPre(MethodInfo original, string prefixMethodName) => HarmonyInstance.Patch(original, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(prefixMethodName)));
@@ -33,6 +35,8 @@ namespace DawnVR
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
+            VRRig.Instance?.UpdateCachedChloe(__instance);
+
             foreach (AnimationState state in __instance.m_animStates)
             {
                 if (state.name.ToLower().Contains("idle"))
@@ -41,6 +45,15 @@ namespace DawnVR
                     state.speed = 0;
                     state.time = 0;
                 }
+            }
+        }
+
+        public static void OnSetMode(bool __result, eGameMode _1C57B7248)
+        {
+            if (__result)
+            {
+                MelonLogger.Msg("Game successfully updated to mode " + _1C57B7248);
+                VRRig.Instance?.UpdateRigParent(_1C57B7248);
             }
         }
 
