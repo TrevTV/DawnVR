@@ -27,14 +27,16 @@ namespace DawnVR
 
         public static bool GetIdleExtraName(ref string __result)
         {
-            // todo: this causes an error to be spat out every frame, might want to replace at some point
-            // CharAnimSet.GetIdleExtraName
-            __result = "";
+            __result = "empty_anim";
             return false;
         }
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
+            AnimationClip clip = new AnimationClip();
+            clip.name = "empty_anim";
+            clip.legacy = true;
+            __instance.m_animation.AddClip(clip, "empty_anim");
             VRRig.Instance?.UpdateCachedChloe(__instance);
 
             foreach (AnimationState state in __instance.m_animStates)
@@ -69,8 +71,18 @@ namespace DawnVR
         public static void InitNoVR(HarmonyLib.Harmony hInstance)
         {
             HarmonyInstance = hInstance;
+            // Debug Stuff
             PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
+            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
+            // Disable Idling
+            PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+        }
+
+        public static void DisableSplashScreen(T_EDB11480 __instance)
+        {
+            __instance.m_splashList.Clear();
         }
 
         public static bool ReturnTrue(ref bool __result)
