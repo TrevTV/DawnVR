@@ -45,8 +45,6 @@ namespace DawnVR
 
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
                 MelonCoroutines.Start(InitSteamVR());
-            /*else
-                VRRig.Instance?.UpdateRigParent(sceneName);*/
         }
 
         public override void OnUpdate()
@@ -66,20 +64,6 @@ namespace DawnVR
                     path = "/" + path;
                     MelonLogger.Msg(path);
                 }
-
-                /*MelonLogger.Msg(" ----- BEGINNING CANVAS STUFF ----- ");
-                foreach (Canvas can in GameObject.FindObjectsOfType<Canvas>())
-                {
-                    string path = can.name;
-                    Transform parent = can.transform.parent;
-                    while (parent != null)
-                    {
-                        path = parent.name + "/" + path;
-                        parent = parent.parent;
-                    }
-                    path = "/" + path;
-                    MelonLogger.Msg(path);
-                }*/
             }
 
             else if (Input.GetKeyDown(KeyCode.K))
