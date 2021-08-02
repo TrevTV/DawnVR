@@ -10,6 +10,9 @@ namespace DawnVR.Modules
     {
         private static HarmonyLib.Harmony HarmonyInstance;
 
+        private static void PatchPre(MethodInfo original, string prefixMethodName) => HarmonyInstance.Patch(original, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(prefixMethodName)));
+        private static void PatchPost(MethodInfo original, string postfixMethodName) => HarmonyInstance.Patch(original, null, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(postfixMethodName)));
+
         public static void Init(HarmonyLib.Harmony hInstance)
         {
             HarmonyInstance = hInstance;
@@ -21,12 +24,17 @@ namespace DawnVR.Modules
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
-            // rig parent updating
+            // Rig Parent Updating
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
+            // Highlight Manager
+            PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
+            PatchPost(typeof(T_4679B25C).GetMethod("DeselectObject"), "Highlights_DeselectObject");
+            PatchPost(typeof(T_4679B25C).GetMethod("DeselectAll"), "Highlights_DeselectAll");
         }
 
-        private static void PatchPre(MethodInfo original, string prefixMethodName) => HarmonyInstance.Patch(original, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(prefixMethodName)));
-        private static void PatchPost(MethodInfo original, string postfixMethodName) => HarmonyInstance.Patch(original, null, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(postfixMethodName)));
+        public static void Highlights_SelectObject(T_A8FCC1F5 _13F8ADFD4) => VRHighlightManager.Instance?.SelectObject(_13F8ADFD4);
+        public static void Highlights_DeselectObject(T_A8FCC1F5 _13F8ADFD4) => VRHighlightManager.Instance?.DeselectObject(_13F8ADFD4);
+        public static void Highlights_DeselectAll() => VRHighlightManager.Instance?.DeselectAll();
 
         public static bool GetIdleExtraName(ref string __result)
         {

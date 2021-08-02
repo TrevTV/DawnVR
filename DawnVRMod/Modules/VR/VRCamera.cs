@@ -4,13 +4,19 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
+        public Camera Camera;
+
         private Camera uiCamera;
         private Transform uiRenderer;
         private RenderTexture renderTexture;
-        private bool shouldWeDoALittleTrolling = false;
+        private bool haveFollowCamFollowThis = true;
 
         private void Start()
         {
+            Camera = GetComponent<Camera>();
+
+            #region UI Renderer
+
             uiRenderer = transform.Find("UIRenderer");
             uiCamera = GameObject.Find("/UIRoot/Camera").GetComponent<Camera>();
             renderTexture = new RenderTexture(1920, 1080, 1);
@@ -20,6 +26,11 @@ namespace DawnVR.Modules.VR
             uiCamera.clearFlags = CameraClearFlags.Color;
             uiCamera.backgroundColor = new Color(0, 0, 0, 0);
             uiRenderer.GetComponent<MeshRenderer>().material = mat;
+
+            #endregion
+
+            #region Highlight Manager
+            #endregion
         }
 
         private void OnDestroy()
@@ -29,7 +40,7 @@ namespace DawnVR.Modules.VR
 
         private void LateUpdate()
         {
-            if (shouldWeDoALittleTrolling)
+            if (haveFollowCamFollowThis)
             {
                 if (T_A6E913D1.Instance.m_followCamera.enabled)
                     T_A6E913D1.Instance.m_followCamera.enabled = false;
