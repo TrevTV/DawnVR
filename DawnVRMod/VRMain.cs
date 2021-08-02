@@ -96,7 +96,7 @@ namespace DawnVR
             {
                 if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeFailure)
                 {
-                    MelonLogger.Error("[SteamVR] Initialization failure! Disabling VR modules as failsafe.");
+                    MelonLogger.Error("[SteamVR] Initialization failure! Disabling VR modules.");
                     vrEnabled = false;
                     yield break;
                 }

@@ -57,6 +57,9 @@
   <ItemGroup>
     <EmbeddedResource Include="vr-ggm" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TypeClassPackage.tpk" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Plugins"</PostBuildEvent>
