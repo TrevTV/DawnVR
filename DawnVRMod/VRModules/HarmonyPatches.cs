@@ -13,6 +13,9 @@ namespace DawnVR
         public static void Init(HarmonyLib.Harmony hInstance)
         {
             HarmonyInstance = hInstance;
+            // Debug Stuff
+            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
+            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
             // Input Handling
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetAxisVector3"), "VRVector3Axis");
             // Disable Idling
@@ -30,6 +33,31 @@ namespace DawnVR
             __result = "empty_anim";
             return false;
         }
+
+        public static bool CutsceneSkipPressed(T_BF5A5EEC __instance)
+        {
+            _15C6DD6D9.T_58A5E6E2 currentMode = __instance.GetCurrentMode<_15C6DD6D9.T_58A5E6E2>();
+            if (currentMode != null)
+            {
+                T_156BDACC timeline = T_14474339.GetTimeline(currentMode);
+                if (timeline != null)
+                {
+                    float sequenceEndTime = currentMode.sequenceEndTime;
+                    float timeS = sequenceEndTime - timeline.CurrentTime;
+                    T_E8819104.Singleton.AdvanceAllSounds(timeS);
+                    timeline.SetTime(sequenceEndTime);
+                    _169E4A3E.T_4B84CB26.s_forceFullEvaluate = true;
+                    T_14474339.UpdateCurrentTimelinesForFrame();
+                }
+            }
+
+            if (T_A6E913D1.Instance.m_rumbleManager != null)
+                T_A6E913D1.Instance.m_rumbleManager.ClearAllRumbles(0f);
+
+            return false;
+        }
+
+        public static void DisableSplashScreen(T_EDB11480 __instance) => __instance.m_splashList.Clear();
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
@@ -75,14 +103,10 @@ namespace DawnVR
             PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
+            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
-        }
-
-        public static void DisableSplashScreen(T_EDB11480 __instance)
-        {
-            __instance.m_splashList.Clear();
         }
 
         public static bool ReturnTrue(ref bool __result)
