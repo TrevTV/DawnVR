@@ -34,7 +34,7 @@ namespace DawnVREnabler
             bool backupExists = CreateGameManagersBackup(ggmLocation);
             if (!backupExists)
             {
-                using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("VREnabler.vr-ggm"))
+                using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("DawnVREnabler.vr-ggm"))
                 {
                     using (FileStream fileStream = new FileStream(ggmLocation, FileMode.Create, FileAccess.Write, FileShare.Delete))
                     {
@@ -58,7 +58,7 @@ namespace DawnVREnabler
                 if (!filePaths.Any((a) => a.Contains(asm)))
                 {
                     copiedPlugins = true;
-                    using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("VREnabler.VRPlugins." + asm))
+                    using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("DawnVREnabler.VRPlugins." + asm))
                     {
                         using (FileStream fileStream = new FileStream(Path.Combine(pluginsPath, asm), FileMode.Create, FileAccess.Write, FileShare.Delete))
                         {
@@ -136,7 +136,7 @@ namespace DawnVREnabler
                 MelonLogger.Msg($"Backup already exists.");
                 return true;
             }
-            File.Copy(path, backupPath);
+            File.Move(path, backupPath);
             MelonLogger.Msg($"Backup created!");
             return false;
         }
