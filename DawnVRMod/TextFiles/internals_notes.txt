@@ -35,6 +35,16 @@ T_6FD30C1C - selectable objects (unob name "ST_Hotspot")
 T_244D769F - (unob name  "HotspotObject")
 T_E6DAC959 - (unob name  "ST_Tag")
 
+--- Main LISCamera Component Mapping ---
+UnityStandardAssets._1CC59503E.T_53A129E6 - UnityStandardAssets.ImageEffects.SunShafts
+T_ACB76229 - LISDeferredSetup
+T_4D93A7F7 - SlaveCamera
+T_4679B25C - HighlightManager
+T_9D242C27 - CameraMovement
+_167702734.T_7ACC9EC4 - IdolDebug.ScreenshotUtils
+UnityEngine._1F1547F66.T_190FC323 - UnityEngine.PostProcessing.PostProcessingBehaviour
+T_209ED6B6 - FreeroamCharacterFillLight
+
  -- Method Info --
 ExtendedViewBase.GrabExtendedView<T>(Camera, Camera, T) - updates the cached camera and then returns the component T and adds it to the object, if needed (T seems to nearly always be ExtendedViewThirdPerson and ExtendedViewFirstPerson)
 
