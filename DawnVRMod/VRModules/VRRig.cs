@@ -16,6 +16,7 @@ namespace DawnVR
         {
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
+            // transform.Find("Camera").gameObject.SetActive(false);
             Input = new VRInput();
         }
 
@@ -28,13 +29,15 @@ namespace DawnVR
                 case eGameMode.kCutscene:
                     // todo: doesnt follow the camera properly
                     // me in the future - cause i am blind and this is using a simple position set instead of parenting the camera
-                    transform.position = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform.position ?? Vector3.zero;
+                    //transform.position = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform.position ?? Vector3.zero;
+                    //SetParent(((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform);
                     break;
                 case eGameMode.kDialog:
                     throw new System.NotImplementedException();
                 case eGameMode.kFreeRoam:
                     // todo: doesnt work
-                    SetParent((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E").GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>()), new Vector3(0, -1, 0));
+                    // fuck i am dumb
+                    SetParent((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E", HarmonyLib.AccessTools.all).GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>()), new Vector3(0, -1, 0));
                     break;
                 case eGameMode.kLoading:
                     break;

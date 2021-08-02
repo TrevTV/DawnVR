@@ -107,6 +107,13 @@ namespace DawnVR
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+            // Testing
+            PatchPost(typeof(T_A6E913D1).GetMethod("Awake"), "GameManagerAwake");
+        }
+
+        public static void GameManagerAwake(T_A6E913D1 __instance)
+        {
+            //__instance.SetBuildOptions(T_A6E913D1.eBuildOptions.kVR, true);
         }
 
         public static bool ReturnTrue(ref bool __result)

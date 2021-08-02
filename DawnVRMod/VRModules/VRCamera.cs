@@ -7,7 +7,7 @@ namespace DawnVR
         private Camera uiCamera;
         private Transform uiRenderer;
         private RenderTexture renderTexture;
-        private bool shouldWeDoALittleTrolling = true;
+        private bool shouldWeDoALittleTrolling = false;
 
         private void Start()
         {
@@ -20,6 +20,11 @@ namespace DawnVR
             uiCamera.clearFlags = CameraClearFlags.Color;
             uiCamera.backgroundColor = new Color(0, 0, 0, 0);
             uiRenderer.GetComponent<MeshRenderer>().material = mat;
+        }
+
+        private void OnDestroy()
+        {
+            Destroy(uiRenderer.gameObject);
         }
 
         private void LateUpdate()
