@@ -46,7 +46,7 @@ namespace DawnVREnabler
                 }
                 //ModifyGGM(ggmLocation);
                 MelonLogger.Msg("Successfully copied VR patch!");
-                MelonLogger.Msg("Successfully modified GGM!");
+                //MelonLogger.Msg("Successfully modified GGM!");
             }
 
             MelonLogger.Msg("Checking for VR plugins...");
