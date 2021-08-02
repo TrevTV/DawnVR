@@ -2,9 +2,9 @@
 using UnityEngine;
 using MelonLoader;
 using System.Reflection;
-using System.Diagnostics;
+using DawnVR.Modules.VR;
 
-namespace DawnVR
+namespace DawnVR.Modules
 {
     internal static class HarmonyPatches
     {

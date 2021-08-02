@@ -2,7 +2,7 @@
 using Valve.VR;
 using UnityEngine;
 
-namespace DawnVR
+namespace DawnVR.Modules.VR
 {
     // This class is a large mess, but in a nutshell, it's a fancy wrapper for SteamVR_Action
     internal class VRInput

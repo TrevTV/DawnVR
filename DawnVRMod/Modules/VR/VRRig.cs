@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-namespace DawnVR
+namespace DawnVR.Modules.VR
 {
     internal class VRRig : MonoBehaviour
     {
@@ -14,6 +14,7 @@ namespace DawnVR
 
         private void Start()
         {
+            // todo: for future me, look at the main scene camera and look into the components, there is something there that allows rendering those object highlights
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             // transform.Find("Camera").gameObject.SetActive(false);

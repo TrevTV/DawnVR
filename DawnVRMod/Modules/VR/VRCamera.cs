@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DawnVR
+namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
