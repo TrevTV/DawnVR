@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using UnityStandardAssets._1CC59503E;
 
 namespace DawnVR.Modules.VR
 {
@@ -38,7 +39,51 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kFreeRoam:
                     // todo: doesnt work
                     // fuck i am dumb
-                    SetParent((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E", HarmonyLib.AccessTools.all).GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>()), new Vector3(0, -1, 0));
+                    SetParent(((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E", HarmonyLib.AccessTools.all).GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>())).parent, new Vector3(0, -1, 0));
+
+                    #region Manually Copy Over Variables
+
+                    T_FA85E78 highlightEdgeDetection = T_4679B25C.s_highlightManager.GetComponent<T_FA85E78>();
+                    if (highlightEdgeDetection == null)
+                        MelonLoader.MelonLogger.Msg("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah");
+                    System.Reflection.FieldInfo field = typeof(T_FA85E78).GetField("_122A4CEDD", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("1");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("2");
+                    field = typeof(T_FA85E78).GetField("_13660FE29", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("3");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("4");
+                    field = typeof(T_FA85E78).GetField("_1AC7BCA8", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("5");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("6");
+                    field = typeof(T_FA85E78).GetField("_1CB469D39", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("7");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("8");
+                    field = typeof(T_FA85E78).GetField("edgeDetectionShader", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("9");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("10");
+                    field = typeof(T_FA85E78).GetField("m_hatchScale", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("11");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("12");
+                    field = typeof(T_FA85E78).GetField("m_outlineJitter", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("13");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("14");
+                    field = typeof(T_FA85E78).GetField("sensitivityNormals", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("15");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("16");
+                    field = typeof(T_FA85E78).GetField("_18CEA9484", HarmonyLib.AccessTools.all);
+                    MelonLoader.MelonLogger.Msg("17");
+                    field.SetValue(VRHighlightManager.Instance.m_edgeDetection, field.GetValue(highlightEdgeDetection));
+                    MelonLoader.MelonLogger.Msg("18");
+
+                    #endregion
                     break;
                 case eGameMode.kLoading:
                     break;

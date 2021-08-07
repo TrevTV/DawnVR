@@ -30,6 +30,9 @@ namespace DawnVR.Modules.VR
             #endregion
 
             #region Highlight Manager
+
+            gameObject.AddComponent<VRHighlightManager>();
+
             #endregion
         }
 

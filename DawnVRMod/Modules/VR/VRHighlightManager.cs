@@ -20,14 +20,14 @@ namespace DawnVR.Modules.VR
         private Material m_highlightMaterial;
         private bool m_isCharacter;
         private List<Renderer> m_selectedRenderers;
-        private T_FA85E78 m_edgeDetection;
+        public T_FA85E78 m_edgeDetection;
         private CommandBuffer m_commandBuffer;
         private bool m_hadSemiTrans;
 
         private void Start()
         {
             m_edgeDetection = gameObject.AddComponent<T_FA85E78>();
-            CopyComponent(T_4679B25C.s_highlightManager.GetComponent<T_FA85E78>(), m_edgeDetection);
+
             if (m_edgeDetection != null)
             {
                 m_edgeDetection.SetTextures(m_hatchTexture, m_noiseTexture, m_outlineNoiseTexture);
@@ -204,13 +204,6 @@ namespace DawnVR.Modules.VR
                 m_commandBuffer.name = "OutlineTransparent";
                 VRRig.Instance?.Camera.Camera.AddCommandBuffer(CameraEvent.AfterGBuffer, m_commandBuffer);
             }
-        }
-
-        public static Component CopyComponent(Component original, Component newcopy)
-        {
-            foreach (System.Reflection.FieldInfo fieldInfo in original.GetType().GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
-                fieldInfo.SetValue(newcopy, fieldInfo.GetValue(original));
-            return newcopy;
         }
     }
 }
