@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using MelonLoader;
 using System.Reflection;
 using DawnVR.Modules.VR;
-using System.Linq;
+using UnityEngine.Rendering;
+using UnityStandardAssets._1CC59503E;
 
 namespace DawnVR.Modules
 {
@@ -21,6 +23,7 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
             // Input Handling
+            PatchPre(typeof(T_6FCAE66C).GetMethod("Init", HarmonyLib.AccessTools.all), "InputManagerInit");
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetAxisVector3"), "VRVector3Axis");
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
@@ -31,6 +34,86 @@ namespace DawnVR.Modules
             //PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
             //PatchPost(typeof(T_4679B25C).GetMethod("DeselectObject"), "Highlights_DeselectObject");
             //PatchPost(typeof(T_4679B25C).GetMethod("DeselectAll"), "Highlights_DeselectAll");
+            PatchPre(typeof(T_4679B25C).GetMethod("Awake", HarmonyLib.AccessTools.all), "HighlightManagerAwake");
+            PatchPre(typeof(T_4679B25C).GetMethod("_17B00A89A", HarmonyLib.AccessTools.all), "CreateStencilBuffer");
+            PatchPre(typeof(T_4679B25C).GetMethod("OnDisable"), "DestroyStencilBuffer");
+        }
+
+        public static bool HighlightManagerAwake(T_4679B25C __instance)
+        {
+            Camera cam = new GameObject("testCam").AddComponent<Camera>();
+            MelonLogger.Msg("highlight man awake");
+            if (__instance.name.Contains("LISCamera") && !VRRig.Instance.Camera.GetComponent<T_FA85E78>())
+            {
+                MelonLogger.Msg("Beginning component copy...");
+
+                // StenciledEdgeDetection
+                try
+                {
+                    T_FA85E78 ogEdgeDetection = __instance.gameObject.GetComponent<T_FA85E78>();
+                    T_FA85E78 edgeDet = VRRig.Instance.Camera.gameObject.AddComponent<T_FA85E78>();
+                    foreach (FieldInfo i in typeof(T_FA85E78).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        i.SetValue(edgeDet, i.GetValue(ogEdgeDetection));
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+
+                try
+                {
+                    T_4679B25C highlightMan = VRRig.Instance.Camera.gameObject.AddComponent<T_4679B25C>();
+                    foreach (FieldInfo i in typeof(T_4679B25C).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        i.SetValue(highlightMan, i.GetValue(__instance));
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+
+                MelonLogger.Msg("Succesfully copied edgeDetection!");
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool CreateStencilBuffer(T_4679B25C __instance)
+        {
+            MelonLogger.Msg("Creating a stencil!");
+            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
+            if (commandBuffer.GetValue(__instance) != null)
+            {
+                ((CommandBuffer)commandBuffer.GetValue(__instance)).Clear();
+            }
+            else
+            {
+                commandBuffer.SetValue(__instance, new CommandBuffer());
+                ((CommandBuffer)commandBuffer.GetValue(__instance)).name = "OutlineTransparent";
+                VRRig.Instance.Camera.Component.AddCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
+            }
+
+            return false;
+        }
+
+        public static bool DestroyStencilBuffer(T_4679B25C __instance)
+        {
+            MelonLogger.Msg("Destroying the stencil!");
+            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
+            if (commandBuffer.GetValue(__instance) != null && VRRig.Instance.Camera != null)
+            {
+                VRRig.Instance.Camera.Component.RemoveCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
+                commandBuffer.SetValue(__instance, null);
+            }
+
+            return false;
+        }
+
+        public static void InputManagerInit(T_6FCAE66C __instance)
+        {
+            // todo: doesnt work
+            //typeof(T_6FCAE66C).GetField("m_overrideType").SetValue(__instance, eControlType.kXboxOne);
         }
 
         public static bool GetIdleExtraName(ref string __result)
@@ -130,6 +213,83 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
             // Testing
             PatchPost(typeof(T_A6E913D1).GetMethod("Awake"), "GameManagerAwake");
+            // 
+            //PatchPre(typeof(T_4679B25C).GetMethod("Awake", HarmonyLib.AccessTools.all), "HighlightManagerAwake2");
+            //PatchPre(typeof(T_4679B25C).GetMethod("_17B00A89A", HarmonyLib.AccessTools.all), "CreateStencilBuffer2");
+            //PatchPre(typeof(T_4679B25C).GetMethod("OnDisable"), "DestroyStencilBuffer2");
+        }
+
+        private static Camera cam;
+
+        public static bool HighlightManagerAwake2(T_4679B25C __instance)
+        {
+            cam = new GameObject("testCam").AddComponent<Camera>();
+            MelonLogger.Msg("highlight man awake");
+            if (__instance.name.Contains("LISCamera") && !cam.GetComponent<T_FA85E78>())
+            {
+                MelonLogger.Msg("Beginning component copy...");
+
+                // StenciledEdgeDetection
+                try
+                {
+                    T_FA85E78 ogEdgeDetection = __instance.gameObject.GetComponent<T_FA85E78>();
+                    T_FA85E78 edgeDet = cam.gameObject.AddComponent<T_FA85E78>();
+                    foreach (FieldInfo i in typeof(T_FA85E78).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        i.SetValue(edgeDet, i.GetValue(ogEdgeDetection));
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+
+                try
+                {
+                    T_4679B25C highlightMan = cam.gameObject.AddComponent<T_4679B25C>();
+                    foreach (FieldInfo i in typeof(T_4679B25C).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        i.SetValue(highlightMan, i.GetValue(__instance));
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+
+                MelonLogger.Msg("Succesfully copied edgeDetection!");
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool CreateStencilBuffer2(T_4679B25C __instance)
+        {
+            MelonLogger.Msg("Creating a stencil!");
+            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
+            if (commandBuffer.GetValue(__instance) != null)
+            {
+                ((CommandBuffer)commandBuffer.GetValue(__instance)).Clear();
+            }
+            else
+            {
+                commandBuffer.SetValue(__instance, new CommandBuffer());
+                ((CommandBuffer)commandBuffer.GetValue(__instance)).name = "OutlineTransparent";
+                cam.AddCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
+            }
+
+            return false;
+        }
+
+        public static bool DestroyStencilBuffer2(T_4679B25C __instance)
+        {
+            MelonLogger.Msg("Destroying the stencil!");
+            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
+            if (commandBuffer.GetValue(__instance) != null && cam != null)
+            {
+                cam.RemoveCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
+                commandBuffer.SetValue(__instance, null);
+            }
+
+            return false;
         }
 
         public static void GameManagerAwake(T_A6E913D1 __instance)

@@ -35,6 +35,9 @@ T_6FD30C1C - selectable objects (unob name "ST_Hotspot")
 T_244D769F - (unob name  "HotspotObject")
 T_E6DAC959 - (unob name  "ST_Tag")
 
+T_572A4969 - ("InteractUI") handles displaying the pointer and text for each Hotspot
+T_F8FE3E1C - ("FreeRoamWindow") handles displaying the outline and contains the InteractUI
+
 --- Main LISCamera Component Mapping ---
 UnityStandardAssets._1CC59503E.T_53A129E6 - UnityStandardAssets.ImageEffects.SunShafts
 T_ACB76229 - LISDeferredSetup

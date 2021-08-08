@@ -4,7 +4,7 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
-        public Camera Camera;
+        public Camera Component;
         public RenderTexture RenderToVRTexture;
 
         private Camera uiCamera;
@@ -13,7 +13,7 @@ namespace DawnVR.Modules.VR
 
         private void Start()
         {
-            Camera = GetComponent<Camera>();
+            Component = GetComponent<Camera>();
 
             #region UI Renderer
 
