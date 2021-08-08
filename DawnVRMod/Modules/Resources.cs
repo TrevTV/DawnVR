@@ -15,7 +15,7 @@ namespace DawnVR.Modules
             Shader standard = Shader.Find("Standard");
             AssetBundle camRig = ResourceLoader.GetAssetBundle("camerarig");
             vrCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
-            vrCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = false;
+            vrCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = true;
             SteamVR_Behaviour_Pose pose1 = vrCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
             SteamVR_Behaviour_Pose pose2 = vrCameraRig.transform.Find("Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
             pose1.poseAction = SteamVR_Actions._default.Pose;

@@ -28,12 +28,6 @@ namespace DawnVR.Modules.VR
             uiRenderer.GetComponent<MeshRenderer>().material = mat;
 
             #endregion
-
-            #region Highlight Manager
-
-            gameObject.AddComponent<VRHighlightManager>();
-
-            #endregion
         }
 
         private void OnDestroy()
