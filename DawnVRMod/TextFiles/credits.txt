@@ -1,5 +1,6 @@
 ﻿- MrPurple & DrBibop for the VREnabler (though I have modified it to remove the need for AssetTools.NET)
-- DrBibop for the RoR2 mod which has helped me throughout the process of making this
+- DrBibop for the RoR2 mod and for giving me info on how he fixed it for RoR2 which led to me fixing this mess
+- elliotttate for some assistance in the Flatscreen to VR Modding Discord
 - Sinai for creating UnityExplorer which definitly helped speed up the process
 - Valve for creating an API which works when being applied out of editor
 - alecpizz for helping me with some vr rig stuff
