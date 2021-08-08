@@ -34,12 +34,11 @@ namespace DawnVR.Modules.VR
                     //SetParent(((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform);
 
                     // set camera's rendertexture to the one used for the ui to prevent motion sickness
-                    SetParent(cachedChloe.transform);
                     break;
                 case eGameMode.kDialog:
                     throw new System.NotImplementedException();
                 case eGameMode.kFreeRoam:
-                    // SetParent(((Transform)typeof(_1EB728BCC.T_A7E3390E).GetField("_123859A1E", HarmonyLib.AccessTools.all).GetValue(cachedChloe.gameObject.GetComponent<_1EB728BCC.T_A7E3390E>())).parent, new Vector3(0, -1, 0));
+                    SetParent(cachedChloe.transform);
                     break;
                 case eGameMode.kLoading:
                     break;
