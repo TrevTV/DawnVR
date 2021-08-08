@@ -3,6 +3,7 @@ using UnityEngine;
 using MelonLoader;
 using System.Reflection;
 using DawnVR.Modules.VR;
+using System.Linq;
 
 namespace DawnVR.Modules
 {
@@ -65,6 +66,8 @@ namespace DawnVR.Modules
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
+            #region Disable Idling
+
             AnimationClip clip = new AnimationClip();
             clip.name = "empty_anim";
             clip.legacy = true;
@@ -80,6 +83,20 @@ namespace DawnVR.Modules
                     state.time = 0;
                 }
             }
+
+            #endregion
+
+            #region Add Hand Material
+
+            SkinnedMeshRenderer meshRenderer = __instance.transform.Find("CH_M_Chloe_Deluxe04/CH_M_Chloe_Deluxe04_Mesh").GetComponent<SkinnedMeshRenderer>();
+            Material material = meshRenderer.sharedMaterials.Single((m) => m.name.Contains("Arms_TShirt"));
+            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+            VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+
+            meshRenderer.enabled = false;
+
+            #endregion
         }
 
         public static void OnSetMode(bool __result, eGameMode _1C57B7248)
