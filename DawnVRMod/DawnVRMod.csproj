@@ -64,7 +64,6 @@
     <Compile Include="AssemblyLoadingTools.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\Resources.cs" />
-    <Compile Include="Modules\VR\VRHighlightManager.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_BooleanEvent.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_PoseEvent.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Pose_ConnectedChangedEvent.cs" />
