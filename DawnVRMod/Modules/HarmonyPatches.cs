@@ -35,6 +35,7 @@ namespace DawnVR.Modules
             // Objective Manager
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
             // Highlight Manager
+            PatchPost(typeof(T_A6E913D1).GetMethod("Awake"), "GameManagerAwake");
             //PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
             //PatchPost(typeof(T_4679B25C).GetMethod("DeselectObject"), "Highlights_DeselectObject");
             //PatchPost(typeof(T_4679B25C).GetMethod("DeselectAll"), "Highlights_DeselectAll");
@@ -47,10 +48,50 @@ namespace DawnVR.Modules
         private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
         private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
 
-        public static void SetReminderTexture(T_81803C2C __instance, Texture _1366CBC04)
+        #region Debug Stuff
+
+        public static bool CutsceneSkipPressed(T_BF5A5EEC __instance)
         {
-            MelonLogger.Msg("Set texture called for Texture " + _1366CBC04.name);
-            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+            _15C6DD6D9.T_58A5E6E2 currentMode = __instance.GetCurrentMode<_15C6DD6D9.T_58A5E6E2>();
+            if (currentMode != null)
+            {
+                T_156BDACC timeline = T_14474339.GetTimeline(currentMode);
+                if (timeline != null)
+                {
+                    float sequenceEndTime = currentMode.sequenceEndTime;
+                    float timeS = sequenceEndTime - timeline.CurrentTime;
+                    T_E8819104.Singleton.AdvanceAllSounds(timeS);
+                    timeline.SetTime(sequenceEndTime);
+                    _169E4A3E.T_4B84CB26.s_forceFullEvaluate = true;
+                    T_14474339.UpdateCurrentTimelinesForFrame();
+                }
+            }
+
+            if (T_A6E913D1.Instance.m_rumbleManager != null)
+                T_A6E913D1.Instance.m_rumbleManager.ClearAllRumbles(0f);
+
+            return false;
+        }
+
+        public static void DisableSplashScreen(T_EDB11480 __instance) => __instance.m_splashList.Clear();
+
+        #endregion
+
+        #region Input Handling
+
+        public static void InputManagerInit(T_6FCAE66C __instance)
+        {
+            // todo: doesnt work
+            //typeof(T_6FCAE66C).GetField("m_overrideType").SetValue(__instance, eControlType.kXboxOne);
+        }
+
+        public static bool VRVector3Axis(ref Vector3 __result, eGameInput _1A16DF67C, eGameInput _19E4D962D, eGameInput _19F48D18E)
+        {
+            Vector2 axis = VRRig.Instance.Input.LeftController.Thumbstick.Axis;
+            Vector3 controlDirection = new Vector3(axis.x, 0, axis.y);
+            //__result = VRRig.Instance.Camera.transform.TransformDirection(controlDirection);
+            __result = controlDirection;
+            return false;
         }
 
         public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
@@ -73,7 +114,81 @@ namespace DawnVR.Modules
             return true;
         }
 
+        #endregion
+
+        #region Disable Idling
+
+        public static bool GetIdleExtraName(ref string __result)
+        {
+            __result = "empty_anim";
+            return false;
+        }
+
+        public static void PostCharControllerStart(T_C3DD66D9 __instance)
+        {
+            #region Disable Idling
+
+            AnimationClip clip = new AnimationClip();
+            clip.name = "empty_anim";
+            clip.legacy = true;
+            __instance.m_animation.AddClip(clip, "empty_anim");
+            VRRig.Instance?.UpdateCachedChloe(__instance);
+
+            foreach (AnimationState state in __instance.m_animStates)
+            {
+                if (state.name.ToLower().Contains("idle"))
+                {
+                    state.weight = 0;
+                    state.speed = 0;
+                    state.time = 0;
+                }
+            }
+
+            #endregion
+
+            #region Add Hand Material
+
+            Material material = null;
+            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
+                if (possibleMat != null)
+                    material = possibleMat;
+
+                sMesh.sharedMesh = null;
+            }
+            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+            VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Rig Parent Updating
+
+        public static void OnSetMode(bool __result, eGameMode _1C57B7248)
+        {
+            if (__result)
+            {
+                MelonLogger.Msg("Game successfully updated to mode " + _1C57B7248);
+                VRRig.Instance?.UpdateRigParent(_1C57B7248);
+            }
+        }
+
         public static void UnloadCurrentLevel() => VRRig.Instance.UpdateRigParent(eGameMode.kNone);
+
+        #endregion
+
+        #region Objective Manager
+
+        public static void SetReminderTexture(T_81803C2C __instance)
+            => VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+
+        #endregion
+
+        #region Highlight Manager
 
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, bool __result)
         {
@@ -179,100 +294,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void InputManagerInit(T_6FCAE66C __instance)
-        {
-            // todo: doesnt work
-            //typeof(T_6FCAE66C).GetField("m_overrideType").SetValue(__instance, eControlType.kXboxOne);
-        }
-
-        public static bool GetIdleExtraName(ref string __result)
-        {
-            __result = "empty_anim";
-            return false;
-        }
-
-        public static bool CutsceneSkipPressed(T_BF5A5EEC __instance)
-        {
-            _15C6DD6D9.T_58A5E6E2 currentMode = __instance.GetCurrentMode<_15C6DD6D9.T_58A5E6E2>();
-            if (currentMode != null)
-            {
-                T_156BDACC timeline = T_14474339.GetTimeline(currentMode);
-                if (timeline != null)
-                {
-                    float sequenceEndTime = currentMode.sequenceEndTime;
-                    float timeS = sequenceEndTime - timeline.CurrentTime;
-                    T_E8819104.Singleton.AdvanceAllSounds(timeS);
-                    timeline.SetTime(sequenceEndTime);
-                    _169E4A3E.T_4B84CB26.s_forceFullEvaluate = true;
-                    T_14474339.UpdateCurrentTimelinesForFrame();
-                }
-            }
-
-            if (T_A6E913D1.Instance.m_rumbleManager != null)
-                T_A6E913D1.Instance.m_rumbleManager.ClearAllRumbles(0f);
-
-            return false;
-        }
-
-        public static void DisableSplashScreen(T_EDB11480 __instance) => __instance.m_splashList.Clear();
-
-        public static void PostCharControllerStart(T_C3DD66D9 __instance)
-        {
-            #region Disable Idling
-
-            AnimationClip clip = new AnimationClip();
-            clip.name = "empty_anim";
-            clip.legacy = true;
-            __instance.m_animation.AddClip(clip, "empty_anim");
-            VRRig.Instance?.UpdateCachedChloe(__instance);
-
-            foreach (AnimationState state in __instance.m_animStates)
-            {
-                if (state.name.ToLower().Contains("idle"))
-                {
-                    state.weight = 0;
-                    state.speed = 0;
-                    state.time = 0;
-                }
-            }
-
-            #endregion
-
-            #region Add Hand Material
-
-            Material material = null;
-            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
-                if (possibleMat != null)
-                    material = possibleMat;
-
-                sMesh.sharedMesh = null;
-            }
-            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
-            VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
-
-            #endregion
-        }
-
-        public static void OnSetMode(bool __result, eGameMode _1C57B7248)
-        {
-            if (__result)
-            {
-                MelonLogger.Msg("Game successfully updated to mode " + _1C57B7248);
-                VRRig.Instance?.UpdateRigParent(_1C57B7248);
-            }
-        }
-
-        public static bool VRVector3Axis(ref Vector3 __result, eGameInput _1A16DF67C, eGameInput _19E4D962D, eGameInput _19F48D18E)
-        {
-            Vector2 axis = VRRig.Instance.Input.LeftController.Thumbstick.Axis;
-            Vector3 controlDirection = new Vector3(axis.x, 0, axis.y);
-            //__result = VRRig.Instance.Camera.transform.TransformDirection(controlDirection);
-            __result = controlDirection;
-            return false;
-        }
+        #endregion
 
         #region NoVR Patches
 
@@ -305,86 +327,9 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void IsHotspotOnScreen2(T_8F74F848 __instance, bool __result)
-        {
-            MelonLogger.Msg("hi from " + __instance.name);
-            __result = true;
-        }
-
-        public static bool HighlightManagerAwake2(T_4679B25C __instance)
-        {
-            cam = new GameObject("testCam").AddComponent<Camera>();
-            MelonLogger.Msg("highlight man awake");
-            if (__instance.name.Contains("LISCamera") && !cam.GetComponent<T_FA85E78>())
-            {
-                MelonLogger.Msg("Beginning component copy...");
-
-                // StenciledEdgeDetection
-                try
-                {
-                    T_FA85E78 ogEdgeDetection = __instance.gameObject.GetComponent<T_FA85E78>();
-                    T_FA85E78 edgeDet = cam.gameObject.AddComponent<T_FA85E78>();
-                    foreach (FieldInfo i in typeof(T_FA85E78).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                        i.SetValue(edgeDet, i.GetValue(ogEdgeDetection));
-                }
-                catch (Exception e)
-                {
-                    MelonLogger.Msg(e);
-                }
-
-                try
-                {
-                    T_4679B25C highlightMan = cam.gameObject.AddComponent<T_4679B25C>();
-                    foreach (FieldInfo i in typeof(T_4679B25C).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                        i.SetValue(highlightMan, i.GetValue(__instance));
-                }
-                catch (Exception e)
-                {
-                    MelonLogger.Msg(e);
-                }
-
-                MelonLogger.Msg("Succesfully copied edgeDetection!");
-
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool CreateStencilBuffer2(T_4679B25C __instance)
-        {
-            MelonLogger.Msg("Creating a stencil!");
-            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
-            if (commandBuffer.GetValue(__instance) != null)
-            {
-                ((CommandBuffer)commandBuffer.GetValue(__instance)).Clear();
-            }
-            else
-            {
-                commandBuffer.SetValue(__instance, new CommandBuffer());
-                ((CommandBuffer)commandBuffer.GetValue(__instance)).name = "OutlineTransparent";
-                cam.AddCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
-            }
-
-            return false;
-        }
-
-        public static bool DestroyStencilBuffer2(T_4679B25C __instance)
-        {
-            MelonLogger.Msg("Destroying the stencil!");
-            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
-            if (commandBuffer.GetValue(__instance) != null && cam != null)
-            {
-                cam.RemoveCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
-                commandBuffer.SetValue(__instance, null);
-            }
-
-            return false;
-        }
-
         public static void GameManagerAwake(T_A6E913D1 __instance)
         {
-            //__instance.SetBuildOptions(T_A6E913D1.eBuildOptions.kVR, true);
+            __instance.SetBuildOptions(T_A6E913D1.eBuildOptions.kVR, true);
         }
 
         public static bool ReturnTrue(ref bool __result)
