@@ -32,6 +32,8 @@ namespace DawnVR.Modules
             // Rig Parent Updating
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), "UnloadCurrentLevel");
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
+            // Objective Manager
+            PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
             // Highlight Manager
             //PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
             //PatchPost(typeof(T_4679B25C).GetMethod("DeselectObject"), "Highlights_DeselectObject");
@@ -44,6 +46,12 @@ namespace DawnVR.Modules
 
         private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
         private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
+
+        public static void SetReminderTexture(T_81803C2C __instance, Texture _1366CBC04)
+        {
+            MelonLogger.Msg("Set texture called for Texture " + _1366CBC04.name);
+            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+        }
 
         public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
         {
@@ -232,14 +240,18 @@ namespace DawnVR.Modules
 
             #region Add Hand Material
 
-            SkinnedMeshRenderer meshRenderer = __instance.transform.Find("CH_M_Chloe_Deluxe04/CH_M_Chloe_Deluxe04_Mesh").GetComponent<SkinnedMeshRenderer>();
-            Material material = meshRenderer.sharedMaterials.Single((m) => m.name.Contains("Arms_TShirt"));
+            Material material = null;
+            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
+                if (possibleMat != null)
+                    material = possibleMat;
+
+                sMesh.sharedMesh = null;
+            }
             material.hideFlags = HideFlags.DontUnloadUnusedAsset;
             VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
-
-            //todo: add "handpad" mesh to the VRRig hands
-            meshRenderer.enabled = false;
 
             #endregion
         }

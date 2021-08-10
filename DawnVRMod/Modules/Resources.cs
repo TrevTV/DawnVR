@@ -22,6 +22,7 @@ namespace DawnVR.Modules
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
+            pose1.transform.Find("ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
             //pose1.transform.Find("Model").gameObject.AddComponent<SteamVR_RenderModel>().shader = standard;
             //pose2.transform.Find("Model").gameObject.AddComponent<SteamVR_RenderModel>().shader = standard;
 
