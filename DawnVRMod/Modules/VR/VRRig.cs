@@ -9,8 +9,6 @@ namespace DawnVR.Modules.VR
         public static VRRig Instance;
         public VRCamera Camera;
         public VRInput Input;
-
-        private Camera mainSceneCam;
         private T_C3DD66D9 cachedChloe;
 
         private void Start()
@@ -47,6 +45,7 @@ namespace DawnVR.Modules.VR
                     transform.position = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform.position ?? Vector3.zero;
                     break;
                 case eGameMode.kNone:
+                    SetParent(null);
                     break;
                 case eGameMode.kPosterView:
                     throw new System.NotImplementedException();

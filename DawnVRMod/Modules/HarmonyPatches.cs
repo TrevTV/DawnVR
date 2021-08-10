@@ -23,12 +23,14 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
             // Input Handling
+            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
             PatchPre(typeof(T_6FCAE66C).GetMethod("Init", HarmonyLib.AccessTools.all), "InputManagerInit");
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetAxisVector3"), "VRVector3Axis");
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
             // Rig Parent Updating
+            PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), "UnloadCurrentLevel");
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
             // Highlight Manager
             //PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
@@ -37,11 +39,68 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_4679B25C).GetMethod("Awake", HarmonyLib.AccessTools.all), "HighlightManagerAwake");
             PatchPre(typeof(T_4679B25C).GetMethod("_17B00A89A", HarmonyLib.AccessTools.all), "CreateStencilBuffer");
             PatchPre(typeof(T_4679B25C).GetMethod("OnDisable"), "DestroyStencilBuffer");
+            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen");
+        }
+
+        private static FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
+        private static FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
+
+        public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
+        {
+            // todo: somehow implement using the Camera to change direction like in other locomotion vr games
+            if (_13F806F29 != __instance.m_moveDirection)
+            {
+                __instance.m_moveDirection = (__instance.m_nonNormalMoveDirection = _13F806F29);
+                __instance.m_moveDirection.Normalize();
+                CharControl_WorldAngle.SetValue(__instance, Vector3.Angle(Vector3.forward, __instance.m_moveDirection));
+                if (_13F806F29.x < 0f)
+                {
+                    //__instance._15B7EF7A4 = 360f - __instance._15B7EF7A4;
+                    CharControl_WorldAngle.SetValue(__instance, 360f - (float)CharControl_WorldAngle.GetValue(__instance));
+                }
+            }
+
+            return false;
+        }
+
+        public static void UnloadCurrentLevel() => VRRig.Instance.UpdateRigParent(eGameMode.kNone);
+
+        public static bool IsHotspotOnScreen(T_8F74F848 __instance, bool __result)
+        {
+            if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
+            {
+                __result = false;
+                return false;
+            }
+            Vector3 position = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
+            Vector3 vector = VRRig.Instance.Camera.Component.ScreenToViewportPoint(position);
+            if (vector.x > 0f && vector.y > 0f && vector.x < 1f && vector.y < 1f)
+            {
+                float num = 0.1f; // never changed, so its hardcoded here
+
+                if (vector.x < num)
+                    HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.Lerp(0f, 1f, vector.x / num));
+                else if (vector.x > 1f - num)
+                    HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.Lerp(0f, 1f, (1f - vector.x) / num));
+                else
+                    HotSpotUI_ScreenAlpha.SetValue(__instance, 1f);
+
+                if (vector.y < num)
+                    HotSpotUI_ScreenAlpha.SetValue(__instance, ((float)HotSpotUI_ScreenAlpha.GetValue(__instance)) * Mathf.Lerp(0f, 1f, vector.y / num));
+                else if (vector.y > 1f - num)
+                    HotSpotUI_ScreenAlpha.SetValue(__instance, ((float)HotSpotUI_ScreenAlpha.GetValue(__instance)) * Mathf.Lerp(0f, 1f, (1f - vector.y) / num));
+
+                __result = true;
+                return false;
+            }
+            float _ = 0;
+            HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.SmoothDamp((float)HotSpotUI_ScreenAlpha.GetValue(__instance), 0f, ref _, 0.2f));
+            //this.m_screenAlpha = Mathf.SmoothDamp(this.m_screenAlpha, 0f, ref this.m_alphaChangeVelocity, 0.2f);
+            return false;
         }
 
         public static bool HighlightManagerAwake(T_4679B25C __instance)
         {
-            Camera cam = new GameObject("testCam").AddComponent<Camera>();
             MelonLogger.Msg("highlight man awake");
             if (__instance.name.Contains("LISCamera") && !VRRig.Instance.Camera.GetComponent<T_FA85E78>())
             {
@@ -177,6 +236,7 @@ namespace DawnVR.Modules
             VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
 
+            //todo: add "handpad" mesh to the VRRig hands
             meshRenderer.enabled = false;
 
             #endregion
@@ -194,7 +254,8 @@ namespace DawnVR.Modules
         public static bool VRVector3Axis(ref Vector3 __result, eGameInput _1A16DF67C, eGameInput _19E4D962D, eGameInput _19F48D18E)
         {
             Vector2 axis = VRRig.Instance.Input.LeftController.Thumbstick.Axis;
-            __result = new Vector3(axis.x, 0, axis.y);
+            Vector3 controlDirection = new Vector3(axis.x, 0, axis.y);
+            __result = VRRig.Instance.Camera.transform.TransformDirection(controlDirection);
             return false;
         }
 
@@ -213,13 +274,27 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
             // Testing
             PatchPost(typeof(T_A6E913D1).GetMethod("Awake"), "GameManagerAwake");
-            // 
+            //
+            PatchPost(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen2");
+            PatchPre(typeof(T_5A79B056).GetMethod("_183B63F81", HarmonyLib.AccessTools.all), "TweenAlphaCache");
             //PatchPre(typeof(T_4679B25C).GetMethod("Awake", HarmonyLib.AccessTools.all), "HighlightManagerAwake2");
             //PatchPre(typeof(T_4679B25C).GetMethod("_17B00A89A", HarmonyLib.AccessTools.all), "CreateStencilBuffer2");
             //PatchPre(typeof(T_4679B25C).GetMethod("OnDisable"), "DestroyStencilBuffer2");
         }
 
         private static Camera cam;
+
+        public static bool TweenAlphaCache(T_5A79B056 __instance)
+        {
+            __instance.enabled = false;
+            return false;
+        }
+
+        public static void IsHotspotOnScreen2(T_8F74F848 __instance, bool __result)
+        {
+            MelonLogger.Msg("hi from " + __instance.name);
+            __result = true;
+        }
 
         public static bool HighlightManagerAwake2(T_4679B25C __instance)
         {
