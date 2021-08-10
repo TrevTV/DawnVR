@@ -42,13 +42,13 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen");
         }
 
-        private static FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
-        private static FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
+        private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
+        private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
 
         public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
         {
             // todo: somehow implement using the Camera to change direction like in other locomotion vr games
-            if (_13F806F29 != __instance.m_moveDirection)
+            /*if (_13F806F29 != __instance.m_moveDirection)
             {
                 __instance.m_moveDirection = (__instance.m_nonNormalMoveDirection = _13F806F29);
                 __instance.m_moveDirection.Normalize();
@@ -60,7 +60,9 @@ namespace DawnVR.Modules
                 }
             }
 
-            return false;
+            return false;*/
+
+            return true;
         }
 
         public static void UnloadCurrentLevel() => VRRig.Instance.UpdateRigParent(eGameMode.kNone);
@@ -255,7 +257,8 @@ namespace DawnVR.Modules
         {
             Vector2 axis = VRRig.Instance.Input.LeftController.Thumbstick.Axis;
             Vector3 controlDirection = new Vector3(axis.x, 0, axis.y);
-            __result = VRRig.Instance.Camera.transform.TransformDirection(controlDirection);
+            //__result = VRRig.Instance.Camera.transform.TransformDirection(controlDirection);
+            __result = controlDirection;
             return false;
         }
 
