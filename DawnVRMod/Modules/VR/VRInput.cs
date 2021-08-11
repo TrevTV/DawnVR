@@ -5,6 +5,7 @@ using UnityEngine;
 namespace DawnVR.Modules.VR
 {
     // This class is a large mess, but in a nutshell, it's a fancy wrapper for SteamVR_Action
+    // todo: limit this to just controls that the game needs
     internal class VRInput
     {
         public LeftControllerData LeftController => lController;

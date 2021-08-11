@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
-using UnityStandardAssets._1CC59503E;
 
 namespace DawnVR.Modules.VR
 {
@@ -131,12 +129,7 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kCustomization:
                     throw new System.NotImplementedException();
                 case eGameMode.kCutscene:
-                    // todo: doesnt follow the camera properly
-                    // me in the future - cause i am blind and this is using a simple position set instead of parenting the camera
-                    //transform.position = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform.position ?? Vector3.zero;
-                    //SetParent(((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform);
-
-                    // set camera's rendertexture to the one used for the ui to prevent motion sickness
+                    // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
                     break;
                 case eGameMode.kDialog:
                     throw new System.NotImplementedException();

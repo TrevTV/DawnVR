@@ -14,7 +14,7 @@ namespace DawnVR
         public const string Name = "DawnVR";
         public const string Author = "trev";
         public const string Company = null;
-        public const string Version = "0.1.0";
+        public const string Version = "0.0.1";
         public const string DownloadLink = null;
     }
 
@@ -49,27 +49,6 @@ namespace DawnVR
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                MelonLogger.Msg(" ----- BEGINNING CAMERA STUFF ----- ");
-                foreach (Camera cam in GameObject.FindObjectsOfType<Camera>())
-                {
-                    string path = cam.name;
-                    Transform parent = cam.transform.parent;
-                    while (parent != null)
-                    {
-                        path = parent.name + "/" + path;
-                        parent = parent.parent;
-                    }
-                    path = "/" + path;
-                    MelonLogger.Msg(path);
-                }
-            }
-
-            else if (Input.GetKeyDown(KeyCode.K))
-            {
-                MelonLogger.Msg("Current Mode: " + T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
-            }
         }
 
         private IEnumerator InitSteamVR()

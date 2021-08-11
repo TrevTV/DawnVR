@@ -20,18 +20,23 @@ namespace DawnVR.Modules
             // Debug Stuff
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
+
             // Input Handling
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
             PatchPre(typeof(T_6FCAE66C).GetMethod("Init", HarmonyLib.AccessTools.all), "InputManagerInit");
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetAxisVector3"), "VRVector3Axis");
+
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+
             // Rig Parent Updating
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), "UnloadCurrentLevel");
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
+
             // Objective Manager
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
+
             // Highlight Manager
             PatchPre(typeof(T_1C1609D7).GetMethod("Update"), "CUICameraRelativeUpdate");
             PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), "CUIAnchorUpdatePosition");
@@ -231,9 +236,8 @@ namespace DawnVR.Modules
                 __result = true;
                 return false;
             }
-            float _ = 0;
-            HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.SmoothDamp((float)HotSpotUI_ScreenAlpha.GetValue(__instance), 0f, ref _, 0.2f));
-            //this.m_screenAlpha = Mathf.SmoothDamp(this.m_screenAlpha, 0f, ref this.m_alphaChangeVelocity, 0.2f);
+            float output = 0;
+            HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.SmoothDamp((float)HotSpotUI_ScreenAlpha.GetValue(__instance), 0f, ref output, 0.2f));
             return false;
         }
 

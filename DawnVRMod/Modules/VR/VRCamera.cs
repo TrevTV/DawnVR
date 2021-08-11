@@ -9,7 +9,6 @@ namespace DawnVR.Modules.VR
 
         private Camera uiCamera;
         private Transform uiRenderer;
-        private bool haveFollowCamFollowThis = true;
 
         private void Start()
         {
@@ -30,28 +29,6 @@ namespace DawnVR.Modules.VR
             #endregion
         }
 
-        private void OnDestroy()
-        {
-            Destroy(uiRenderer.gameObject);
-        }
-
-        private System.Reflection.PropertyInfo DawnUICamera = typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main");
-
-        private void LateUpdate()
-        {
-            if (haveFollowCamFollowThis)
-            {
-                /*if (T_A6E913D1.Instance.m_followCamera.enabled)
-                    T_A6E913D1.Instance.m_followCamera.enabled = false;
-                T_A6E913D1.Instance.m_followCamera.transform.position = transform.position;
-                T_A6E913D1.Instance.m_followCamera.transform.rotation = transform.rotation;
-                Camera camValue = (Camera)DawnUICamera.GetValue(null, null);
-                if (camValue != null)
-                {
-                    camValue.transform.position = transform.position;
-                    camValue.transform.rotation = transform.rotation;
-                }*/
-            }
-        }
+        private void OnDestroy() => Destroy(uiRenderer.gameObject);
     }
 }
