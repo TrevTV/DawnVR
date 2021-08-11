@@ -23,7 +23,8 @@ namespace DawnVR.Modules
 
             // Input Handling
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
-            PatchPre(typeof(T_6FCAE66C).GetMethod("Init", HarmonyLib.AccessTools.all), "InputManagerInit");
+            //PatchPre(typeof(T_6FCAE66C).GetMethod("Init", HarmonyLib.AccessTools.all), "InputManagerInit");
+            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), "InputManagerInit");
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetAxisVector3"), "VRVector3Axis");
 
             // Disable Idling
@@ -80,8 +81,17 @@ namespace DawnVR.Modules
 
         public static void InputManagerInit(T_6FCAE66C __instance)
         {
-            // todo: doesnt work
-            //typeof(T_6FCAE66C).GetField("m_overrideType").SetValue(__instance, eControlType.kXboxOne);
+            // this was me testing a mono harmony bug, ignore
+            /*MelonLogger.Msg("Force setting input manager to Xbox One (try catch)");
+            try
+            {
+                typeof(T_6FCAE66C).GetField("_1C6FBAE09").SetValue(__instance, eControlType.kXboxOne);
+            }
+            catch (Exception e) { MelonLogger.Msg(e); }
+            MelonLogger.Msg("ForceSet attempt 2 (notrycatch)");
+            typeof(T_6FCAE66C).GetField("_1C6FBAE09").SetValue(__instance, eControlType.kXboxOne);
+            MelonLogger.Msg("done");*/
+            typeof(T_6FCAE66C).GetField("_1C6FBAE09", HarmonyLib.AccessTools.all).SetValue(__instance, eControlType.kXboxOne);
         }
 
         public static bool VRVector3Axis(ref Vector3 __result, eGameInput _1A16DF67C, eGameInput _19E4D962D, eGameInput _19F48D18E)
