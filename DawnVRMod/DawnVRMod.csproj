@@ -154,7 +154,6 @@
   <ItemGroup>
     <Content Include="TextFiles\credits.txt" />
     <Content Include="TextFiles\internals_notes.txt" />
-    <Content Include="TextFiles\todos.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
