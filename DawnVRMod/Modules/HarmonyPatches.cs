@@ -4,8 +4,6 @@ using UnityEngine;
 using MelonLoader;
 using System.Reflection;
 using DawnVR.Modules.VR;
-using UnityEngine.Rendering;
-using UnityStandardAssets._1CC59503E;
 
 namespace DawnVR.Modules
 {
@@ -35,17 +33,13 @@ namespace DawnVR.Modules
             // Objective Manager
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
             // Highlight Manager
-            PatchPost(typeof(T_A6E913D1).GetMethod("Awake"), "GameManagerAwake");
-            //PatchPost(typeof(T_4679B25C).GetMethod("SelectObject"), "Highlights_SelectObject");
-            //PatchPost(typeof(T_4679B25C).GetMethod("DeselectObject"), "Highlights_DeselectObject");
-            //PatchPost(typeof(T_4679B25C).GetMethod("DeselectAll"), "Highlights_DeselectAll");
-            PatchPre(typeof(T_4679B25C).GetMethod("Awake", HarmonyLib.AccessTools.all), "HighlightManagerAwake");
-            PatchPre(typeof(T_4679B25C).GetMethod("_17B00A89A", HarmonyLib.AccessTools.all), "CreateStencilBuffer");
-            PatchPre(typeof(T_4679B25C).GetMethod("OnDisable"), "DestroyStencilBuffer");
-            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen");
+            PatchPre(typeof(T_1C1609D7).GetMethod("Update"), "CUICameraRelativeUpdate");
+            PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), "CUIAnchorUpdatePosition");
+            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen"); // HotSpotUI
+            PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), "IsInteractOnScreen"); // InteractUI
+            // todo: i have no clue what "HoverObjectUI" is but it also has a CheckOnScreen function
         }
 
-        private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
         private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
 
         #region Debug Stuff
@@ -190,7 +184,26 @@ namespace DawnVR.Modules
 
         #region Highlight Manager
 
-        public static bool IsHotspotOnScreen(T_8F74F848 __instance, bool __result)
+        private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
+        private static readonly FieldInfo InteractUI_HotSpotObj = typeof(T_572A4969).GetField("_133075675", HarmonyLib.AccessTools.all);
+
+        public static bool CUICameraRelativeUpdate(T_1C1609D7 __instance)
+        {
+            __instance.transform.rotation = VRRig.Instance.Camera.transform.rotation;
+            return false;
+        }
+
+        public static bool CUIAnchorUpdatePosition(T_2D9F19A8 __instance)
+        {
+            if (__instance.m_anchorObj != null)
+            {
+                Transform parent = __instance.transform.parent;
+                __instance.transform.localPosition = ((!(parent != null)) ? __instance.m_anchorObj.transform.position : parent.InverseTransformPoint(__instance.m_anchorObj.transform.position)) + __instance.m_offset;
+            }
+            return false;
+        }
+
+        public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
             {
@@ -224,73 +237,32 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool HighlightManagerAwake(T_4679B25C __instance)
+        public static bool IsInteractOnScreen(T_572A4969 __instance, ref bool __result)
         {
-            MelonLogger.Msg("highlight man awake");
-            if (__instance.name.Contains("LISCamera") && !VRRig.Instance.Camera.GetComponent<T_FA85E78>())
+            if (__instance.m_anchor != null && __instance.m_anchor.m_anchorObj != null)
             {
-                MelonLogger.Msg("Beginning component copy...");
-
-                // StenciledEdgeDetection
-                try
+                T_6FD30C1C hotspotObj = (T_6FD30C1C)InteractUI_HotSpotObj.GetValue(__instance);
+                float num = Vector3.Angle(VRRig.Instance.Camera.transform.forward, __instance.m_anchor.m_anchorObj.transform.position - VRRig.Instance.Camera.transform.position);
+                if (num < 180f)
                 {
-                    T_FA85E78 ogEdgeDetection = __instance.gameObject.GetComponent<T_FA85E78>();
-                    T_FA85E78 edgeDet = VRRig.Instance.Camera.gameObject.AddComponent<T_FA85E78>();
-                    foreach (FieldInfo i in typeof(T_FA85E78).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                        i.SetValue(edgeDet, i.GetValue(ogEdgeDetection));
+                    Vector3 position = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
+                    Vector3 vector = VRRig.Instance.Camera.Component.ScreenToViewportPoint(position);
+                    if (vector.x > 0f && vector.y > 0f && vector.x < 1f && vector.y < 1f)
+                    {
+                        __instance.m_arrow.gameObject.SetActive(true);
+                        __instance.m_choiceUI.gameObject.SetActive(true);
+                        if (hotspotObj != null)
+                            hotspotObj.Select(true, true);
+                        __result = true;
+                        return false;
+                    }
                 }
-                catch (Exception e)
-                {
-                    MelonLogger.Msg(e);
-                }
-
-                try
-                {
-                    T_4679B25C highlightMan = VRRig.Instance.Camera.gameObject.AddComponent<T_4679B25C>();
-                    foreach (FieldInfo i in typeof(T_4679B25C).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                        i.SetValue(highlightMan, i.GetValue(__instance));
-                }
-                catch (Exception e)
-                {
-                    MelonLogger.Msg(e);
-                }
-
-                MelonLogger.Msg("Succesfully copied edgeDetection!");
-
-                return false;
+                __instance.m_arrow.gameObject.SetActive(false);
+                __instance.m_choiceUI.gameObject.SetActive(false);
+                if (hotspotObj != null)
+                    hotspotObj.Select(false, false);
             }
-
-            return true;
-        }
-
-        public static bool CreateStencilBuffer(T_4679B25C __instance)
-        {
-            MelonLogger.Msg("Creating a stencil!");
-            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
-            if (commandBuffer.GetValue(__instance) != null)
-            {
-                ((CommandBuffer)commandBuffer.GetValue(__instance)).Clear();
-            }
-            else
-            {
-                commandBuffer.SetValue(__instance, new CommandBuffer());
-                ((CommandBuffer)commandBuffer.GetValue(__instance)).name = "OutlineTransparent";
-                VRRig.Instance.Camera.Component.AddCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
-            }
-
-            return false;
-        }
-
-        public static bool DestroyStencilBuffer(T_4679B25C __instance)
-        {
-            MelonLogger.Msg("Destroying the stencil!");
-            FieldInfo commandBuffer = typeof(T_4679B25C).GetField("_1743C93B6", HarmonyLib.AccessTools.all);
-            if (commandBuffer.GetValue(__instance) != null && VRRig.Instance.Camera != null)
-            {
-                VRRig.Instance.Camera.Component.RemoveCommandBuffer(CameraEvent.AfterGBuffer, (CommandBuffer)commandBuffer.GetValue(__instance));
-                commandBuffer.SetValue(__instance, null);
-            }
-
+            __result = false;
             return false;
         }
 
