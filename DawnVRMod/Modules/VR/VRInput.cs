@@ -25,6 +25,26 @@ namespace DawnVR.Modules.VR
         public SteamVR_Action_Boolean_Source GetThumbstickLeft(Hand h) => SteamVR_Actions.default_Bool_ThumbstickLeft[GetSourceFromHand(h)];
         public SteamVR_Action_Boolean_Source GetThumbstickRight(Hand h) => SteamVR_Actions.default_Bool_ThumbstickRight[GetSourceFromHand(h)];
 
+        public static eInputState GetBooleanInputState(SteamVR_Action_Boolean inSource)
+        {
+            if (inSource.stateDown)
+                return eInputState.kDown;
+            else if (inSource.state)
+                return eInputState.kHeld;
+            else
+                return eInputState.kNone;
+        }
+
+        public static eInputState GetBooleanInputState(SteamVR_Action_Boolean_Source inSource)
+        {
+            if (inSource.stateDown)
+                return eInputState.kDown;
+            else if (inSource.state)
+                return eInputState.kHeld;
+            else
+                return eInputState.kNone;
+        }
+
         private SteamVR_Input_Sources GetSourceFromHand(Hand hand)
         {
             switch (hand)
