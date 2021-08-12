@@ -19,12 +19,10 @@ namespace DawnVR.Modules.VR
             uiRenderer = transform.Find("UIRenderer");
             uiCamera = GameObject.Find("/UIRoot/Camera").GetComponent<Camera>();
             RenderToVRTexture = new RenderTexture(1920, 1080, 1);
-            Material mat = new Material(Shader.Find("Unlit/Transparent"));
-            mat.mainTexture = RenderToVRTexture;
             uiCamera.targetTexture = RenderToVRTexture;
             uiCamera.clearFlags = CameraClearFlags.Color;
             uiCamera.backgroundColor = new Color(0, 0, 0, 0);
-            uiRenderer.GetComponent<MeshRenderer>().material = mat;
+            uiRenderer.GetComponent<MeshRenderer>().material.mainTexture = RenderToVRTexture;
 
             #endregion
         }
