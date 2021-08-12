@@ -49,19 +49,11 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Vector2 V2_LeftThumbstick
+        public virtual SteamVR_Action_Vector2 V2_Thumbstick
         {
             get
             {
-                return SteamVR_Actions.default_V2_LeftThumbstick;
-            }
-        }
-        
-        public virtual SteamVR_Action_Vector2 V2_RightThumbstick
-        {
-            get
-            {
-                return SteamVR_Actions.default_V2_RightThumbstick;
+                return SteamVR_Actions.default_V2_Thumbstick;
             }
         }
         
@@ -97,131 +89,75 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_LThumbstickUp
+        public virtual SteamVR_Action_Boolean Bool_ThumbstickUp
         {
             get
             {
-                return SteamVR_Actions.default_Bool_LThumbstickUp;
+                return SteamVR_Actions.default_Bool_ThumbstickUp;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_LThumbstickDown
+        public virtual SteamVR_Action_Boolean Bool_ThumbstickDown
         {
             get
             {
-                return SteamVR_Actions.default_Bool_LThumbstickDown;
+                return SteamVR_Actions.default_Bool_ThumbstickDown;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_LThumbstickLeft
+        public virtual SteamVR_Action_Boolean Bool_ThumbstickLeft
         {
             get
             {
-                return SteamVR_Actions.default_Bool_LThumbstickLeft;
+                return SteamVR_Actions.default_Bool_ThumbstickLeft;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_LThumbstickRight
+        public virtual SteamVR_Action_Boolean Bool_ThumbstickRight
         {
             get
             {
-                return SteamVR_Actions.default_Bool_LThumbstickRight;
+                return SteamVR_Actions.default_Bool_ThumbstickRight;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_RThumbstickUp
+        public virtual SteamVR_Action_Boolean Bool_Trigger
         {
             get
             {
-                return SteamVR_Actions.default_Bool_RThumbstickUp;
+                return SteamVR_Actions.default_Bool_Trigger;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_RThumbstickDown
+        public virtual SteamVR_Action_Boolean Bool_Grip
         {
             get
             {
-                return SteamVR_Actions.default_Bool_RThumbstickDown;
+                return SteamVR_Actions.default_Bool_Grip;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_RThumbstickLeft
+        public virtual SteamVR_Action_Single V1_Trigger
         {
             get
             {
-                return SteamVR_Actions.default_Bool_RThumbstickLeft;
+                return SteamVR_Actions.default_V1_Trigger;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_RThumbstickRight
+        public virtual SteamVR_Action_Single V1_Grip
         {
             get
             {
-                return SteamVR_Actions.default_Bool_RThumbstickRight;
+                return SteamVR_Actions.default_V1_Grip;
             }
         }
         
-        public virtual SteamVR_Action_Boolean Bool_LTrigger
+        public virtual SteamVR_Action_Boolean Bool_ButtonThumbstick
         {
             get
             {
-                return SteamVR_Actions.default_Bool_LTrigger;
-            }
-        }
-        
-        public virtual SteamVR_Action_Boolean Bool_LGrip
-        {
-            get
-            {
-                return SteamVR_Actions.default_Bool_LGrip;
-            }
-        }
-        
-        public virtual SteamVR_Action_Single V1_LTrigger
-        {
-            get
-            {
-                return SteamVR_Actions.default_V1_LTrigger;
-            }
-        }
-        
-        public virtual SteamVR_Action_Single V1_LGrip
-        {
-            get
-            {
-                return SteamVR_Actions.default_V1_LGrip;
-            }
-        }
-        
-        public virtual SteamVR_Action_Boolean Bool_RTrigger
-        {
-            get
-            {
-                return SteamVR_Actions.default_Bool_RTrigger;
-            }
-        }
-        
-        public virtual SteamVR_Action_Boolean Bool_RGrip
-        {
-            get
-            {
-                return SteamVR_Actions.default_Bool_RGrip;
-            }
-        }
-        
-        public virtual SteamVR_Action_Single V1_RTrigger
-        {
-            get
-            {
-                return SteamVR_Actions.default_V1_RTrigger;
-            }
-        }
-        
-        public virtual SteamVR_Action_Single V1_RGrip
-        {
-            get
-            {
-                return SteamVR_Actions.default_V1_RGrip;
+                return SteamVR_Actions.default_Bool_ButtonThumbstick;
             }
         }
         
