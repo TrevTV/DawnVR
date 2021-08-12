@@ -132,7 +132,7 @@ namespace DawnVR.Modules.VR
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
                     break;
                 case eGameMode.kDialog:
-                    throw new System.NotImplementedException();
+                    // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
                 case eGameMode.kFreeRoam:
                     SetParent(cachedChloe.transform);
                     break;

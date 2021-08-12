@@ -41,6 +41,8 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
 
             // Highlight Manager
+            PatchPre(typeof(T_C3DD66D9).GetMethod("OnDisable"), "OnCharControllerDisable");
+            PatchPre(typeof(T_244D769F).GetMethod("Interact"), "HotspotObjectInteract");
             PatchPre(typeof(T_1C1609D7).GetMethod("Update"), "CUICameraRelativeUpdate");
             PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), "CUIAnchorUpdatePosition");
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen"); // HotSpotUI
@@ -367,6 +369,31 @@ namespace DawnVR.Modules
             }
             return false;
         }
+
+        public static bool OnCharControllerDisable(T_C3DD66D9 __instance)
+        {
+            // todo: bad solution to prevent the game from disabling the CharController gameobject
+            MelonCoroutines.Start(CoCharDisable(__instance));
+            return false;
+        }
+
+        private static System.Collections.IEnumerator CoCharDisable(T_C3DD66D9 __instance)
+        {
+            __instance.enabled = true;
+            float timeElapsed = 0;
+            while (__instance.gameObject.activeInHierarchy)
+            {
+                yield return new WaitForEndOfFrame();
+                timeElapsed += Time.deltaTime;
+                MelonLogger.Msg(timeElapsed);
+                if (timeElapsed > 1)
+                    yield break;
+            }
+            yield return new WaitForEndOfFrame();
+            __instance.gameObject.SetActive(true);
+        }
+
+        public static void HotspotObjectInteract(T_6FD30C1C _1BAF664A9) => _1BAF664A9.m_lookAt = null;
 
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
