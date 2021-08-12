@@ -129,7 +129,9 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kCustomization:
                     throw new System.NotImplementedException();
                 case eGameMode.kCutscene:
-                    // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
+					// todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
+					if (transform.parent == cachedChloe.transform)
+						SetParent(null, null, false);
                     break;
                 case eGameMode.kDialog:
                     // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
