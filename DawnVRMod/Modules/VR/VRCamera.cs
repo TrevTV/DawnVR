@@ -5,6 +5,7 @@ namespace DawnVR.Modules.VR
     internal class VRCamera : MonoBehaviour
     {
         public Camera Component;
+        public bool HasPostProcessing;
         public RenderTexture RenderToVRTexture;
 
         private Camera uiCamera;

@@ -31,7 +31,6 @@ namespace DawnVR.Modules
 
             // Disable Idling
             PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
 
             // Rig Parent Updating
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), "UnloadCurrentLevel");
@@ -47,6 +46,12 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen"); // HotSpotUI
             PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), "IsInteractOnScreen"); // InteractUI
             // todo: i have no clue what "HoverObjectUI" is but it also has a CheckOnScreen function
+
+            // Misc
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+            //todo: post processing if i can ever figure out how to block out certain components
+            //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
+            //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
         }
 
         private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
@@ -284,46 +289,6 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void PostCharControllerStart(T_C3DD66D9 __instance)
-        {
-            #region Disable Idling
-
-            AnimationClip clip = new AnimationClip();
-            clip.name = "empty_anim";
-            clip.legacy = true;
-            __instance.m_animation.AddClip(clip, "empty_anim");
-            VRRig.Instance?.UpdateCachedChloe(__instance);
-
-            foreach (AnimationState state in __instance.m_animStates)
-            {
-                if (state.name.ToLower().Contains("idle"))
-                {
-                    state.weight = 0;
-                    state.speed = 0;
-                    state.time = 0;
-                }
-            }
-
-            #endregion
-
-            #region Add Hand Material
-
-            Material material = null;
-            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
-                if (possibleMat != null)
-                    material = possibleMat;
-
-                sMesh.sharedMesh = null;
-            }
-            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
-            VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
-
-            #endregion
-        }
-
         #endregion
 
         #region Rig Parent Updating
@@ -431,6 +396,77 @@ namespace DawnVR.Modules
             }
             __result = false;
             return false;
+        }
+
+        #endregion
+
+        #region Misc
+
+        public static void PostCharControllerStart(T_C3DD66D9 __instance)
+        {
+            #region Disable Idling
+
+            AnimationClip clip = new AnimationClip();
+            clip.name = "empty_anim";
+            clip.legacy = true;
+            __instance.m_animation.AddClip(clip, "empty_anim");
+            VRRig.Instance?.UpdateCachedChloe(__instance);
+
+            foreach (AnimationState state in __instance.m_animStates)
+            {
+                if (state.name.ToLower().Contains("idle"))
+                {
+                    state.weight = 0;
+                    state.speed = 0;
+                    state.time = 0;
+                }
+            }
+
+            #endregion
+
+            #region Add Hand Material
+
+            Material material = null;
+            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
+                if (possibleMat != null)
+                    material = possibleMat;
+
+                sMesh.sharedMesh = null;
+            }
+            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+            VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
+
+            #endregion
+        }
+
+        public static void SlaveCameraStart(T_4D93A7F7 __instance)
+        {
+            if (!VRRig.Instance.Camera.HasPostProcessing)
+            {
+                UnityEngine._1F1547F66.T_190FC323 originalProc = GameObject.FindObjectOfType<UnityEngine._1F1547F66.T_190FC323>();
+                UnityEngine._1F1547F66.T_190FC323 postProc = VRRig.Instance.Camera.gameObject.AddComponent<UnityEngine._1F1547F66.T_190FC323>();
+                CopyComponentVariables(originalProc, postProc);
+                VRRig.Instance.Camera.HasPostProcessing = true;
+                MelonLogger.Msg("Copied post processing component!");
+            }
+        }
+
+        public static void AddPPComponent(UnityEngine._1F1547F66.T_2AEBE7B4 _1CE10DFDE)
+        {
+            MelonLogger.Msg("hi");
+            if (_1CE10DFDE == null)
+                MelonLogger.Msg("whoop");
+            else
+                MelonLogger.Msg("nice");
+        }
+
+        private static void CopyComponentVariables(Component original, Component newCopy)
+        {
+            foreach (FieldInfo info in original.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+                info.SetValue(newCopy, info.GetValue(original));
         }
 
         #endregion
