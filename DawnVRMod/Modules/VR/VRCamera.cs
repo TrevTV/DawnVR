@@ -26,7 +26,5 @@ namespace DawnVR.Modules.VR
 
             #endregion
         }
-
-        private void OnDestroy() => Destroy(uiRenderer.gameObject);
     }
 }
