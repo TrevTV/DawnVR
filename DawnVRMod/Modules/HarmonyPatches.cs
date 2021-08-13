@@ -414,7 +414,7 @@ namespace DawnVR.Modules
             Material material = null;
             foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms_TShirt"));
+                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
                 if (possibleMat != null)
                     material = possibleMat;
 
@@ -425,14 +425,6 @@ namespace DawnVR.Modules
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
 
             #endregion
-
-            //__instance.m_rotateTrans = VRRig.Instance.transform;
-        }
-
-        public static bool CharControllerGetCam(ref T_884A92DB __result)
-        {
-            __result = VRRig.Instance.Camera.FollowCam;
-            return false;
         }
 
         public static void SlaveCameraStart(T_4D93A7F7 __instance)
@@ -474,12 +466,21 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), nameof(ReturnTrue));
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
+            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
 
             // didnt work too well
             /*MethodInfo methodInfo = typeof(T_190FC323).GetMethod("_16BF5D9E3", HarmonyLib.AccessTools.all).MakeGenericMethod(typeof(T_2AEBE7B4));
             var processor = HarmonyInstance.CreateProcessor(methodInfo);
             processor.AddPrefix(new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches), nameof(Test)));
             processor.Patch();*/
+        }
+
+        public static void OnSetMode2(bool __result, eGameMode _1C57B7248)
+        {
+            if (__result)
+            {
+                MelonLogger.Msg("Game successfully updated to mode " + _1C57B7248);
+            }
         }
 
         public static bool ReturnTrue(ref bool __result)

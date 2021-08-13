@@ -145,11 +145,11 @@ namespace DawnVR.Modules.VR
 					// todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
 					if (transform.parent == cachedChloe.transform)
 						SetParent(null, null, false);
-                    break;
+					break;
                 case eGameMode.kDialog:
                     // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
                 case eGameMode.kFreeRoam:
-                    SetParent(cachedChloe.transform);
+					SetParent(cachedChloe.transform);
                     break;
                 case eGameMode.kLoading:
                     break;
