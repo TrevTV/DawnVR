@@ -24,7 +24,7 @@ namespace DawnVR.Modules
 
             // Input Handling
             PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(InputManagerInit));
-            //PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
+            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum));
             PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState));
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
@@ -53,8 +53,6 @@ namespace DawnVR.Modules
             //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
             //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
         }
-
-        private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
 
         #region Debug Stuff
 
@@ -87,39 +85,26 @@ namespace DawnVR.Modules
 
         #region Input Handling
 
+        private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
+        private static readonly FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
+
         public static void InputManagerInit(T_6FCAE66C __instance)
-        {
-            // this was me testing a mono harmony bug, ignore
-            /*MelonLogger.Msg("Force setting input manager to Xbox One (try catch)");
-            try
-            {
-                typeof(T_6FCAE66C).GetField("_1C6FBAE09").SetValue(__instance, eControlType.kXboxOne);
-            }
-            catch (Exception e) { MelonLogger.Msg(e); }
-            MelonLogger.Msg("ForceSet attempt 2 (notrycatch)");
-            typeof(T_6FCAE66C).GetField("_1C6FBAE09").SetValue(__instance, eControlType.kXboxOne);
-            MelonLogger.Msg("done");*/
-            typeof(T_6FCAE66C).GetField("_1C6FBAE09", HarmonyLib.AccessTools.all).SetValue(__instance, eControlType.kXboxOne);
-        }
+            => typeof(T_6FCAE66C).GetField("_1C6FBAE09", HarmonyLib.AccessTools.all).SetValue(__instance, eControlType.kXboxOne);
 
         public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
         {
-            // todo: somehow implement using the Camera to change direction like in other locomotion vr games
-            /*if (_13F806F29 != __instance.m_moveDirection)
+            CharControl_TargetRot.SetValue(__instance, Quaternion.Euler(0, VRRig.Instance.Camera.transform.eulerAngles.y, 0));
+            if (_13F806F29 != __instance.m_moveDirection)
             {
                 __instance.m_moveDirection = (__instance.m_nonNormalMoveDirection = _13F806F29);
                 __instance.m_moveDirection.Normalize();
                 CharControl_WorldAngle.SetValue(__instance, Vector3.Angle(Vector3.forward, __instance.m_moveDirection));
                 if (_13F806F29.x < 0f)
                 {
-                    //__instance._15B7EF7A4 = 360f - __instance._15B7EF7A4;
                     CharControl_WorldAngle.SetValue(__instance, 360f - (float)CharControl_WorldAngle.GetValue(__instance));
                 }
             }
-
-            return false;*/
-
-            return true;
+            return false;
         }
 
         public static eInputState GetInputState_Binding(T_6FCAE66C inputManInstance, T_9005A419 binding)
@@ -440,6 +425,14 @@ namespace DawnVR.Modules
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
 
             #endregion
+
+            //__instance.m_rotateTrans = VRRig.Instance.transform;
+        }
+
+        public static bool CharControllerGetCam(ref T_884A92DB __result)
+        {
+            __result = VRRig.Instance.Camera.FollowCam;
+            return false;
         }
 
         public static void SlaveCameraStart(T_4D93A7F7 __instance)

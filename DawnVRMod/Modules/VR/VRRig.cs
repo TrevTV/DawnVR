@@ -5,18 +5,31 @@ namespace DawnVR.Modules.VR
     internal class VRRig : MonoBehaviour
     {
         public static VRRig Instance;
-        public VRCamera Camera;
-        public VRInput Input;
-        private T_C3DD66D9 cachedChloe;
 
-        private void Start()
+		public Transform ChloeTransform => cachedChloe?.transform;
+		public VRCamera Camera;
+        public VRInput Input;
+
+		private float turnSpeed = 4;
+		private T_C3DD66D9 cachedChloe;
+		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
+
+		private void Start()
         {
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
+
+            Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
         }
 
-		private void Update()
+        private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
+		{
+			transform.Rotate(new Vector3(0, axis.x * turnSpeed, 0));
+			CharControl_TargetRot.SetValue(cachedChloe, transform.rotation);
+		}
+
+        private void Update()
         {
 			#region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
