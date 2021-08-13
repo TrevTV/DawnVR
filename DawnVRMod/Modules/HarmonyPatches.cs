@@ -19,36 +19,36 @@ namespace DawnVR.Modules
         {
             HarmonyInstance = hInstance;
             // Debug Stuff
-            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
-            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
+            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
+            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
 
             // Input Handling
-            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), "InputManagerInit");
-            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
-            PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), "GetInputState_Enum");
-            PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), "GetButtonState");
-            PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), "GetAxis");
+            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(InputManagerInit));
+            //PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
+            PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum));
+            PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState));
+            PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
 
             // Disable Idling
-            PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), "GetIdleExtraName");
+            PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), nameof(GetIdleExtraName));
 
             // Rig Parent Updating
-            PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), "UnloadCurrentLevel");
-            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), "OnSetMode");
+            PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel));
+            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode));
 
             // Objective Manager
-            PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), "SetReminderTexture");
+            PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), nameof(SetReminderTexture));
 
             // Highlight Manager
-            PatchPre(typeof(T_244D769F).GetMethod("Interact"), "HotspotObjectInteract");
-            PatchPre(typeof(T_1C1609D7).GetMethod("Update"), "CUICameraRelativeUpdate");
-            PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), "CUIAnchorUpdatePosition");
-            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), "IsHotspotOnScreen"); // HotSpotUI
-            PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), "IsInteractOnScreen"); // InteractUI
+            PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract));
+            PatchPre(typeof(T_1C1609D7).GetMethod("Update"), nameof(CUICameraRelativeUpdate));
+            PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition));
+            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI
+            PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
             // todo: i have no clue what "HoverObjectUI" is but it also has a CheckOnScreen function
 
             // Misc
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), "PostCharControllerStart");
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             //todo: post processing if i can ever figure out how to block out certain components
             //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
             //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
@@ -477,10 +477,16 @@ namespace DawnVR.Modules
         {
             HarmonyInstance = hInstance;
             // Debug Stuff
-            PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), "ReturnTrue");
-            PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), "ReturnTrue");
-            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), "DisableSplashScreen");
-            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), "CutsceneSkipPressed");
+            PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), nameof(ReturnTrue));
+            PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), nameof(ReturnTrue));
+            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
+            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
+
+            // didnt work too well
+            /*MethodInfo methodInfo = typeof(T_190FC323).GetMethod("_16BF5D9E3", HarmonyLib.AccessTools.all).MakeGenericMethod(typeof(T_2AEBE7B4));
+            var processor = HarmonyInstance.CreateProcessor(methodInfo);
+            processor.AddPrefix(new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches), nameof(Test)));
+            processor.Patch();*/
         }
 
         public static bool ReturnTrue(ref bool __result)
