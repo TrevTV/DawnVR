@@ -50,6 +50,7 @@ namespace DawnVR.Modules
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
+            PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), "ReplaceScrollingText");
             //todo: post processing if i can ever figure out how to block out certain components
             //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
             //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
@@ -426,6 +427,12 @@ namespace DawnVR.Modules
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
 
             #endregion
+        }
+
+        public static bool ReplaceScrollingText(ref string __result)
+        {
+            __result = "Join the Flat2VR Discord (https://flat2vr.com) for more Flatscreen To VR mods!";
+            return false;
         }
 
         public static void SlaveCameraStart(T_4D93A7F7 __instance)
