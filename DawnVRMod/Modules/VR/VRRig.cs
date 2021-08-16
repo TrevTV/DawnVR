@@ -10,6 +10,7 @@ namespace DawnVR.Modules.VR
 		public VRCamera Camera;
         public VRInput Input;
 
+		// todo: snap turning?
 		private float turnSpeed = 4;
 		private T_C3DD66D9 cachedChloe;
 		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
@@ -142,13 +143,10 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kCustomization:
                     throw new System.NotImplementedException();
                 case eGameMode.kCutscene:
-					// todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
-					/*if (transform.parent == cachedChloe.transform)
-						SetParent(null, null, false);*/
-					MelonLoader.MelonLogger.Msg("before setparent");
-					SetParent(((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null)).transform);
-					MelonLoader.MelonLogger.Msg("after setparent, enabling mesh");
-					SetMeshActive(true);
+                    // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
+                    if (transform.parent == cachedChloe.transform)
+                        SetParent(null, null, false);
+                    SetMeshActive(true);
 					break;
                 case eGameMode.kDialog:
                     // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)

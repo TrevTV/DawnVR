@@ -51,6 +51,7 @@ namespace DawnVR.Modules
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), "ReplaceScrollingText");
+            PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), "SetCameraPosition");
             //todo: post processing if i can ever figure out how to block out certain components
             //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
             //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
@@ -391,13 +392,14 @@ namespace DawnVR.Modules
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
+            VRRig.Instance?.UpdateCachedChloe(__instance);
+
             #region Disable Idling
 
             AnimationClip clip = new AnimationClip();
             clip.name = "empty_anim";
             clip.legacy = true;
             __instance.m_animation.AddClip(clip, "empty_anim");
-            VRRig.Instance?.UpdateCachedChloe(__instance);
 
             foreach (AnimationState state in __instance.m_animStates)
             {
@@ -427,6 +429,18 @@ namespace DawnVR.Modules
             VRRig.Instance.transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>().sharedMaterial = material;
 
             #endregion
+        }
+
+        public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
+        {
+            if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
+            {
+                VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
+                Vector3 rot = _13A97A3A2.transform.eulerAngles;
+                rot.x = 0;
+                rot.z = 0;
+                VRRig.Instance.transform.eulerAngles = rot;
+            }
         }
 
         public static bool ReplaceScrollingText(ref string __result)
