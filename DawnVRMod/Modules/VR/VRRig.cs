@@ -143,14 +143,20 @@ namespace DawnVR.Modules.VR
                     throw new System.NotImplementedException();
                 case eGameMode.kCutscene:
 					// todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
-					if (transform.parent == cachedChloe.transform)
-						SetParent(null, null, false);
+					/*if (transform.parent == cachedChloe.transform)
+						SetParent(null, null, false);*/
+					MelonLoader.MelonLogger.Msg("before setparent");
+					SetParent(((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null)).transform);
+					MelonLoader.MelonLogger.Msg("after setparent, enabling mesh");
+					SetMeshActive(true);
 					break;
                 case eGameMode.kDialog:
                     // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
+					// it may not need anything for the most part
                 case eGameMode.kFreeRoam:
 					SetParent(cachedChloe.transform);
-                    break;
+					SetMeshActive(false);
+					break;
                 case eGameMode.kLoading:
                     break;
                 case eGameMode.kMainMenu:
@@ -185,5 +191,11 @@ namespace DawnVR.Modules.VR
             if (updateParent)
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }
+
+		public void SetMeshActive(bool active)
+        {
+			foreach (SkinnedMeshRenderer sMesh in cachedChloe.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+				sMesh.enabled = active;
+		}
     }
 }

@@ -8,6 +8,7 @@ using DawnVR.Modules.VR;
 
 namespace DawnVR.Modules
 {
+    // todo: possibly separate patches by function (some moved to VRRig, VRCamera, etc)
     internal static class HarmonyPatches
     {
         private static HarmonyLib.Harmony HarmonyInstance;
@@ -418,7 +419,7 @@ namespace DawnVR.Modules
                 if (possibleMat != null)
                     material = possibleMat;
 
-                sMesh.sharedMesh = null;
+                sMesh.enabled = false;
             }
             material.hideFlags = HideFlags.DontUnloadUnusedAsset;
             VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
