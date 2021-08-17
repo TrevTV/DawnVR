@@ -181,19 +181,19 @@ namespace DawnVRMod.Modules.VR
 				return;
 			}
 
-			/*if (m_DepthOfField != null && m_DepthOfField.active)
-			{
-				if (m_dofPass == null)
-					m_dofPass = gameObject.GetComponent<T_C0F7FD02>();
-				if (m_dofPass == null)
-					m_dofPass = gameObject.AddComponent<T_C0F7FD02>();
+            if (m_DepthOfField != null && m_DepthOfField.active)
+            {
+                if (m_dofPass == null)
+                    m_dofPass = gameObject.GetComponent<T_C0F7FD02>();
+                if (m_dofPass == null)
+                    m_dofPass = gameObject.AddComponent<T_C0F7FD02>();
 
-				m_dofPass.enabled = true;
-			}
-			else if (m_dofPass)
-				m_dofPass.enabled = false;*/
+                m_dofPass.enabled = true;
+            }
+            else if (m_dofPass)
+                m_dofPass.enabled = false;
 
-			bool someFlagIDontKnowWhat = false;
+            bool someFlagIDontKnowWhat = false;
 
 			Material material = m_MaterialFactory.Get("Hidden/Post FX/Uber Shader");
 			material.shaderKeywords = null;

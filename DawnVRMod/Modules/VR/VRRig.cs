@@ -142,8 +142,8 @@ namespace DawnVR.Modules.VR
 			switch (gameMode)
             {
                 case eGameMode.kCustomization:
-                    throw new System.NotImplementedException();
-                case eGameMode.kCutscene:
+					break;
+				case eGameMode.kCutscene:
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
@@ -167,10 +167,10 @@ namespace DawnVR.Modules.VR
                     break;
                 case eGameMode.kPosterView:
 					// todo: uh, for some reason i get moved to the main camera position when this occurs, might just be me throwing an error but for rn i am not 100% sure
-                    throw new System.NotImplementedException();
+					break;
                 case eGameMode.kVideo:
-                    throw new System.NotImplementedException();
-            }
+					break;
+			}
         }
 
         private void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
