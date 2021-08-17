@@ -54,10 +54,8 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), "ReplaceScrollingText");
             PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), "SetCameraPosition");
-            //todo: post processing if i can ever figure out how to block out certain components
+            //todo: make post processing look nicer
             PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), "OnPPEnable");
-            //PatchPost(typeof(T_4D93A7F7).GetMethod("Start", HarmonyLib.AccessTools.all), "SlaveCameraStart");
-            //PatchPre(typeof(UnityEngine._1F1547F66.T_190FC323).GetMethod("_16BF5D9E3").MakeGenericMethod(typeof(UnityEngine._1F1547F66.T_2AEBE7B4)), "AddPPComponent");
         }
 
         #region Debug Stuff
@@ -452,64 +450,14 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool OnPPEnable(T_190FC323 __instance)
+        public static void OnPPEnable(T_190FC323 __instance)
         {
-            MelonLogger.Msg("hi");
-            __instance._1C83DC291 = new Dictionary<Type, KeyValuePair<UnityEngine.Rendering.CameraEvent, UnityEngine.Rendering.CommandBuffer>>(); // commandbuffers
-            __instance._19D648ACC = new T_FBB0748(); // materialfactory
-            __instance._1DDE7740 = new T_1E4B6FBC(); // rendertexturefactory
-            __instance._1D8D884E6 = new T_45EF8C6F(); // postprocessingcontext
-            __instance._15FA79034 = __instance.GetComponent<Camera>(); // thiscamera
-            __instance._1B80BDD95 = new List<T_2AEBE7B4>(); // components list
-            //__instance._12972CC38 = __instance._16BF5D9E3<T_9A1222A0>(new T_9A1222A0()); // debug views
-            //__instance._16C54F6DE = __instance._16BF5D9E3<T_38A0EF37>(new T_38A0EF37()); // ambient occlusion
-            //__instance._175ECB362 = __instance._16BF5D9E3<T_500C5913>(new T_500C5913()); // screen space reflection
-            //__instance._12CA084E4 = __instance._16BF5D9E3<T_DA9AE9BD>(new T_DA9AE9BD()); // motion blur
-            //__instance._1FCD61565 = __instance._16BF5D9E3<T_EE3DF9EA>(new T_EE3DF9EA()); // taa
-            //__instance._1386E7763 = __instance._16BF5D9E3<T_DA260798>(new T_DA260798()); // eye adaption
-            //__instance._1804C8DCE = __instance._16BF5D9E3<T_94D1D537>(new T_94D1D537()); // bloom
-            //__instance._17D6C7E28 = __instance._16BF5D9E3<T_67FB24C9>(new T_67FB24C9()); // chromatic aberration
-            //__instance._18A0FBF35 = __instance._16BF5D9E3<T_6246D46A>(new T_6246D46A()); // color strokes
-            //__instance._14B96DD42 = __instance._16BF5D9E3<T_9029920B>(new T_9029920B()); // color grading
-            //__instance._1113B4CAF = __instance._16BF5D9E3<T_BE10C434>(new T_BE10C434()); // userlut
-            //__instance._11410697F = __instance._16BF5D9E3<T_5D13383C>(new T_5D13383C()); // vignette
-            //__instance._1F11A5295 = __instance._16BF5D9E3<T_24E2ACA2>(new T_24E2ACA2()); // fxaa
-            //__instance._1866C41D = __instance._16BF5D9E3<T_96C502AA>(new T_96C502AA()); // depth of field
-            //__instance._17932F668 = new Dictionary<T_2AEBE7B4, bool>(); // component states
-            foreach (T_2AEBE7B4 key in __instance._1B80BDD95)
-            {
-                __instance._17932F668.Add(key, false);
-            }
-            __instance.useGUILayout = false;
-            MelonLogger.Msg("done");
-            return false;
-        }
+            if (__instance.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
+                return;
 
-        public static void SlaveCameraStart(T_4D93A7F7 __instance)
-        {
-            if (!VRRig.Instance.Camera.HasPostProcessing)
-            {
-                UnityEngine._1F1547F66.T_190FC323 originalProc = GameObject.FindObjectOfType<UnityEngine._1F1547F66.T_190FC323>();
-                UnityEngine._1F1547F66.T_190FC323 postProc = VRRig.Instance.Camera.gameObject.AddComponent<UnityEngine._1F1547F66.T_190FC323>();
-                CopyComponentVariables(originalProc, postProc);
-                VRRig.Instance.Camera.HasPostProcessing = true;
-                MelonLogger.Msg("Copied post processing component!");
-            }
-        }
-
-        public static void AddPPComponent(UnityEngine._1F1547F66.T_2AEBE7B4 _1CE10DFDE)
-        {
-            MelonLogger.Msg("hi");
-            if (_1CE10DFDE == null)
-                MelonLogger.Msg("whoop");
-            else
-                MelonLogger.Msg("nice");
-        }
-
-        private static void CopyComponentVariables(Component original, Component newCopy)
-        {
-            foreach (FieldInfo info in original.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
-                info.SetValue(newCopy, info.GetValue(original));
+            __instance.enabled = false;
+            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<DawnVRMod.Modules.VR.VRPostProcessing>();
+            vpp.profile = __instance.profile;
         }
 
         #endregion
@@ -525,12 +473,6 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
-
-            // didnt work too well
-            /*MethodInfo methodInfo = typeof(T_190FC323).GetMethod("_16BF5D9E3", HarmonyLib.AccessTools.all).MakeGenericMethod(typeof(T_2AEBE7B4));
-            var processor = HarmonyInstance.CreateProcessor(methodInfo);
-            processor.AddPrefix(new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches), nameof(Test)));
-            processor.Patch();*/
         }
 
         public static void OnSetMode2(bool __result, eGameMode _1C57B7248)

@@ -49,19 +49,19 @@ namespace DawnVRMod.Modules.VR
 			m_Camera = GetComponent<Camera>();
 			m_Components = new List<T_2AEBE7B4>();
 			m_DebugViews = AddComponent(new T_9A1222A0());
-			m_AmbientOcclusion = AddComponent(new T_38A0EF37());
+			//m_AmbientOcclusion = AddComponent(new T_38A0EF37());
 			m_ScreenSpaceReflection = AddComponent(new T_500C5913());
-			m_MotionBlur = AddComponent(new T_DA9AE9BD());
+			//m_MotionBlur = AddComponent(new T_DA9AE9BD());
 			m_Taa = AddComponent(new T_EE3DF9EA());
-			m_EyeAdaptation = AddComponent(new T_DA260798());
-			m_Bloom = AddComponent(new T_94D1D537());
-			m_ChromaticAberration = AddComponent(new T_67FB24C9());
-			m_colorStrokes = AddComponent(new T_6246D46A());
-			m_ColorGrading = AddComponent(new T_9029920B());
+			//m_EyeAdaptation = AddComponent(new T_DA260798());
+			//m_Bloom = AddComponent(new T_94D1D537());
+			//m_ChromaticAberration = AddComponent(new T_67FB24C9());
+			//m_colorStrokes = AddComponent(new T_6246D46A());
+			//m_ColorGrading = AddComponent(new T_9029920B());
 			m_UserLut = AddComponent(new T_BE10C434());
-			m_Vignette = AddComponent(new T_5D13383C());
+			//m_Vignette = AddComponent(new T_5D13383C());
 			m_Fxaa = AddComponent(new T_24E2ACA2());
-			m_DepthOfField = AddComponent(new T_96C502AA());
+			//m_DepthOfField = AddComponent(new T_96C502AA());
 			m_ComponentStates = new Dictionary<T_2AEBE7B4, bool>();
 			foreach (T_2AEBE7B4 key in m_Components)
 				m_ComponentStates.Add(key, false);
@@ -113,20 +113,20 @@ namespace DawnVRMod.Modules.VR
 			postProcessingContext.materialFactory = m_MaterialFactory;
 			postProcessingContext.camera = m_Camera;
 
-			m_DebugViews.Init(postProcessingContext, profile.debugViews);
-			m_AmbientOcclusion.Init(postProcessingContext, profile.ambientOcclusion);
-			m_ScreenSpaceReflection.Init(postProcessingContext, profile.screenSpaceReflection);
-			m_MotionBlur.Init(postProcessingContext, profile.motionBlur);
-			m_Taa.Init(postProcessingContext, profile.antialiasing);
-			m_EyeAdaptation.Init(postProcessingContext, profile.eyeAdaptation);
-			m_Bloom.Init(postProcessingContext, profile.bloom);
-			m_colorStrokes.Init(postProcessingContext, profile.colorStrokes);
-			m_ChromaticAberration.Init(postProcessingContext, profile.chromaticAberration);
-			m_ColorGrading.Init(postProcessingContext, profile.colorGrading);
-			m_UserLut.Init(postProcessingContext, profile.userLut);
-			m_Vignette.Init(postProcessingContext, profile.vignette);
-			m_Fxaa.Init(postProcessingContext, profile.antialiasing);
-			m_DepthOfField.Init(postProcessingContext, profile.depthOfField);
+			m_DebugViews?.Init(postProcessingContext, profile.debugViews);
+			m_AmbientOcclusion?.Init(postProcessingContext, profile.ambientOcclusion);
+			m_ScreenSpaceReflection?.Init(postProcessingContext, profile.screenSpaceReflection);
+			m_MotionBlur?.Init(postProcessingContext, profile.motionBlur);
+			m_Taa?.Init(postProcessingContext, profile.antialiasing);
+			m_EyeAdaptation?.Init(postProcessingContext, profile.eyeAdaptation);
+			m_Bloom?.Init(postProcessingContext, profile.bloom);
+			m_colorStrokes?.Init(postProcessingContext, profile.colorStrokes);
+			m_ChromaticAberration?.Init(postProcessingContext, profile.chromaticAberration);
+			m_ColorGrading?.Init(postProcessingContext, profile.colorGrading);
+			m_UserLut?.Init(postProcessingContext, profile.userLut);
+			m_Vignette?.Init(postProcessingContext, profile.vignette);
+			m_Fxaa?.Init(postProcessingContext, profile.antialiasing);
+			m_DepthOfField?.Init(postProcessingContext, profile.depthOfField);
 
 			if (m_PreviousProfile != profile)
 			{
@@ -160,12 +160,15 @@ namespace DawnVRMod.Modules.VR
 		private void OnPreRender()
 		{
 			if (profile == null) return;
+			
+			if (m_DebugViews != null)
+				TryExecuteCommandBuffer(m_DebugViews);
+			if (m_AmbientOcclusion != null)
+				TryExecuteCommandBuffer(m_AmbientOcclusion);
+			if (m_ScreenSpaceReflection != null)
+				TryExecuteCommandBuffer(m_ScreenSpaceReflection);
 
-			TryExecuteCommandBuffer(m_DebugViews);
-			TryExecuteCommandBuffer(m_AmbientOcclusion);
-			TryExecuteCommandBuffer(m_ScreenSpaceReflection);
-
-			if (!m_RenderingInSceneView)
+			if (!m_RenderingInSceneView && m_MotionBlur != null)
 				TryExecuteCommandBuffer(m_MotionBlur);
 		}
 
@@ -178,7 +181,7 @@ namespace DawnVRMod.Modules.VR
 				return;
 			}
 
-			if (m_DepthOfField != null && m_DepthOfField.active)
+			/*if (m_DepthOfField != null && m_DepthOfField.active)
 			{
 				if (m_dofPass == null)
 					m_dofPass = gameObject.GetComponent<T_C0F7FD02>();
@@ -188,7 +191,7 @@ namespace DawnVRMod.Modules.VR
 				m_dofPass.enabled = true;
 			}
 			else if (m_dofPass)
-				m_dofPass.enabled = false;
+				m_dofPass.enabled = false;*/
 
 			bool someFlagIDontKnowWhat = false;
 
@@ -204,30 +207,30 @@ namespace DawnVRMod.Modules.VR
 			}
 
 			Texture texture = T_67A00CDD.whiteTexture;
-			if (m_EyeAdaptation.active)
+			if (m_EyeAdaptation != null && m_EyeAdaptation.active)
 			{
 				someFlagIDontKnowWhat = true;
 				texture = m_EyeAdaptation.Prepare(renderTexture, material);
 			}
 
 			material.SetTexture("_AutoExposure", texture);
-			if (m_Bloom.active)
+			if (m_Bloom != null && m_Bloom.active)
 			{
 				someFlagIDontKnowWhat = true;
 				m_Bloom.Prepare(renderTexture, material, texture);
 			}
 
-			someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_colorStrokes, material);
-			someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_ChromaticAberration, material);
-			someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_ColorGrading, material);
-			someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_UserLut, material);
+			if (m_colorStrokes != null) someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_colorStrokes, material);
+			if (m_ChromaticAberration != null) someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_ChromaticAberration, material);
+			if (m_ColorGrading != null) someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_ColorGrading, material);
+			if (m_UserLut != null) someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_UserLut, material);
 
-			if (!m_DepthOfField.active)
+			if (!(m_DepthOfField?.active ?? false) && m_Vignette != null)
 				someFlagIDontKnowWhat |= TryPrepareUberImageEffect(m_Vignette, material);
 
 			SetupCorners(material);
-			Material material2 = (!m_Fxaa.active) ? null : m_MaterialFactory.Get("Hidden/Post FX/FXAA");
-			if (m_Fxaa.active)
+			Material material2 = (!m_Fxaa?.active ?? false) ? null : m_MaterialFactory.Get("Hidden/Post FX/FXAA");
+			if (m_Fxaa?.active ?? false)
 			{
 				material2.shaderKeywords = null;
 				if (someFlagIDontKnowWhat)
@@ -246,7 +249,7 @@ namespace DawnVRMod.Modules.VR
 				Graphics.Blit(renderTexture, destination, material, 0);
 			}
 
-			if (!someFlagIDontKnowWhat && !m_Fxaa.active)
+			if (!someFlagIDontKnowWhat && !(m_Fxaa?.active ?? false))
 				Graphics.Blit(renderTexture, destination);
 
 			m_RenderTextureFactory.ReleaseAll();
@@ -255,7 +258,7 @@ namespace DawnVRMod.Modules.VR
 		private void OnPostRender()
 		{
 			if (profile == null || m_Camera == null) return;
-			if (!m_RenderingInSceneView && m_Taa.active && !profile.debugViews.willInterrupt)
+			if (!m_RenderingInSceneView && (m_Fxaa?.active ?? false) && !profile.debugViews.willInterrupt)
 				m_Context.camera.ResetProjectionMatrix();
 		}
 
