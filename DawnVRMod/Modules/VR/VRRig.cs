@@ -13,11 +13,11 @@ namespace DawnVR.Modules.VR
 		// todo: snap turning?
 		private float turnSpeed = 4;
 		private T_C3DD66D9 cachedChloe;
+		private CapsuleCollider chloeCollider;
 		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
 
 		private void Start()
         {
-			// todo: find out how to get the charactercontroller or whatever to follow the player rig
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
@@ -33,6 +33,13 @@ namespace DawnVR.Modules.VR
 
         private void Update()
         {
+			// todo: find out how to get the charactercontroller or whatever to follow the player rig
+			// test this
+			Vector3 center = chloeCollider.center;
+			center.x = Camera.transform.position.x;
+			center.z = Camera.transform.position.z;
+			chloeCollider.center = center;
+
 			#region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
 			T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
@@ -188,6 +195,7 @@ namespace DawnVR.Modules.VR
         public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
             cachedChloe = newChloe;
+			chloeCollider = cachedChloe.transform.Find("Reference/Hips").GetComponent<CapsuleCollider>();
             if (updateParent)
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }

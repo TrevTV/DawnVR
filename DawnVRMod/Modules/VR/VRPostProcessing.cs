@@ -41,7 +41,6 @@ namespace DawnVRMod.Modules.VR
 
 		private void OnEnable()
 		{
-			// todo: set public variables?
 			m_CommandBuffers = new Dictionary<Type, KeyValuePair<CameraEvent, CommandBuffer>>();
 			m_MaterialFactory = new T_FBB0748();
 			m_RenderTextureFactory = new T_1E4B6FBC();
