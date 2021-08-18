@@ -444,9 +444,17 @@ namespace DawnVR.Modules
             }
         }
 
+        private static readonly string[] scrollingTextOptions =
+        {
+            "Join the Flat2VR Discord (https://flat2vr.com) for more Flatscreen To VR mods!",
+            "Support me on Ko-fi! https://ko-fi.com/trevtv",
+            "I hope Deck Nine approves of this mod...",
+            "Thank you for trying my VR mod!"
+        };
+
         public static bool ReplaceScrollingText(ref string __result)
         {
-            __result = "Join the Flat2VR Discord (https://flat2vr.com) for more Flatscreen To VR mods!";
+            __result = scrollingTextOptions[UnityEngine.Random.Range(0, scrollingTextOptions.Length)];
             return false;
         }
 
