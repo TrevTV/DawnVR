@@ -34,11 +34,10 @@ namespace DawnVR.Modules.VR
         private void Update()
         {
 			// todo: find out how to get the charactercontroller or whatever to follow the player rig
-			// test this
-			Vector3 center = chloeCollider.center;
+			/*Vector3 center = chloeCollider.center;
 			center.x = Camera.transform.position.x;
 			center.z = Camera.transform.position.z;
-			chloeCollider.center = center;
+			chloeCollider.center = center;*/
 
 			#region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
@@ -154,8 +153,19 @@ namespace DawnVR.Modules.VR
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
+					// todo: this doesnt work for the "later, skip" cutscene?
                     SetMeshActive(true);
-					break;
+					Camera dawnCamera = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null));
+					if (dawnCamera != null)
+                    {
+                        transform.position = dawnCamera.transform.position - new Vector3(0, 1, 0);
+						Vector3 rot = dawnCamera.transform.eulerAngles;
+						rot.x = 0;
+						rot.z = 0;
+						transform.eulerAngles = rot;
+					}
+
+                    break;
                 case eGameMode.kDialog:
                     // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
 					// it may not need anything for the most part
