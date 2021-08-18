@@ -55,7 +55,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), "ReplaceScrollingText");
             PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), "SetCameraPosition");
             //todo: make post processing look nicer
-            PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), "OnPPEnable");
+            //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), "OnPPEnable");
         }
 
         #region Debug Stuff
