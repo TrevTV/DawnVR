@@ -2,5 +2,5 @@
 - DrBibop for the RoR2 mod and for giving me info on how he fixed it for RoR2 which led to me fixing this mess
 - elliotttate for some assistance in the Flatscreen to VR Modding Discord
 - Sinai for creating UnityExplorer which definitely helped speed up the process
-- Valve for creating an API which works when being applied out of editor
+- Valve for the SteamVR Unity Plugin (licensed under bsd 3)
 - alecpizz for helping me with some vr rig stuff
