@@ -10,9 +10,8 @@ namespace DawnVR.Modules.VR
 		public VRCamera Camera;
         public VRInput Input;
 
-		// todo: snap turning?
 		private T_C3DD66D9 cachedChloe;
-		private readonly float turnSpeed = 4;
+		private readonly float turnSpeed = 120;
 		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
 
 		private void Start()
@@ -26,8 +25,9 @@ namespace DawnVR.Modules.VR
 
         private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
-			// todo: rotate around the player camera instead of this
-			transform.Rotate(new Vector3(0, axis.x * turnSpeed, 0));
+			// todo: make turnSpeed configurable
+			// todo: snap turning? alec said i could just pass an angle as the third parameter of RotateAround (with no Time.deltaTime)
+			transform.RotateAround(Camera.transform.position, Vector3.up, turnSpeed * axis.x * Time.deltaTime);
 			CharControl_TargetRot.SetValue(cachedChloe, transform.rotation);
 		}
 
