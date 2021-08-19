@@ -11,8 +11,6 @@ namespace DawnVR.Modules.VR
         public VRInput Input;
 
 		private T_C3DD66D9 cachedChloe;
-		private readonly float turnSpeed = 120;
-		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
 
 		private void Start()
         {
@@ -20,20 +18,41 @@ namespace DawnVR.Modules.VR
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
 
-            Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
-        }
-
-        private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
-		{
-			// todo: make turnSpeed configurable
-			// todo: snap turning? alec said i could just pass an angle as the third parameter of RotateAround (with no Time.deltaTime)
-			transform.RotateAround(Camera.transform.position, Vector3.up, turnSpeed * axis.x * Time.deltaTime);
-			CharControl_TargetRot.SetValue(cachedChloe, transform.rotation);
+			if (Preferences.UseSmoothTurning)
+				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
+            else if (Preferences.UseSnapTurning)
+            {
+				Input.GetThumbstickLeft(VRInput.Hand.Right).onStateDown += OnThumbstickLeft;
+				Input.GetThumbstickRight(VRInput.Hand.Right).onStateDown += OnThumbstickRight;
+			}
 		}
 
-        private void Update()
+		#region Turning Stuff
+
+		private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
+		{
+			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
+			cachedChloe._11C77E995 = transform.rotation;
+		}
+
+		private void OnThumbstickLeft(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
+		{
+			// todo: test (goes for right aswell)
+			transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
+			cachedChloe._11C77E995 = transform.rotation;
+		}
+
+		private void OnThumbstickRight(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
+		{
+			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
+			cachedChloe._11C77E995 = transform.rotation;
+		}
+
+		#endregion
+
+		private void Update()
         {
-            // todo: find out how to get the charactercontroller or whatever to follow the player rig
+            // todo: find out how to get chloe's collision to follow the vr player
 
             #region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
@@ -165,8 +184,8 @@ namespace DawnVR.Modules.VR
 
                     break;
                 case eGameMode.kDialog:
-                    // todo: figure out how to handle this, its when talking with character (ex: talking to david and joyce)
-					// it may not need anything for the most part
+					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
+					break;
                 case eGameMode.kFreeRoam:
 					SetParent(cachedChloe.transform);
 					SetMeshActive(false);

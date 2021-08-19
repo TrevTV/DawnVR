@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DawnVR.Modules.VR
 {
     // really is just here to make things look slightly cleaner
-    // todo: limit this to just controls that the game needs
+    // not making specific contols as this should allow for the in-game remapping to work with vr controllers
     internal class VRInput
     {
         public SteamVR_Action_Boolean GetButtonA() => SteamVR_Actions.default_Bool_ButtonA;

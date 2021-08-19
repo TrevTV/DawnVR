@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using DawnVR.Modules.VR;
 using DawnVR.Modules;
-using UnityEngine;
 using MelonLoader;
 using System.Linq;
 using Valve.VR;
@@ -35,7 +34,8 @@ namespace DawnVR
                 return;
             }
 
-            Modules.Resources.Init();
+            Resources.Init();
+            Preferences.Init();
             HarmonyPatches.Init(HarmonyInstance);
         }
 
@@ -47,13 +47,9 @@ namespace DawnVR
                 MelonCoroutines.Start(InitSteamVR());
         }
 
-        public override void OnUpdate()
-        {
-        }
-
         private IEnumerator InitSteamVR()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new UnityEngine.WaitForSeconds(1f);
             steamInitRunning = true;
             SteamVR.Initialize(false);
 
@@ -75,7 +71,7 @@ namespace DawnVR
 
         private void CreateCameraRig()
         {
-            GameObject rig = GameObject.Instantiate(Modules.Resources.VRCameraRig);
+            UnityEngine.GameObject rig = UnityEngine.GameObject.Instantiate(Resources.VRCameraRig);
             if (!VRRig.Instance)
                 VRRig.Instance = rig.AddComponent<VRRig>();
         }
