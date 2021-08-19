@@ -11,9 +11,8 @@ namespace DawnVR.Modules.VR
         public VRInput Input;
 
 		// todo: snap turning?
-		private float turnSpeed = 4;
 		private T_C3DD66D9 cachedChloe;
-		private CapsuleCollider chloeCollider;
+		private readonly float turnSpeed = 4;
 		private static readonly System.Reflection.FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
 
 		private void Start()
@@ -27,21 +26,18 @@ namespace DawnVR.Modules.VR
 
         private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
+			// todo: rotate around the player camera instead of this
 			transform.Rotate(new Vector3(0, axis.x * turnSpeed, 0));
 			CharControl_TargetRot.SetValue(cachedChloe, transform.rotation);
 		}
 
         private void Update()
         {
-			// todo: find out how to get the charactercontroller or whatever to follow the player rig
-			/*Vector3 center = chloeCollider.center;
-			center.x = Camera.transform.position.x;
-			center.z = Camera.transform.position.z;
-			chloeCollider.center = center;*/
+            // todo: find out how to get the charactercontroller or whatever to follow the player rig
 
-			#region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
+            #region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
-			T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
+            T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
 
 			if (!window.gameObject.activeInHierarchy) return;
 
@@ -144,6 +140,8 @@ namespace DawnVR.Modules.VR
 			// prevents double renders of ui elements, both in headset, and on screen
 			T_D4EA31BB.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
 			T_D4EA31BB.s_ui3DCamera.m_camera.targetDisplay = 10;
+			// disable unused camera, improves performance
+			T_34182F31.main.enabled = false;
 
 			switch (gameMode)
             {
@@ -205,7 +203,6 @@ namespace DawnVR.Modules.VR
         public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
             cachedChloe = newChloe;
-			chloeCollider = cachedChloe.transform.Find("Reference/Hips").GetComponent<CapsuleCollider>();
             if (updateParent)
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }
