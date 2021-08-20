@@ -165,10 +165,9 @@ namespace DawnVR.Modules.VR
 					break;
 				case eGameMode.kCutscene:
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
-					// maybe just make this configurable, from testing motion sickness doesnt occur, at least for the opening cutscene
+					// maybe just make the above configurable, from testing motion sickness doesnt occur, at least for the opening cutscene
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
-					// todo: this doesnt work for the "later, skip" cutscene?
                     SetMeshActive(true);
 					Camera dawnCamera = T_34182F31.main;
 					if (dawnCamera != null)

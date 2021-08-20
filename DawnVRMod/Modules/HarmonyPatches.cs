@@ -422,8 +422,6 @@ namespace DawnVR.Modules
                 Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
                 if (possibleMat != null)
                     material = possibleMat;
-
-                sMesh.enabled = false;
             }
             material.hideFlags = HideFlags.DontUnloadUnusedAsset;
             VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>().sharedMaterial = material;
