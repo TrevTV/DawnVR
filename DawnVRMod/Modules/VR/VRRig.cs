@@ -94,9 +94,7 @@ namespace DawnVR.Modules.VR
 
 						Vector3 vector = T_F8FE3E1C.s_currentTriggers[i].m_pointAt.transform.position - Camera.transform.position;
 						float angle = Vector3.Angle(vector, Camera.transform.forward);
-						// todo: might be important? leaving a log here for the future
-						if (T_F8FE3E1C.s_currentTriggers[i].usesAngleInteract)
-							MelonLoader.MelonLogger.Msg(T_F8FE3E1C.s_currentTriggers[i].m_friendlyName + " USES ANGLE INTERACT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						// angle interact doesnt seem to be imporant so this will just stay commented
 						/*if (T_F8FE3E1C.s_currentTriggers[i].usesAngleInteract)
                         {
                             vector.y = 0f;
@@ -167,6 +165,7 @@ namespace DawnVR.Modules.VR
 					break;
 				case eGameMode.kCutscene:
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
+					// maybe just make this configurable, from testing motion sickness doesnt occur, at least for the opening cutscene
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
 					// todo: this doesnt work for the "later, skip" cutscene?
@@ -200,6 +199,7 @@ namespace DawnVR.Modules.VR
                     break;
                 case eGameMode.kPosterView:
 					// todo: uh, for some reason i get moved to the main camera position when this occurs, might just be me throwing an error but for rn i am not 100% sure
+					// mostly fixed itself it seems?
 					break;
                 case eGameMode.kVideo:
 					break;
