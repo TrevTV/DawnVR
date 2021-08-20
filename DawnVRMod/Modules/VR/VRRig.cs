@@ -197,8 +197,6 @@ namespace DawnVR.Modules.VR
                     SetParent(null);
                     break;
                 case eGameMode.kPosterView:
-					// todo: uh, for some reason i get moved to the main camera position when this occurs, might just be me throwing an error but for rn i am not 100% sure
-					// mostly fixed itself it seems?
 					break;
                 case eGameMode.kVideo:
 					break;
