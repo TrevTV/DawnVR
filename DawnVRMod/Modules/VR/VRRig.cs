@@ -37,7 +37,6 @@ namespace DawnVR.Modules.VR
 
 		private void OnThumbstickLeft(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
-			// todo: test (goes for right aswell)
 			transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
 			cachedChloe._11C77E995 = transform.rotation;
 		}

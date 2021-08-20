@@ -19,6 +19,8 @@ namespace DawnVR.Modules
             MelonPreferences.CreateEntry(categoryName, nameof(UseSnapTurning), false);
             MelonPreferences.CreateEntry(categoryName, nameof(SnapTurnAngle), 45);
 
+            MelonPreferences.Save();
+
             UseSmoothTurning = MelonPreferences.GetEntryValue<bool>(categoryName, nameof(UseSmoothTurning));
             SmoothTurnSpeed = MelonPreferences.GetEntryValue<int>(categoryName, nameof(SmoothTurnSpeed));
             UseSnapTurning = MelonPreferences.GetEntryValue<bool>(categoryName, nameof(UseSnapTurning));
