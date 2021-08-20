@@ -170,7 +170,7 @@ namespace DawnVR.Modules.VR
                         SetParent(null, null, false);
 					// todo: this doesnt work for the "later, skip" cutscene?
                     SetMeshActive(true);
-					Camera dawnCamera = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null));
+					Camera dawnCamera = T_34182F31.main;
 					if (dawnCamera != null)
                     {
                         transform.position = dawnCamera.transform.position - new Vector3(0, 1, 0);
@@ -192,7 +192,7 @@ namespace DawnVR.Modules.VR
                     break;
                 case eGameMode.kMainMenu:
                     transform.rotation = Quaternion.Euler(0, 85, 0);
-                    transform.position = ((Camera)typeof(T_C3DD66D9).Assembly.GetType("T_34182F31").GetProperty("main").GetValue(null, null))?.transform.position ?? Vector3.zero;
+                    transform.position = T_34182F31.main.transform.position;
                     break;
                 case eGameMode.kNone:
                     SetParent(null);
