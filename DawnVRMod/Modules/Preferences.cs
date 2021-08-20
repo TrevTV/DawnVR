@@ -13,18 +13,18 @@ namespace DawnVR.Modules
 
         public static void Init()
         {
-            MelonPreferences.CreateCategory(categoryName);
-            MelonPreferences.CreateEntry(categoryName, nameof(UseSmoothTurning), true);
-            MelonPreferences.CreateEntry(categoryName, nameof(SmoothTurnSpeed), 120);
-            MelonPreferences.CreateEntry(categoryName, nameof(UseSnapTurning), false);
-            MelonPreferences.CreateEntry(categoryName, nameof(SnapTurnAngle), 45);
+            MelonPreferences_Category category = MelonPreferences.CreateCategory(categoryName);
+            MelonPreferences_Entry<bool> smoothTurning = category.CreateEntry(nameof(UseSmoothTurning), true);
+            MelonPreferences_Entry<int> smoothTurnSpeed = category.CreateEntry(nameof(SmoothTurnSpeed), 120);
+            MelonPreferences_Entry<bool> snapTurning = category.CreateEntry(nameof(UseSnapTurning), false);
+            MelonPreferences_Entry<int> snapTurnAngle = category.CreateEntry(nameof(SnapTurnAngle), 45);
 
             MelonPreferences.Save();
 
-            UseSmoothTurning = MelonPreferences.GetEntryValue<bool>(categoryName, nameof(UseSmoothTurning));
-            SmoothTurnSpeed = MelonPreferences.GetEntryValue<int>(categoryName, nameof(SmoothTurnSpeed));
-            UseSnapTurning = MelonPreferences.GetEntryValue<bool>(categoryName, nameof(UseSnapTurning));
-            SnapTurnAngle = MelonPreferences.GetEntryValue<int>(categoryName, nameof(SnapTurnAngle));
+            UseSmoothTurning = smoothTurning.Value;
+            SmoothTurnSpeed = smoothTurnSpeed.Value;
+            UseSnapTurning = snapTurning.Value;
+            SnapTurnAngle = snapTurnAngle.Value;
         }
 
         private static readonly string categoryName = "DawnVR";
