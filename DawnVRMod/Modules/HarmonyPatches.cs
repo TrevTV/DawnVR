@@ -89,24 +89,19 @@ namespace DawnVR.Modules
 
         #region Input Handling
 
-        private static readonly FieldInfo CharControl_WorldAngle = typeof(T_C3DD66D9).GetField("_15B7EF7A4", HarmonyLib.AccessTools.all);
-        private static readonly FieldInfo CharControl_TargetRot = typeof(T_C3DD66D9).GetField("_11C77E995", HarmonyLib.AccessTools.all);
-
         public static void InputManagerInit(T_6FCAE66C __instance)
-            => typeof(T_6FCAE66C).GetField("_1C6FBAE09", HarmonyLib.AccessTools.all).SetValue(__instance, eControlType.kXboxOne);
+            => __instance._1C6FBAE09 = eControlType.kXboxOne;
 
         public static bool CalculateCharAngle(T_C3DD66D9 __instance, Vector3 _13F806F29)
         {
-            CharControl_TargetRot.SetValue(__instance, Quaternion.Euler(0, VRRig.Instance.Camera.transform.eulerAngles.y, 0));
+            __instance._11C77E995 = Quaternion.Euler(0, VRRig.Instance.Camera.transform.eulerAngles.y, 0);
             if (_13F806F29 != __instance.m_moveDirection)
             {
                 __instance.m_moveDirection = (__instance.m_nonNormalMoveDirection = _13F806F29);
                 __instance.m_moveDirection.Normalize();
-                CharControl_WorldAngle.SetValue(__instance, Vector3.Angle(Vector3.forward, __instance.m_moveDirection));
+                __instance._15B7EF7A4 = Vector3.Angle(Vector3.forward, __instance.m_moveDirection);
                 if (_13F806F29.x < 0f)
-                {
-                    CharControl_WorldAngle.SetValue(__instance, 360f - (float)CharControl_WorldAngle.GetValue(__instance));
-                }
+                    __instance._15B7EF7A4 = 360f - __instance._15B7EF7A4;
             }
             return false;
         }
