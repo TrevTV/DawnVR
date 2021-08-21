@@ -52,10 +52,10 @@ namespace DawnVRMod.Modules.VR
 			m_ScreenSpaceReflection = AddComponent(new T_500C5913());
 			//m_MotionBlur = AddComponent(new T_DA9AE9BD());
 			m_Taa = AddComponent(new T_EE3DF9EA());
-			//m_EyeAdaptation = AddComponent(new T_DA260798());
+			m_EyeAdaptation = AddComponent(new T_DA260798());
 			//m_Bloom = AddComponent(new T_94D1D537());
 			//m_ChromaticAberration = AddComponent(new T_67FB24C9());
-			//m_colorStrokes = AddComponent(new T_6246D46A());
+			m_colorStrokes = AddComponent(new T_6246D46A());
 			//m_ColorGrading = AddComponent(new T_9029920B());
 			m_UserLut = AddComponent(new T_BE10C434());
 			//m_Vignette = AddComponent(new T_5D13383C());

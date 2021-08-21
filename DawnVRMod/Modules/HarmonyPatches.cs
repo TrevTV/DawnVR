@@ -54,8 +54,8 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText));
             PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition));
-            //todo: make post processing look nicer
-            //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), "OnPPEnable");
+            // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
+            //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
 
         #region Debug Stuff
@@ -453,7 +453,7 @@ namespace DawnVR.Modules
 
         public static void OnPPEnable(T_190FC323 __instance)
         {
-            if (__instance.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
+            if (VRRig.Instance.Camera.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
                 return;
 
             __instance.enabled = false;
@@ -474,6 +474,16 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
+        }
+
+        public static void OnPPEnable2(T_190FC323 __instance)
+        {
+            if (__instance.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
+                return;
+
+            __instance.enabled = false;
+            var vpp = __instance.gameObject.AddComponent<DawnVRMod.Modules.VR.VRPostProcessing>();
+            vpp.profile = __instance.profile;
         }
 
         public static void OnSetMode2(bool __result, eGameMode _1C57B7248)
