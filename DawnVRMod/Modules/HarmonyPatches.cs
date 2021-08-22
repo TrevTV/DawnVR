@@ -41,6 +41,7 @@ namespace DawnVR.Modules
 
             // Objective Manager
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), nameof(SetReminderTexture));
+            PatchPre(typeof(T_1928221C).GetMethod("Update", HarmonyLib.AccessTools.all), nameof(DontRunMe));
 
             // Highlight Manager
             PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract));
@@ -293,7 +294,10 @@ namespace DawnVR.Modules
         #region Objective Manager
 
         public static void SetReminderTexture(T_81803C2C __instance)
-            => VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+        {
+            __instance.SetAlpha(1);
+            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+        }
 
         #endregion
 
