@@ -27,7 +27,7 @@ namespace DawnVR.Modules
 
             // Input Handling
             PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(InputManagerInit));
-            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), "CalculateCharAngle");
+            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle));
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum));
             PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState));
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
