@@ -51,7 +51,15 @@ namespace DawnVR.Modules.VR
 
 		private void Update()
         {
-            // todo: find out how to get chloe's collision to follow the vr player
+			// this could probably be improved, but it works for now
+			if (transform.parent == ChloeTransform)
+            {
+				Vector3 oldPosition = transform.position;
+				Vector3 newChloePos = Camera.transform.position;
+				newChloePos.y = ChloeTransform.position.y;
+				ChloeTransform.position = newChloePos;
+				transform.position = oldPosition;
+			}
 
             #region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
 
