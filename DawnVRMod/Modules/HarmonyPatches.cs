@@ -165,10 +165,11 @@ namespace DawnVR.Modules
                 case eJoystickKey.kNone:
                     break;
                 case eJoystickKey.kStart:
-                    // todo: start and select buttons, maybe use Y and B when there is no interaction menu active?
+                    // todo: possibly breaks movement?
+                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                     break;
                 case eJoystickKey.kSelect:
-                    //
+                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                     break;
                 case eJoystickKey.kDPadUp:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickUp(VRInput.Hand.Left));

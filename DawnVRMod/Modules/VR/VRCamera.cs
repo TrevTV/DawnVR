@@ -5,7 +5,6 @@ namespace DawnVR.Modules.VR
     internal class VRCamera : MonoBehaviour
     {
         public Camera Component;
-        public bool HasPostProcessing;
         public RenderTexture RenderToVRTexture;
 
         private Camera uiCamera;
@@ -18,6 +17,7 @@ namespace DawnVR.Modules.VR
             #region UI Renderer
 
             uiRenderer = transform.Find("UIRenderer");
+            uiRenderer.localScale = new Vector3(0.25f, 0.15f, 0.15f);
             uiCamera = GameObject.Find("/UIRoot/Camera").GetComponent<Camera>();
             RenderToVRTexture = new RenderTexture(1920, 1080, 1);
             uiCamera.targetTexture = RenderToVRTexture;

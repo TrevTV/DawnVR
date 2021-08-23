@@ -93,6 +93,9 @@
             },
             {
                "inputs": {
+                  "click": {
+                     "output": "/actions/default/in/bool_buttonthumbstick"
+                  },
                   "position": {
                      "output": "/actions/default/in/v2_thumbstick"
                   }
@@ -147,6 +150,9 @@
             },
             {
                "inputs": {
+                  "click": {
+                     "output": "/actions/default/in/bool_buttonthumbstick"
+                  },
                   "position": {
                      "output": "/actions/default/in/v2_thumbstick"
                   }
