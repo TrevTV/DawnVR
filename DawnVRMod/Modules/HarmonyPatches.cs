@@ -33,7 +33,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
 
             // Disable Idling
-            PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), nameof(GetIdleExtraName));
+            //PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), nameof(GetIdleExtraName));
 
             // Rig Parent Updating
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel));
@@ -399,7 +399,7 @@ namespace DawnVR.Modules
 
             #region Disable Idling
 
-            AnimationClip clip = new AnimationClip();
+            /*AnimationClip clip = new AnimationClip();
             clip.name = "empty_anim";
             clip.legacy = true;
             __instance.m_animation.AddClip(clip, "empty_anim");
@@ -412,7 +412,7 @@ namespace DawnVR.Modules
                     state.speed = 0;
                     state.time = 0;
                 }
-            }
+            }*/
 
             #endregion
 
