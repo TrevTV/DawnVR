@@ -55,6 +55,8 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText));
             PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition));
+            PatchPre(typeof(T_3BE79CFB).GetMethod("Start", HarmonyLib.AccessTools.all), nameof(BoundaryStart));
+            PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe));
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
@@ -452,6 +454,12 @@ namespace DawnVR.Modules
         public static bool ReplaceScrollingText(ref string __result)
         {
             __result = scrollingTextOptions[UnityEngine.Random.Range(0, scrollingTextOptions.Length)];
+            return false;
+        }
+
+        public static bool BoundaryStart(T_3BE79CFB __instance)
+        {
+            __instance.GetComponent<Collider>().isTrigger = false;
             return false;
         }
 
