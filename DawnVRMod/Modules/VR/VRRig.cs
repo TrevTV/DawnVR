@@ -14,6 +14,8 @@ namespace DawnVR.Modules.VR
 
 		private void Start()
         {
+			// todo: possibly create a custom movement controller using NavMeshAgent
+			// todo: seated mode, alec said he could give me some of his code for this
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
@@ -172,6 +174,7 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kCustomization:
 					break;
 				case eGameMode.kCutscene:
+					// todo: fade to black (steamvr has a built in thing?)
                     // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
 					// maybe just make the above configurable, from testing motion sickness doesnt occur, at least for the opening cutscene
                     if (transform.parent == cachedChloe.transform)

@@ -49,7 +49,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition));
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI
             PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
-            // todo: i have no clue what "HoverObjectUI" is but it also has a CheckOnScreen function
+            // todo: "HoverObjectUI" seems to be used in the scene where you fix the truck in the junkyard
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
@@ -165,13 +165,12 @@ namespace DawnVR.Modules
                 case eJoystickKey.kNone:
                     break;
                 case eJoystickKey.kStart:
-                    // todo: possibly breaks movement?
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                     break;
                 case eJoystickKey.kSelect:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                     break;
-                case eJoystickKey.kDPadUp:
+                /*case eJoystickKey.kDPadUp:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickUp(VRInput.Hand.Left));
                     break;
                 case eJoystickKey.kDPadRight:
@@ -182,7 +181,7 @@ namespace DawnVR.Modules
                     break;
                 case eJoystickKey.kDPadDown:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickDown(VRInput.Hand.Left));
-                    break;
+                    break;*/
                 case eJoystickKey.kR1:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
                     break;
@@ -434,6 +433,7 @@ namespace DawnVR.Modules
 
         public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
         {
+            // todo: fade between large jumps
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
                 VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
