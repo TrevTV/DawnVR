@@ -326,6 +326,7 @@ namespace DawnVR.Modules
 
         public static void HotspotObjectInteract(T_6FD30C1C _1BAF664A9) => _1BAF664A9.m_lookAt = null;
 
+        // todo: in the chloe inside truck part thing scene, the InteractUI check on screen stuff doesnt seem to work
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
