@@ -20,6 +20,7 @@ namespace DawnVR.Modules
 
         public static void Init(HarmonyLib.Harmony hInstance)
         {
+            // todo: find cause of input enabling delay, im sure its from one of these patches
             HarmonyInstance = hInstance;
             // Debug Stuff
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
@@ -305,9 +306,6 @@ namespace DawnVR.Modules
 
         #region Highlight Manager
 
-        private static readonly FieldInfo HotSpotUI_ScreenAlpha = typeof(T_8F74F848).GetField("_14888EF3", HarmonyLib.AccessTools.all);
-        private static readonly FieldInfo InteractUI_HotSpotObj = typeof(T_572A4969).GetField("_133075675", HarmonyLib.AccessTools.all);
-
         public static bool CUICameraRelativeUpdate(T_1C1609D7 __instance)
         {
             __instance.transform.rotation = VRRig.Instance.Camera.transform.rotation;
@@ -341,22 +339,22 @@ namespace DawnVR.Modules
                 float num = 0.1f; // never changed, so its hardcoded here
 
                 if (vector.x < num)
-                    HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.Lerp(0f, 1f, vector.x / num));
+                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, vector.x / num);
                 else if (vector.x > 1f - num)
-                    HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.Lerp(0f, 1f, (1f - vector.x) / num));
+                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, (1f - vector.x) / num);
                 else
-                    HotSpotUI_ScreenAlpha.SetValue(__instance, 1f);
+                    __instance._14888EF3 = 1f;
 
                 if (vector.y < num)
-                    HotSpotUI_ScreenAlpha.SetValue(__instance, ((float)HotSpotUI_ScreenAlpha.GetValue(__instance)) * Mathf.Lerp(0f, 1f, vector.y / num));
+                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, vector.y / num);
                 else if (vector.y > 1f - num)
-                    HotSpotUI_ScreenAlpha.SetValue(__instance, ((float)HotSpotUI_ScreenAlpha.GetValue(__instance)) * Mathf.Lerp(0f, 1f, (1f - vector.y) / num));
+                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, (1f - vector.y) / num);
 
                 __result = true;
                 return false;
             }
             float output = 0;
-            HotSpotUI_ScreenAlpha.SetValue(__instance, Mathf.SmoothDamp((float)HotSpotUI_ScreenAlpha.GetValue(__instance), 0f, ref output, 0.2f));
+            __instance._14888EF3 = Mathf.SmoothDamp(__instance._14888EF3, 0f, ref output, 0.2f);
             return false;
         }
 
@@ -364,7 +362,7 @@ namespace DawnVR.Modules
         {
             if (__instance.m_anchor != null && __instance.m_anchor.m_anchorObj != null)
             {
-                T_6FD30C1C hotspotObj = (T_6FD30C1C)InteractUI_HotSpotObj.GetValue(__instance);
+                T_6FD30C1C hotspotObj = __instance._133075675;
                 float num = Vector3.Angle(VRRig.Instance.Camera.transform.forward, __instance.m_anchor.m_anchorObj.transform.position - VRRig.Instance.Camera.transform.position);
                 if (num < 180f)
                 {
