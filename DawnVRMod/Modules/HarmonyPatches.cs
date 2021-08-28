@@ -49,7 +49,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition));
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI
             PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
-            // todo: "HoverObjectUI" seems to be used in the scene where you fix the truck in the junkyard
+            PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
@@ -384,6 +384,36 @@ namespace DawnVR.Modules
                 if (hotspotObj != null)
                     hotspotObj.Select(false, false);
             }
+            __result = false;
+            return false;
+        }
+
+        public static bool IsHoverObjectOnScreen(T_A0A6EA62 __instance, ref bool __result)
+        {
+            Vector3 vector = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
+            if (vector.x > 0f && vector.y > 0f && vector.x < VRRig.Instance.Camera.Component.pixelWidth && vector.y < VRRig.Instance.Camera.Component.pixelHeight)
+            {
+                float num = VRRig.Instance.Camera.Component.pixelWidth * T_A0A6EA62._1D66D99B4;
+
+                if (vector.x < num)
+                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, vector.x / num);
+                else if (vector.x > VRRig.Instance.Camera.Component.pixelWidth - num)
+                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, (VRRig.Instance.Camera.Component.pixelWidth - vector.x) / num);
+                else
+                    __instance._14888EF3 = 1f;
+
+                num = VRRig.Instance.Camera.Component.pixelHeight * T_A0A6EA62._1D66D99B4;
+
+                if (vector.y < num)
+                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, vector.y / num);
+                else if (vector.y > VRRig.Instance.Camera.Component.pixelHeight - num)
+                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, (VRRig.Instance.Camera.Component.pixelHeight - vector.y) / num);
+
+                __instance._1649E566F();
+                __result = true;
+                return false;
+            }
+            __instance._1649E566F();
             __result = false;
             return false;
         }
