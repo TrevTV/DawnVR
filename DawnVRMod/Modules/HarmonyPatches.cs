@@ -48,6 +48,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract));
             PatchPre(typeof(T_1C1609D7).GetMethod("Update"), nameof(CUICameraRelativeUpdate));
             PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition));
+            PatchPre(typeof(T_F8FE3E1C).GetMethod("Update"), nameof(DontRunMe));
             PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI
             PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
             PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI
@@ -324,7 +325,6 @@ namespace DawnVR.Modules
 
         public static void HotspotObjectInteract(T_6FD30C1C _1BAF664A9) => _1BAF664A9.m_lookAt = null;
 
-        // todo: in the chloe inside truck part thing scene, the InteractUI check on screen stuff doesnt seem to work
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
@@ -332,29 +332,13 @@ namespace DawnVR.Modules
                 __result = false;
                 return false;
             }
-            Vector3 position = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
-            Vector3 vector = VRRig.Instance.Camera.Component.ScreenToViewportPoint(position);
-            if (vector.x > 0f && vector.y > 0f && vector.x < 1f && vector.y < 1f)
+
+            float distance = Vector3.Distance(VRRig.Instance.Camera.transform.position, __instance.m_anchor.m_anchorObj.transform.position);
+            if (distance < 20)
             {
-                float num = 0.1f; // never changed, so its hardcoded here
-
-                if (vector.x < num)
-                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, vector.x / num);
-                else if (vector.x > 1f - num)
-                    __instance._14888EF3 = Mathf.Lerp(0f, 1f, (1f - vector.x) / num);
-                else
-                    __instance._14888EF3 = 1f;
-
-                if (vector.y < num)
-                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, vector.y / num);
-                else if (vector.y > 1f - num)
-                    __instance._14888EF3 *= Mathf.Lerp(0f, 1f, (1f - vector.y) / num);
-
                 __result = true;
                 return false;
             }
-            float output = 0;
-            __instance._14888EF3 = Mathf.SmoothDamp(__instance._14888EF3, 0f, ref output, 0.2f);
             return false;
         }
 
@@ -366,9 +350,8 @@ namespace DawnVR.Modules
                 float num = Vector3.Angle(VRRig.Instance.Camera.transform.forward, __instance.m_anchor.m_anchorObj.transform.position - VRRig.Instance.Camera.transform.position);
                 if (num < 180f)
                 {
-                    Vector3 position = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
-                    Vector3 vector = VRRig.Instance.Camera.Component.ScreenToViewportPoint(position);
-                    if (vector.x > 0f && vector.y > 0f && vector.x < 1f && vector.y < 1f)
+                    float distance = Vector3.Distance(VRRig.Instance.Camera.transform.position, __instance.m_anchor.m_anchorObj.transform.position);
+                    if (distance < 5)
                     {
                         __instance.m_arrow.gameObject.SetActive(true);
                         __instance.m_choiceUI.gameObject.SetActive(true);

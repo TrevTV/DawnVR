@@ -72,6 +72,8 @@ namespace DawnVR.Modules.VR
 			if (T_F8FE3E1C.s_currentTriggers.Count > 0)
 			{
 				float num = 180f;
+				if (T_F8FE3E1C.s_isFreeLook)
+					num = Camera.Component.fieldOfView / 3f;
 				int triggerIndex = -1;
 				float num3 = 1f;
 				float d = window.m_interactUI.transform.localScale.x;
@@ -84,6 +86,7 @@ namespace DawnVR.Modules.VR
 						{
 							d = 1f;
 							num3 = (Mathf.Max(0f, num4 - 2f) + 1f) * window.m_distanceScaleFactor * (Camera.Component.fieldOfView / 30f);
+							num3 /= 2;
 							T_F8FE3E1C.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num3, num3, 1f);
 						}
 						else
