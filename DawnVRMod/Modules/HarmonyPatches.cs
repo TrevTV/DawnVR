@@ -334,11 +334,17 @@ namespace DawnVR.Modules
             }
 
             float distance = Vector3.Distance(VRRig.Instance.Camera.transform.position, __instance.m_anchor.m_anchorObj.transform.position);
+            MelonLogger.Msg($"{__instance.m_name.printedText} :: distance {distance}");
             if (distance < 20)
             {
+                __instance._14888EF3 = 1f;
                 __result = true;
                 return false;
             }
+            else
+                __instance._14888EF3 = 0f;
+
+            __result = false;
             return false;
         }
 
@@ -348,10 +354,10 @@ namespace DawnVR.Modules
             {
                 T_6FD30C1C hotspotObj = __instance._133075675;
                 float num = Vector3.Angle(VRRig.Instance.Camera.transform.forward, __instance.m_anchor.m_anchorObj.transform.position - VRRig.Instance.Camera.transform.position);
-                if (num < 180f)
+                if (num < 90f)
                 {
                     float distance = Vector3.Distance(VRRig.Instance.Camera.transform.position, __instance.m_anchor.m_anchorObj.transform.position);
-                    if (distance < 5)
+                    if (distance < 3)
                     {
                         __instance.m_arrow.gameObject.SetActive(true);
                         __instance.m_choiceUI.gameObject.SetActive(true);
