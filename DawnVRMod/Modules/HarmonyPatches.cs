@@ -53,6 +53,9 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
             PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI
 
+            // Tutorial Fixes
+            PatchPre(typeof(T_F6DEE320).GetMethod("Do"), nameof(UpdateTutorialUI));
+
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText));
@@ -334,7 +337,6 @@ namespace DawnVR.Modules
             }
 
             float distance = Vector3.Distance(VRRig.Instance.Camera.transform.position, __instance.m_anchor.m_anchorObj.transform.position);
-            MelonLogger.Msg($"{__instance.m_name.printedText} :: distance {distance}");
             if (distance < 20)
             {
                 __instance._14888EF3 = 1f;
@@ -404,6 +406,20 @@ namespace DawnVR.Modules
             __instance._1649E566F();
             __result = false;
             return false;
+        }
+
+        #endregion
+
+        #region Tutorial Fixes
+
+        public static bool UpdateTutorialUI(T_F6DEE320 __instance)
+        {
+            if (__instance.flags.Contains("tutorial2") // objective reminders
+                || __instance.flags.Contains("tutorial5")
+                || __instance.flags.Contains("tutorial7"))
+                return false;
+
+            return true;
         }
 
         #endregion
