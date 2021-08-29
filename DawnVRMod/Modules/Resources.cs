@@ -7,6 +7,7 @@ namespace DawnVR.Modules
     internal static class Resources
     {
         public static GameObject VRCameraRig => vrCameraRig;
+        public static Material DitheredHandMaterial => ditheredHandMaterial;
 
         public static void Init()
         {
@@ -22,6 +23,8 @@ namespace DawnVR.Modules
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
             pose1.transform.Find("ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
+            ditheredHandMaterial = pose1.transform.Find("ActuallyLeftHand").GetComponent<MeshRenderer>().material;
+            ditheredHandMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
             if (shouldRenderCameraRig)
             {
                 Shader standard = Shader.Find("Standard");
@@ -34,5 +37,6 @@ namespace DawnVR.Modules
 
         private static readonly bool shouldRenderCameraRig = false;
         private static GameObject vrCameraRig;
+        private static Material ditheredHandMaterial;
     }
 }

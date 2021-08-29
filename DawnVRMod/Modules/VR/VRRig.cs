@@ -7,6 +7,8 @@ namespace DawnVR.Modules.VR
         public static VRRig Instance;
 
 		public Transform ChloeTransform => cachedChloe?.transform;
+		public MeshRenderer[] HandMeshRenderers;
+		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
 
@@ -19,6 +21,12 @@ namespace DawnVR.Modules.VR
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
+
+			HandMeshRenderers = new MeshRenderer[]
+			{
+				transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>(),
+				transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>()
+			};
 
 			if (Preferences.UseSmoothTurning)
 				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
@@ -240,6 +248,9 @@ namespace DawnVR.Modules.VR
         {
 			foreach (SkinnedMeshRenderer sMesh in cachedChloe.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 				sMesh.enabled = active;
+
+			foreach (MeshRenderer renderer in HandMeshRenderers)
+				renderer.sharedMaterial = active ? Resources.DitheredHandMaterial : ChloeMaterial;
 		}
     }
 }
