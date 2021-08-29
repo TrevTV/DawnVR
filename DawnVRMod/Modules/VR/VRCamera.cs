@@ -16,8 +16,6 @@ namespace DawnVR.Modules.VR
 
             #region UI Renderer
 
-            // todo: ui is cutoff for some reason, may be related to alec using an ultrawide monitor for playing
-            // https://i.imgur.com/UbB2iXU.png
             uiRenderer = transform.Find("UIRenderer");
             uiRenderer.localScale = new Vector3(0.25f, 0.15f, 0.15f);
             uiCamera = GameObject.Find("/UIRoot/Camera").GetComponent<Camera>();
