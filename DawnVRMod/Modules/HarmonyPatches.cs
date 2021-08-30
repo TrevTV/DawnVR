@@ -54,7 +54,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI
 
             // Tutorial Fixes
-            PatchPre(typeof(T_F6DEE320).GetMethod("Do"), nameof(UpdateTutorialUI));
+            PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo));
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
@@ -412,12 +412,13 @@ namespace DawnVR.Modules
 
         #region Tutorial Fixes
 
-        public static bool UpdateTutorialUI(T_F6DEE320 __instance)
+        public static bool SetTutorialInfo(T_64B68373 __instance, T_64B68373.eCurrentLesson _1B1E89CA4, T_64B68373.eCurrentEpisode _1F136D4D0)
         {
-            if (__instance.flags.Contains("tutorial2") // objective reminders
-                || __instance.flags.Contains("tutorial5")
-                || __instance.flags.Contains("tutorial7"))
+            if (_1B1E89CA4 == T_64B68373.eCurrentLesson.kObjective)
+            {
+                __instance._133003896(T_64B68373.eCurrentLesson.kCloseWindow); // NextLesson
                 return false;
+            }
 
             return true;
         }
