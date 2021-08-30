@@ -471,6 +471,14 @@ namespace DawnVR.Modules
             // todo: fade between large jumps
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
+                if (Vector3.Distance(VRRig.Instance.transform.position, _1ACF98885) > 20)
+                {
+                    // todo: test
+                    SteamVR_Fade.Start(Color.clear, 0);
+                    SteamVR_Fade.Start(Color.black, 0.1f);
+                }
+
+                //MelonLogger.Msg("Distance between Camera positions: " + Vector3.Distance(VRRig.Instance.transform.position, _1ACF98885));
                 VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
                 Vector3 rot = _13A97A3A2.transform.eulerAngles;
                 rot.x = 0;
@@ -522,6 +530,16 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
+            PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition2));
+        }
+
+        public static void SetCameraPosition2(Camera _13A97A3A2, Vector3 _1ACF98885)
+        {
+            if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
+            {
+                float f = Vector3.Distance(_13A97A3A2.transform.position, _1ACF98885);
+                MelonLogger.Msg("Distance between Camera positions: " + f.ToString());
+            }
         }
 
         public static void OnPPEnable2(T_190FC323 __instance)

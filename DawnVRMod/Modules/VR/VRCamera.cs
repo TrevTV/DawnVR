@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using Valve.VR;
+using UnityEngine;
 
 namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
         public Camera Component;
+        public SteamVR_Fade Fade;
         public RenderTexture RenderToVRTexture;
 
         private Camera uiCamera;
@@ -13,6 +15,7 @@ namespace DawnVR.Modules.VR
         private void Start()
         {
             Component = GetComponent<Camera>();
+            Fade = gameObject.AddComponent<SteamVR_Fade>();
 
             #region UI Renderer
 
