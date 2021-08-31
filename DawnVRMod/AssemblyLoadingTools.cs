@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace DawnVR
         {
             try
             {
-                using (Stream manifestResourceStream = CurrentAsm.GetManifestResourceStream("DawnVRMod.Resources." + name))
+                using (Stream manifestResourceStream = CurrentAsm.GetManifestResourceStream("DawnVR.Resources." + name))
                 {
                     using (FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Delete))
                     {
@@ -40,9 +39,9 @@ namespace DawnVR
             catch { return false; }
         }
 
-        public static T LoadAssetWithHF<T>(this AssetBundle b, string name) where T : UnityEngine.Object
+        public static T LoadAssetWithHF<T>(this AssetBundle b, string name) where T : Object
         {
-            UnityEngine.Object asset = b.LoadAsset<UnityEngine.Object>(name);
+            Object asset = b.LoadAsset<Object>(name);
             asset.hideFlags = HideFlags.DontUnloadUnusedAsset;
             return (T)asset;
         }

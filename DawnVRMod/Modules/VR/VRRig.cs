@@ -71,9 +71,9 @@ namespace DawnVR.Modules.VR
 				transform.position = oldPosition;
 			}
 
-            #region Mostly a copypaste from the FreeRoamWindow but modifed to use the vr cam
+			#region Modified FreeRoamWindow.Update()
 
-            T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
+			T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
 
 			if (!window.gameObject.activeInHierarchy) return;
 

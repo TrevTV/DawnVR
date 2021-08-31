@@ -9,6 +9,7 @@ namespace DawnVR.Modules.VR
 	[RequireComponent(typeof(Camera))]
 	internal class VRPostProcessing : MonoBehaviour
     {
+#pragma warning disable 0649
 		public T_EEA04AB5 profile;
 		public Func<Vector2, Matrix4x4> jitteredMatrixFunc;
 		private Dictionary<Type, KeyValuePair<CameraEvent, CommandBuffer>> m_CommandBuffers;
@@ -38,6 +39,7 @@ namespace DawnVR.Modules.VR
 		private T_C0F7FD02 m_dofPass;
 		private List<T_2AEBE7B4> m_ComponentsToEnable = new List<T_2AEBE7B4>();
 		private List<T_2AEBE7B4> m_ComponentsToDisable = new List<T_2AEBE7B4>();
+#pragma warning restore 0649
 
 		private void OnEnable()
 		{

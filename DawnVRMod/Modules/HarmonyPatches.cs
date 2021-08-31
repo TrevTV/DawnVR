@@ -6,8 +6,6 @@ using MelonLoader;
 using System.Reflection;
 using DawnVR.Modules.VR;
 using UnityEngine._1F1547F66;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace DawnVR.Modules
 {
@@ -16,8 +14,8 @@ namespace DawnVR.Modules
     {
         private static HarmonyLib.Harmony HarmonyInstance;
 
-        private static void PatchPre(MethodInfo original, string prefixMethodName) => HarmonyInstance.Patch(original, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(prefixMethodName)));
-        private static void PatchPost(MethodInfo original, string postfixMethodName) => HarmonyInstance.Patch(original, null, new HarmonyLib.HarmonyMethod(typeof(HarmonyPatches).GetMethod(postfixMethodName)));
+        private static void PatchPre(MethodInfo original, string prefixMethodName) => HarmonyInstance.Patch(original, typeof(HarmonyPatches).GetMethod(prefixMethodName).ToNewHarmonyMethod());
+        private static void PatchPost(MethodInfo original, string postfixMethodName) => HarmonyInstance.Patch(original, null, typeof(HarmonyPatches).GetMethod(postfixMethodName).ToNewHarmonyMethod());
 
         public static void Init(HarmonyLib.Harmony hInstance)
         {
@@ -413,7 +411,7 @@ namespace DawnVR.Modules
 
         #region Tutorial Fixes
 
-        public static bool SetTutorialInfo(T_64B68373 __instance, T_64B68373.eCurrentLesson _1B1E89CA4, T_64B68373.eCurrentEpisode _1F136D4D0)
+        public static bool SetTutorialInfo(T_64B68373 __instance, T_64B68373.eCurrentLesson _1B1E89CA4)
         {
             if (_1B1E89CA4 == T_64B68373.eCurrentLesson.kObjective)
             {
@@ -503,11 +501,11 @@ namespace DawnVR.Modules
 
         public static void OnPPEnable(T_190FC323 __instance)
         {
-            if (VRRig.Instance.Camera.GetComponent<DawnVR.Modules.VR.VRPostProcessing>())
+            if (VRRig.Instance.Camera.GetComponent<VRPostProcessing>())
                 return;
 
             __instance.enabled = false;
-            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<DawnVR.Modules.VR.VRPostProcessing>();
+            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<VRPostProcessing>();
             vpp.profile = __instance.profile;
         }
 
