@@ -7,6 +7,7 @@ using System.Reflection;
 using DawnVR.Modules.VR;
 using UnityEngine._1F1547F66;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace DawnVR.Modules
 {
@@ -469,17 +470,11 @@ namespace DawnVR.Modules
 
         public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
         {
-            // todo: fade between large jumps
+            // todo: fade between large jumps (without using coroutines)
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
-                if (Vector3.Distance(VRRig.Instance.transform.position, _1ACF98885) > 20)
-                {
-                    // todo: test
-                    SteamVR_Fade.Start(Color.clear, 0);
-                    SteamVR_Fade.Start(Color.black, 0.1f);
-                }
+                // if (Vector3.Distance(VRRig.Instance.transform.position, position) >= 1f) { }
 
-                //MelonLogger.Msg("Distance between Camera positions: " + Vector3.Distance(VRRig.Instance.transform.position, _1ACF98885));
                 VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
                 Vector3 rot = _13A97A3A2.transform.eulerAngles;
                 rot.x = 0;
@@ -534,12 +529,24 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition2));
         }
 
+        private static bool wasLastDistZero;
+
         public static void SetCameraPosition2(Camera _13A97A3A2, Vector3 _1ACF98885)
         {
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
                 float f = Vector3.Distance(_13A97A3A2.transform.position, _1ACF98885);
-                MelonLogger.Msg("Distance between Camera positions: " + f.ToString());
+                if (f != 0)
+                {
+                    if (wasLastDistZero)
+                        MelonLogger.Msg("finished 0s");
+                    MelonLogger.Msg("Distance between Camera positions: " + f.ToString());
+                }
+                else if (!wasLastDistZero)
+                {
+                    MelonLogger.Msg("Distance between Camera positions: 0");
+                    wasLastDistZero = true;
+                }
             }
         }
 

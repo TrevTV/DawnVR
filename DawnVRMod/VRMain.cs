@@ -2,6 +2,7 @@
 using DawnVR.Modules.VR;
 using DawnVR.Modules;
 using MelonLoader;
+using UnityEngine;
 using System.Linq;
 using Valve.VR;
 using System;
@@ -34,7 +35,7 @@ namespace DawnVR
                 return;
             }
 
-            Resources.Init();
+            Modules.Resources.Init();
             Preferences.Init();
             HarmonyPatches.Init(HarmonyInstance);
         }
@@ -71,7 +72,7 @@ namespace DawnVR
 
         private void CreateCameraRig()
         {
-            UnityEngine.GameObject rig = UnityEngine.GameObject.Instantiate(Resources.VRCameraRig);
+            GameObject rig = GameObject.Instantiate(Modules.Resources.VRCameraRig);
             if (!VRRig.Instance)
                 VRRig.Instance = rig.AddComponent<VRRig>();
         }
