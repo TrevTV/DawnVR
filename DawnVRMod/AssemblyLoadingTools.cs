@@ -40,16 +40,11 @@ namespace DawnVR
             catch { return false; }
         }
 
-        public static T LoadAssetWithHF<T>(this AssetBundle b, string name)
+        public static T LoadAssetWithHF<T>(this AssetBundle b, string name) where T : UnityEngine.Object
         {
-            if (typeof(T).BaseType != typeof(UnityEngine.Object))
-            {
-                MelonLoader.MelonLogger.Error("LoadAssetWithHF cannot be used on non 'UnityEngine.Object' types, returning default");
-                return default;
-            }
             UnityEngine.Object asset = b.LoadAsset<UnityEngine.Object>(name);
             asset.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            return (T)Convert.ChangeType(asset, typeof(T));
+            return (T)asset;
         }
     }
 }
