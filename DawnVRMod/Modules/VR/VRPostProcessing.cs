@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 using UnityEngine._1F1547F66;
 using System.Collections.Generic;
 
-namespace DawnVRMod.Modules.VR
+namespace DawnVR.Modules.VR
 {
 	[RequireComponent(typeof(Camera))]
 	internal class VRPostProcessing : MonoBehaviour

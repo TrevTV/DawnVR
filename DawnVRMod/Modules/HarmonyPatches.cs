@@ -510,11 +510,11 @@ namespace DawnVR.Modules
 
         public static void OnPPEnable(T_190FC323 __instance)
         {
-            if (VRRig.Instance.Camera.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
+            if (VRRig.Instance.Camera.GetComponent<DawnVR.Modules.VR.VRPostProcessing>())
                 return;
 
             __instance.enabled = false;
-            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<DawnVRMod.Modules.VR.VRPostProcessing>();
+            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<DawnVR.Modules.VR.VRPostProcessing>();
             vpp.profile = __instance.profile;
         }
 
@@ -545,11 +545,11 @@ namespace DawnVR.Modules
 
         public static void OnPPEnable2(T_190FC323 __instance)
         {
-            if (__instance.GetComponent<DawnVRMod.Modules.VR.VRPostProcessing>())
+            if (__instance.GetComponent<DawnVR.Modules.VR.VRPostProcessing>())
                 return;
 
             __instance.enabled = false;
-            var vpp = __instance.gameObject.AddComponent<DawnVRMod.Modules.VR.VRPostProcessing>();
+            var vpp = __instance.gameObject.AddComponent<DawnVR.Modules.VR.VRPostProcessing>();
             vpp.profile = __instance.profile;
         }
 
