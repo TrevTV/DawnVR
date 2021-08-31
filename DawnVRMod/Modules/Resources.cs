@@ -7,6 +7,7 @@ namespace DawnVR.Modules
     internal static class Resources
     {
         public static GameObject VRCameraRig => vrCameraRig;
+        public static Shader SteamFadeShader => steamFadeShader;
         public static Material DitheredHandMaterial => ditheredHandMaterial;
 
         public static void Init()
@@ -14,6 +15,7 @@ namespace DawnVR.Modules
             #region VRCameraRig
 
             AssetBundle camRig = ResourceLoader.GetAssetBundle("camerarig");
+            steamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
             vrCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
             vrCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
             SteamVR_Behaviour_Pose pose1 = vrCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
@@ -37,6 +39,7 @@ namespace DawnVR.Modules
 
         private static readonly bool shouldRenderCameraRig = false;
         private static GameObject vrCameraRig;
+        private static Shader steamFadeShader;
         private static Material ditheredHandMaterial;
     }
 }

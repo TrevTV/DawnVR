@@ -74,7 +74,7 @@ namespace Valve.VR
         {
             if (fadeMaterial == null)
             {
-                fadeMaterial = new Material(Shader.Find("Custom/SteamVR_Fade"));
+                fadeMaterial = new Material(DawnVR.Modules.Resources.SteamFadeShader);
                 fadeMaterialColorID = Shader.PropertyToID("fadeColor");
             }
 
