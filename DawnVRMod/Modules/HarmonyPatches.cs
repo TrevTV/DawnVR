@@ -461,8 +461,6 @@ namespace DawnVR.Modules
                     material = possibleMat;
             }
             material.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            foreach (MeshRenderer renderer in VRRig.Instance.HandMeshRenderers)
-                renderer.sharedMaterial = material;
             VRRig.Instance.ChloeMaterial = material;
 
             #endregion
