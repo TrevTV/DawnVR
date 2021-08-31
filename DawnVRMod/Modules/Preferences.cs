@@ -9,6 +9,8 @@ namespace DawnVR.Modules
         public static bool UseSnapTurning { get; private set; }
         public static int SnapTurnAngle { get; private set; }
 
+        public static bool EnableInternalLogging { get; private set; }
+
         public static void Init()
         {
             MelonPreferences_Category category = MelonPreferences.CreateCategory(categoryName);
@@ -16,6 +18,7 @@ namespace DawnVR.Modules
             MelonPreferences_Entry<int> smoothTurnSpeed = category.CreateEntry(nameof(SmoothTurnSpeed), 120);
             MelonPreferences_Entry<bool> snapTurning = category.CreateEntry(nameof(UseSnapTurning), false);
             MelonPreferences_Entry<int> snapTurnAngle = category.CreateEntry(nameof(SnapTurnAngle), 45);
+            MelonPreferences_Entry<bool> enableInternalLogging = category.CreateEntry(nameof(EnableInternalLogging), false);
 
             MelonPreferences.Save();
 
@@ -23,6 +26,7 @@ namespace DawnVR.Modules
             SmoothTurnSpeed = smoothTurnSpeed.Value;
             UseSnapTurning = snapTurning.Value;
             SnapTurnAngle = snapTurnAngle.Value;
+            EnableInternalLogging = enableInternalLogging.Value;
         }
 
         private static readonly string categoryName = "DawnVR";
