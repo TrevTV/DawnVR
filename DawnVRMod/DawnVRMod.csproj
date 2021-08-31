@@ -7,7 +7,7 @@
     <ProjectGuid>{8A76BD49-E37F-4A13-A9BC-3C01E54BEACB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DawnVRMod</RootNamespace>
+    <RootNamespace>DawnVR</RootNamespace>
     <AssemblyName>DawnVRMod</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
