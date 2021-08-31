@@ -16,7 +16,7 @@ namespace DawnVR.Modules.VR
             Component = GetComponent<Camera>();
             gameObject.AddComponent<SteamVR_Fade>();
 
-            Component.backgroundColor = Color.gray;
+            Component.backgroundColor = Color.black;
 
             #region UI Renderer
 
