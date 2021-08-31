@@ -50,7 +50,7 @@ namespace DawnVR
 
         private IEnumerator InitSteamVR()
         {
-            yield return new UnityEngine.WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
             steamInitRunning = true;
             SteamVR.Initialize(false);
 
