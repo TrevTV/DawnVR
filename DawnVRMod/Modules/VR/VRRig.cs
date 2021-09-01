@@ -200,7 +200,6 @@ namespace DawnVR.Modules.VR
 						rot.z = 0;
 						transform.eulerAngles = rot;
 					}
-
                     break;
                 case eGameMode.kDialog:
 					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
