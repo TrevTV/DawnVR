@@ -10,11 +10,13 @@ namespace DawnVR.Modules.VR
 
         private Camera uiCamera;
         private Transform uiRenderer;
+        private GameObject visionBlocker;
 
         private void Start()
         {
             Component = GetComponent<Camera>();
             gameObject.AddComponent<SteamVR_Fade>();
+            visionBlocker = transform.Find("VisionBlocker").gameObject;
 
             Component.backgroundColor = Color.black;
 
@@ -31,5 +33,7 @@ namespace DawnVR.Modules.VR
 
             #endregion
         }
+
+        public void BlockVision(bool block) => visionBlocker.SetActive(block);
     }
 }

@@ -211,9 +211,11 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kLoading:
                     break;
                 case eGameMode.kMainMenu:
-                    transform.rotation = Quaternion.Euler(0, 85, 0);
-                    transform.position = T_34182F31.main.transform.position;
-                    break;
+					Camera.BlockVision(true);
+					transform.rotation = Quaternion.Euler(0, 85, 0);
+					transform.position = new Vector3(-29.2f, -27.3f, -68.9f);
+					Camera.BlockVision(false);
+					break;
                 case eGameMode.kNone:
                     SetParent(null);
                     break;
