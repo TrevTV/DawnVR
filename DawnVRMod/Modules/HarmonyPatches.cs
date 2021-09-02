@@ -60,6 +60,8 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText));
             PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition));
             PatchPre(typeof(T_3BE79CFB).GetMethod("Start", HarmonyLib.AccessTools.all), nameof(BoundaryStart));
+            PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart));
+            PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove));
             PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe));
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
@@ -109,6 +111,22 @@ namespace DawnVR.Modules
                 __instance._15B7EF7A4 = Vector3.Angle(Vector3.forward, __instance.m_moveDirection);
                 if (_13F806F29.x < 0f)
                     __instance._15B7EF7A4 = 360f - __instance._15B7EF7A4;
+            }
+            return false;
+        }
+
+        private const float speedModifier = 0.05f;
+        private const float sprintModifier = 0.08f;
+
+        public static bool CharControllerMove(T_C3DD66D9 __instance, bool _1AF4345B4)
+        {
+            if (_1AF4345B4)
+                __instance.Rotate();
+            if (__instance.m_moveDirection != Vector3.zero)
+            {
+                Vector3 axis = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
+                float modifier = T_A6E913D1.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
+                __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier);
             }
             return false;
         }
@@ -463,6 +481,8 @@ namespace DawnVR.Modules
 
             #endregion
         }
+
+        public static void FollowCamStart(T_884A92DB __instance) => __instance.enabled = false;
 
         public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
         {

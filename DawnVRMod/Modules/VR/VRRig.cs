@@ -16,7 +16,6 @@ namespace DawnVR.Modules.VR
 
 		private void Start()
         {
-			// todo: possibly create a custom movement controller using NavMeshAgent
 			// todo: seated mode, alec said he could give me some of his code for this
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
@@ -207,6 +206,7 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kFreeRoam:
 					SetParent(cachedChloe.transform);
 					SetMeshActive(false);
+					MelonLoader.MelonCoroutines.Start(EnableMovement());
 					break;
                 case eGameMode.kLoading:
                     break;
@@ -223,6 +223,13 @@ namespace DawnVR.Modules.VR
 					break;
 			}
         }
+
+		private System.Collections.IEnumerator EnableMovement()
+        {
+			yield return new WaitForSeconds(1);
+			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
+			T_F8FE3E1C.s_hideUI = false;
+		}
 
         private void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
         {
