@@ -1,0 +1,5 @@
+﻿ - player height is never taken into account
+ - for the length of the splash screen on game start, the player is stuck to 0,0,0 instead of being around the main menu camera
+ - when using "Return to Main Menu" in the pause menu causes the mod to try to move the player before the scene is completely loaded, keeping the player stuck at 0,0,0
+ - as alec noted from his playtests, when spinning in a circle you can gain some slight speed (with the new movement system)
+ - when loading into a scene there may be a wait before the player can move, i haven't been able to track down why this occurs
