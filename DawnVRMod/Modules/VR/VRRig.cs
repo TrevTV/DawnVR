@@ -206,7 +206,7 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kFreeRoam:
 					SetParent(cachedChloe.transform);
 					SetMeshActive(false);
-					MelonLoader.MelonCoroutines.Start(EnableMovement());
+					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
 					break;
                 case eGameMode.kLoading:
                     break;
@@ -224,7 +224,7 @@ namespace DawnVR.Modules.VR
 			}
         }
 
-		private System.Collections.IEnumerator EnableMovement()
+		private System.Collections.IEnumerator EnableFreeRoam()
         {
 			yield return new WaitForSeconds(1);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
