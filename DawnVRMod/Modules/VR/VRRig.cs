@@ -185,8 +185,7 @@ namespace DawnVR.Modules.VR
 					break;
 				case eGameMode.kCutscene:
 					// todo: fade to black (steamvr has a built in thing?)
-                    // todo: set camera's rendertexture to the one used for the ui to prevent motion sickness
-					// maybe just make the above configurable, from testing motion sickness doesnt occur, at least for the opening cutscene
+					Camera.CutsceneVision(true);
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
                     SetMeshActive(true);
@@ -199,11 +198,12 @@ namespace DawnVR.Modules.VR
 						rot.z = 0;
 						transform.eulerAngles = rot;
 					}
-                    break;
+					break;
                 case eGameMode.kDialog:
 					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
 					break;
                 case eGameMode.kFreeRoam:
+					Camera.CutsceneVision(false);
 					SetParent(cachedChloe.transform);
 					SetMeshActive(false);
 					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());

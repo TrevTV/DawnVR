@@ -9,6 +9,8 @@ namespace DawnVR.Modules
         public static bool UseSnapTurning { get; private set; }
         public static int SnapTurnAngle { get; private set; }
 
+        public static bool EnableCutsceneBorder { get; private set; }
+
         public static bool EnableInternalLogging { get; private set; }
 
         public static void Init()
@@ -18,6 +20,7 @@ namespace DawnVR.Modules
             MelonPreferences_Entry<int> smoothTurnSpeed = category.CreateEntry(nameof(SmoothTurnSpeed), 120);
             MelonPreferences_Entry<bool> snapTurning = category.CreateEntry(nameof(UseSnapTurning), false);
             MelonPreferences_Entry<int> snapTurnAngle = category.CreateEntry(nameof(SnapTurnAngle), 45);
+            MelonPreferences_Entry<bool> enableCutsceneBorder = category.CreateEntry(nameof(EnableCutsceneBorder), true);
             MelonPreferences_Entry<bool> enableInternalLogging = category.CreateEntry(nameof(EnableInternalLogging), false);
 
             MelonPreferences.Save();
@@ -26,6 +29,7 @@ namespace DawnVR.Modules
             SmoothTurnSpeed = smoothTurnSpeed.Value;
             UseSnapTurning = snapTurning.Value;
             SnapTurnAngle = snapTurnAngle.Value;
+            EnableCutsceneBorder = enableCutsceneBorder.Value;
             EnableInternalLogging = enableInternalLogging.Value;
         }
 
