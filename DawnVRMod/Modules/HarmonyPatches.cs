@@ -486,11 +486,8 @@ namespace DawnVR.Modules
 
         public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
         {
-            // todo: fade between large jumps (without using coroutines)
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
-                // if (Vector3.Distance(VRRig.Instance.transform.position, position) >= 1f) { }
-
                 VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
                 Vector3 rot = _13A97A3A2.transform.eulerAngles;
                 rot.x = 0;
