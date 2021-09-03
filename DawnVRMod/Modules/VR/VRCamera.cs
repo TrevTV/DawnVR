@@ -6,6 +6,7 @@ namespace DawnVR.Modules.VR
     internal class VRCamera : MonoBehaviour
     {
         public Camera Component;
+        public Shader OverlayShader;
         public RenderTexture RenderToVRTexture;
 
         private Camera uiCamera;
@@ -30,6 +31,8 @@ namespace DawnVR.Modules.VR
             uiCamera.clearFlags = CameraClearFlags.Color;
             uiCamera.backgroundColor = new Color(0, 0, 0, 0);
             uiRenderer.GetComponent<MeshRenderer>().material.mainTexture = RenderToVRTexture;
+            OverlayShader = uiRenderer.GetComponent<MeshRenderer>().material.shader;
+            OverlayShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
             #endregion
         }
