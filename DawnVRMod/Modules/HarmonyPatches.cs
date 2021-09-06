@@ -307,6 +307,8 @@ namespace DawnVR.Modules
             if (__result)
             {
                 MelonLogger.Msg("Game successfully updated to mode " + _1C57B7248);
+                if (_1C57B7248 == eGameMode.kFreeRoam && (VRRig.Instance.ChloeComponent == null || VRRig.Instance.ChloeComponent.enabled == false))
+                    VRRig.Instance.UpdateCachedChloe(T_A6E913D1.Instance.m_mainCharacter);
                 VRRig.Instance?.UpdateRigParent(_1C57B7248);
             }
         }
@@ -472,10 +474,18 @@ namespace DawnVR.Modules
             Material material = null;
             foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                Material possibleMat = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
-                if (possibleMat != null)
-                    material = possibleMat;
+                material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
+                // todo: add hand models for farewell
+                if (material == null)
+                    material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Farewell_Body"));
             }
+            if (material == null)
+            {
+                MelonLogger.Error("Failed to locate the hand material in scene " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+                VRRig.Instance.ChloeMaterial = new Material(Shader.Find("Standard"));
+                return;
+            }
+
             material.hideFlags = HideFlags.DontUnloadUnusedAsset;
             VRRig.Instance.ChloeMaterial = material;
 
@@ -488,7 +498,7 @@ namespace DawnVR.Modules
         {
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
             {
-                VRRig.Instance.transform.position = _1ACF98885 - new Vector3(0, 1, 0);
+                VRRig.Instance.transform.position = _1ACF98885 - Vector3.up;
                 Vector3 rot = _13A97A3A2.transform.eulerAngles;
                 rot.x = 0;
                 rot.z = 0;

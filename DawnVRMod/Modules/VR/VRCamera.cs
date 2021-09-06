@@ -22,7 +22,7 @@ namespace DawnVR.Modules.VR
             visionBlocker = transform.Find("VisionBlocker").gameObject;
             cutsceneBlocker = transform.Find("CutsceneVision").gameObject;
             cutsceneBlocker.GetComponent<MeshRenderer>().material.renderQueue = 5000;
-            cutsceneBlocker.transform.localScale = new Vector3(2.5f, 3f, 3f);
+            cutsceneBlocker.transform.localScale = new Vector3(2.5f, 3f, 4f);
             cutsceneBlocker.SetActive(false);
 
             Component.backgroundColor = Color.black;

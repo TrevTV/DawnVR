@@ -7,6 +7,7 @@ namespace DawnVR.Modules.VR
         public static VRRig Instance;
 
 		public Transform ChloeTransform => cachedChloe?.transform;
+		public T_C3DD66D9 ChloeComponent => cachedChloe;
 		public MeshRenderer[] HandMeshRenderers;
 		public Material ChloeMaterial;
 		public VRCamera Camera;
@@ -189,7 +190,7 @@ namespace DawnVR.Modules.VR
                     if (transform.parent == cachedChloe.transform)
                         SetParent(null, null, false);
                     SetMeshActive(true);
-					Camera dawnCamera = T_34182F31.main;
+					/*Camera dawnCamera = T_34182F31.main;
 					if (dawnCamera != null)
                     {
                         transform.position = dawnCamera.transform.position - new Vector3(0, 1, 0);
@@ -197,7 +198,7 @@ namespace DawnVR.Modules.VR
 						rot.x = 0;
 						rot.z = 0;
 						transform.eulerAngles = rot;
-					}
+					}*/
 					break;
                 case eGameMode.kDialog:
 					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
@@ -242,6 +243,8 @@ namespace DawnVR.Modules.VR
                     transform.localPosition = newLocalPosition.Value;
                 else
                     transform.localPosition = Vector3.zero;
+
+				transform.eulerAngles = Vector3.zero;
             }
         }
 
