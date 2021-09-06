@@ -32,9 +32,6 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState));
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
 
-            // Disable Idling
-            //PatchPre(typeof(T_7C97EEE2).GetMethod("GetIdleExtraName"), nameof(GetIdleExtraName));
-
             // Rig Parent Updating
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode));
@@ -290,16 +287,6 @@ namespace DawnVR.Modules
 
         #endregion
 
-        #region Disable Idling
-
-        public static bool GetIdleExtraName(ref string __result)
-        {
-            __result = "empty_anim";
-            return false;
-        }
-
-        #endregion
-
         #region Rig Parent Updating
 
         public static void OnSetMode(bool __result, eGameMode _1C57B7248)
@@ -449,25 +436,6 @@ namespace DawnVR.Modules
         public static void PostCharControllerStart(T_C3DD66D9 __instance)
         {
             VRRig.Instance?.UpdateCachedChloe(__instance);
-
-            #region Disable Idling
-
-            /*AnimationClip clip = new AnimationClip();
-            clip.name = "empty_anim";
-            clip.legacy = true;
-            __instance.m_animation.AddClip(clip, "empty_anim");
-
-            foreach (AnimationState state in __instance.m_animStates)
-            {
-                if (state.name.ToLower().Contains("idle"))
-                {
-                    state.weight = 0;
-                    state.speed = 0;
-                    state.time = 0;
-                }
-            }*/
-
-            #endregion
 
             #region Add Hand Material
 
