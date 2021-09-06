@@ -25,6 +25,7 @@ namespace DawnVR
 
         public override void OnApplicationStart()
         {
+            // todo: add check for any updates on github
             if (Environment.GetCommandLineArgs().Contains("OpenVR"))
                 vrEnabled = true;
             else
