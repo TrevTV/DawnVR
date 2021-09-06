@@ -479,7 +479,12 @@ namespace DawnVR.Modules
         {
             // todo: make a camera and rendertexture instead of just saying "no, leave"
             __instance.enabled = false;
-            __instance.gameObject.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Standard"));
+            __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
+            VRMirrorReflection reflection = __instance.gameObject.AddComponent<VRMirrorReflection>();
+            reflection.m_DisablePixelLights = __instance.m_DisablePixelLights;
+            reflection.m_TextureSize = __instance.m_TextureSize;
+            reflection.m_ClipPlaneOffset = __instance.m_ClipPlaneOffset;
+            reflection.m_ReflectLayers = __instance.m_ReflectLayers;
             return false;
         }
 

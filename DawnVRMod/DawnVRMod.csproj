@@ -67,6 +67,7 @@
     <Compile Include="Modules\OutputRedirect.cs" />
     <Compile Include="Modules\Preferences.cs" />
     <Compile Include="Modules\Resources.cs" />
+    <Compile Include="Modules\VR\VRMirrorReflection.cs" />
     <Compile Include="Modules\VR\VRPostProcessing.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_BooleanEvent.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_PoseEvent.cs" />
