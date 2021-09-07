@@ -61,6 +61,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove));
             PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe));
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake));
+            PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade));
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
@@ -472,6 +473,19 @@ namespace DawnVR.Modules
                 rot.z = 0;
                 VRRig.Instance.transform.eulerAngles = rot;
             }
+        }
+
+        public static bool UpdateUIFade(float _13C05413A, Color _1A2D6C82C)
+        {
+            if (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_overrideBlackScreen)
+                SteamVR_Fade.Start(Color.black, 0);
+            else
+            {
+                _1A2D6C82C.a = _13C05413A;
+                SteamVR_Fade.Start(_1A2D6C82C, 0);
+            }
+            
+            return false;
         }
 
         public static bool MirrorReflectionAwake(T_55EA835B __instance)
