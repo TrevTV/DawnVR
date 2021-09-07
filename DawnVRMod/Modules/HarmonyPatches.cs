@@ -444,7 +444,6 @@ namespace DawnVR.Modules
             foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
-                // todo: add hand models for farewell
                 if (material == null)
                     material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Farewell_Body"));
             }
