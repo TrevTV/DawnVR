@@ -51,18 +51,21 @@ namespace DawnVR.Modules.VR
 
 		private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
+			if (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
 			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
 			ChloeComponent._11C77E995 = transform.rotation;
 		}
 
 		private void OnThumbstickLeft(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
+			if (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
 			transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
 			ChloeComponent._11C77E995 = transform.rotation;
 		}
 
 		private void OnThumbstickRight(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
+			if (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
 			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
 			ChloeComponent._11C77E995 = transform.rotation;
 		}
@@ -204,15 +207,6 @@ namespace DawnVR.Modules.VR
                     if (transform.parent == ChloeComponent.transform)
                         SetParent(null, null, false);
                     SetMeshActive(true);
-					/*Camera dawnCamera = T_34182F31.main;
-					if (dawnCamera != null)
-                    {
-                        transform.position = dawnCamera.transform.position - new Vector3(0, 1, 0);
-						Vector3 rot = dawnCamera.transform.eulerAngles;
-						rot.x = 0;
-						rot.z = 0;
-						transform.eulerAngles = rot;
-					}*/
 					break;
                 case eGameMode.kDialog:
 					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
@@ -226,7 +220,9 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kLoading:
                     break;
                 case eGameMode.kMainMenu:
+					Camera.CutsceneVision(false);
 					Camera.BlockVision(true);
+					ChangeHandModel(chloeHandRenderers);
 					foreach (MeshRenderer renderer in ActiveHandRenderers)
 						renderer.sharedMaterial.shader = Resources.DitheredHandMaterial.shader;
 					transform.rotation = Quaternion.Euler(0, 85, 0);
