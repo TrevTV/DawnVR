@@ -6,14 +6,12 @@ namespace DawnVR.Modules.VR
     {
         public static VRRig Instance;
 
-		public Transform ChloeTransform => cachedChloe?.transform;
-		public T_C3DD66D9 ChloeComponent => cachedChloe;
-		public MeshRenderer[] HandMeshRenderers;
+		public Transform ChloeTransform => ChloeComponent?.transform;
+		public T_C3DD66D9 ChloeComponent;
+		public VRHandInfo[] HandInfos;
 		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
-
-		private T_C3DD66D9 cachedChloe;
 
 		private void Start()
         {
@@ -22,11 +20,11 @@ namespace DawnVR.Modules.VR
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
 
-			HandMeshRenderers = new MeshRenderer[]
-			{
-				transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>(),
-				transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>()
-			};
+            HandInfos = new VRHandInfo[]
+            {
+                transform.Find("Controller (left)").gameObject.AddComponent<VRHandInfo>(),
+                transform.Find("Controller (right)").gameObject.AddComponent<VRHandInfo>()
+            };
 
 			if (Preferences.UseSmoothTurning)
 				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
@@ -42,19 +40,19 @@ namespace DawnVR.Modules.VR
 		private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
 			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
-			cachedChloe._11C77E995 = transform.rotation;
+			ChloeComponent._11C77E995 = transform.rotation;
 		}
 
 		private void OnThumbstickLeft(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
 			transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
-			cachedChloe._11C77E995 = transform.rotation;
+			ChloeComponent._11C77E995 = transform.rotation;
 		}
 
 		private void OnThumbstickRight(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
 			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
-			cachedChloe._11C77E995 = transform.rotation;
+			ChloeComponent._11C77E995 = transform.rotation;
 		}
 
 		#endregion
@@ -180,14 +178,18 @@ namespace DawnVR.Modules.VR
 			// disable unused camera, improves performance
 			T_34182F31.main.enabled = false;
 
-			switch (gameMode)
+            int currentEpisode = T_A6E913D1.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
+            foreach (VRHandInfo info in HandInfos)
+                info.ChangeModel(currentEpisode == 4 ? VRHandInfo.HandModel.Max : VRHandInfo.HandModel.Chloe);
+
+            switch (gameMode)
             {
                 case eGameMode.kCustomization:
 					break;
 				case eGameMode.kCutscene:
 					// todo: fade to black (steamvr has a built in thing?)
 					Camera.CutsceneVision(true);
-                    if (transform.parent == cachedChloe.transform)
+                    if (transform.parent == ChloeComponent.transform)
                         SetParent(null, null, false);
                     SetMeshActive(true);
 					/*Camera dawnCamera = T_34182F31.main;
@@ -205,7 +207,7 @@ namespace DawnVR.Modules.VR
 					break;
                 case eGameMode.kFreeRoam:
 					Camera.CutsceneVision(false);
-					SetParent(cachedChloe.transform);
+					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
 					break;
@@ -250,18 +252,18 @@ namespace DawnVR.Modules.VR
 
         public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
-            cachedChloe = newChloe;
+            ChloeComponent = newChloe;
             if (updateParent)
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }
 
 		public void SetMeshActive(bool active)
         {
-			foreach (SkinnedMeshRenderer sMesh in cachedChloe.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+			foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 				sMesh.enabled = active;
 
-			foreach (MeshRenderer renderer in HandMeshRenderers)
-				renderer.sharedMaterial = active ? Resources.DitheredHandMaterial : ChloeMaterial;
-		}
+            foreach (VRHandInfo info in HandInfos)
+                info.ChangeMaterial(active ? VRHandInfo.HandMaterial.Dithered : VRHandInfo.HandMaterial.Standard);
+        }
     }
 }

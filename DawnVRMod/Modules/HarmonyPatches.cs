@@ -310,7 +310,7 @@ namespace DawnVR.Modules
         public static void SetReminderTexture(T_81803C2C __instance)
         {
             __instance.SetAlpha(1);
-            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+            VRRig.Instance.transform.Find("Controller (left)/CustomModel/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
         }
 
         #endregion
@@ -444,7 +444,6 @@ namespace DawnVR.Modules
             foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
-                // todo: add hand models for farewell
                 if (material == null)
                     material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Farewell_Body"));
             }

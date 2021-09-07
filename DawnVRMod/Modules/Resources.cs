@@ -1,6 +1,7 @@
 ﻿using System;
 using Valve.VR;
 using UnityEngine;
+using DawnVR.Modules.VR;
 
 namespace DawnVR.Modules
 {
@@ -24,8 +25,8 @@ namespace DawnVR.Modules
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
-            pose1.transform.Find("ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
-            ditheredHandMaterial = pose1.transform.Find("ActuallyLeftHand").GetComponent<MeshRenderer>().material;
+            pose1.transform.Find("CustomModel/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
+            ditheredHandMaterial = pose1.transform.Find("CustomModel").GetComponent<MeshRenderer>().material;
             ditheredHandMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
             if (shouldRenderCameraRig)
             {
@@ -36,8 +37,26 @@ namespace DawnVR.Modules
 
             #endregion
 
+            #region Hand Assets
+
+            AssetBundle handAssets = ResourceLoader.GetAssetBundle("handassets");
+            VRHandInfo.ChloeHandMeshes = new Mesh[]
+            {
+                handAssets.LoadAssetWithHF<Mesh>("Assets/AssetBundleData/HandAssets/Chloe_LeftHand.asset"),
+                handAssets.LoadAssetWithHF<Mesh>("Assets/AssetBundleData/HandAssets/Chloe_RightHand.asset")
+            };
+            VRHandInfo.MaxHandMeshes = new Mesh[]
+            {
+                handAssets.LoadAssetWithHF<Mesh>("Assets/AssetBundleData/HandAssets/Max_LeftHand.asset"),
+                handAssets.LoadAssetWithHF<Mesh>("Assets/AssetBundleData/HandAssets/Max_RightHand.asset")
+            };
+            VRHandInfo.ChloeTexture = handAssets.LoadAssetWithHF<Texture2D>("Assets/AssetBundleData/HandAssets/Chloe_Body.png");
+            VRHandInfo.MaxTexture = handAssets.LoadAssetWithHF<Texture2D>("Assets/AssetBundleData/HandAssets/Max_Body.png");
+
+            #endregion
+
             steamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
-            mirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/Mirror/Mirror.shader");
+            mirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
         }
 
         private static readonly bool shouldRenderCameraRig = false;

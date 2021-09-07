@@ -67,6 +67,7 @@
     <Compile Include="Modules\OutputRedirect.cs" />
     <Compile Include="Modules\Preferences.cs" />
     <Compile Include="Modules\Resources.cs" />
+    <Compile Include="Modules\VR\VRHandInfo.cs" />
     <Compile Include="Modules\VR\VRMirrorReflection.cs" />
     <Compile Include="Modules\VR\VRPostProcessing.cs" />
     <Compile Include="SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_BooleanEvent.cs" />
@@ -160,6 +161,9 @@
     <Content Include="TextFiles\credits.txt" />
     <Content Include="TextFiles\internals_notes.txt" />
     <Content Include="TextFiles\known_issues.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\handassets" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
