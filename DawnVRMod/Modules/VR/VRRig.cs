@@ -6,11 +6,15 @@ namespace DawnVR.Modules.VR
     {
         public static VRRig Instance;
 
-		public MeshRenderer[] HandMeshRenderers;
+		public MeshRenderer[] ActiveHandRenderers;
 		public T_C3DD66D9 ChloeComponent;
 		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
+
+		private MeshRenderer[] chloeHandRenderers;
+		private MeshRenderer[] maxHandRenderers;
+		private Transform handpadTransform;
 
 		private void Start()
         {
@@ -19,11 +23,20 @@ namespace DawnVR.Modules.VR
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
             Input = new VRInput();
 
-			HandMeshRenderers = new MeshRenderer[]
+			chloeHandRenderers = new MeshRenderer[]
 			{
-				transform.Find("Controller (left)/ActuallyLeftHand").GetComponent<MeshRenderer>(),
-				transform.Find("Controller (right)/ActuallyRightHand").GetComponent<MeshRenderer>()
+				transform.Find("Controller (left)/CustomModel (Chloe)").GetComponent<MeshRenderer>(),
+				transform.Find("Controller (right)/CustomModel (Chloe)").GetComponent<MeshRenderer>()
 			};
+
+			maxHandRenderers = new MeshRenderer[]
+			{
+				transform.Find("Controller (left)/CustomModel (Max)").GetComponent<MeshRenderer>(),
+				transform.Find("Controller (right)/CustomModel (Max)").GetComponent<MeshRenderer>()
+			};
+
+			handpadTransform = chloeHandRenderers[0].transform.Find("handpad");
+			ActiveHandRenderers = chloeHandRenderers;
 
 			if (Preferences.UseSmoothTurning)
 				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
@@ -177,6 +190,10 @@ namespace DawnVR.Modules.VR
 			// disable unused camera, improves performance
 			T_34182F31.main.enabled = false;
 
+			int currentEpisode = T_A6E913D1.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
+			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
+			else ChangeHandModel(chloeHandRenderers);
+
 			switch (gameMode)
             {
                 case eGameMode.kCustomization:
@@ -210,6 +227,8 @@ namespace DawnVR.Modules.VR
                     break;
                 case eGameMode.kMainMenu:
 					Camera.BlockVision(true);
+					foreach (MeshRenderer renderer in ActiveHandRenderers)
+						renderer.sharedMaterial.shader = Resources.DitheredHandMaterial.shader;
 					transform.rotation = Quaternion.Euler(0, 85, 0);
 					transform.position = new Vector3(-29.2f, -27.3f, -68.9f);
 					Camera.BlockVision(false);
@@ -252,13 +271,23 @@ namespace DawnVR.Modules.VR
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }
 
+		public void ChangeHandModel(MeshRenderer[] renderers)
+        {
+			foreach (MeshRenderer renderer in ActiveHandRenderers)
+				renderer.gameObject.SetActive(false);
+			ActiveHandRenderers = renderers;
+			handpadTransform.parent = ActiveHandRenderers[0].transform;
+			foreach (MeshRenderer renderer in ActiveHandRenderers)
+				renderer.gameObject.SetActive(true);
+		}
+
 		public void SetMeshActive(bool active)
         {
 			foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 				sMesh.enabled = active;
 
-			foreach (MeshRenderer renderer in HandMeshRenderers)
-				renderer.sharedMaterial = active ? Resources.DitheredHandMaterial : ChloeMaterial;
+			foreach (MeshRenderer renderer in ActiveHandRenderers)
+				renderer.sharedMaterial.shader = active ? Resources.DitheredHandMaterial.shader : ChloeMaterial.shader;
 		}
     }
 }

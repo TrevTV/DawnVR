@@ -310,7 +310,7 @@ namespace DawnVR.Modules
         public static void SetReminderTexture(T_81803C2C __instance)
         {
             __instance.SetAlpha(1);
-            VRRig.Instance.transform.Find("Controller (left)/ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
+            VRRig.Instance.ActiveHandRenderers[0].transform.Find("handpad").GetComponent<MeshRenderer>().sharedMaterial = __instance.m_reminderRenderer.material;
         }
 
         #endregion

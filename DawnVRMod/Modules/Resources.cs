@@ -24,8 +24,8 @@ namespace DawnVR.Modules
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
-            pose1.transform.Find("ActuallyLeftHand/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
-            ditheredHandMaterial = pose1.transform.Find("ActuallyLeftHand").GetComponent<MeshRenderer>().material;
+            pose1.transform.Find("CustomModel (Chloe)/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
+            ditheredHandMaterial = pose1.transform.Find("CustomModel (Chloe)").GetComponent<MeshRenderer>().material;
             ditheredHandMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
             if (shouldRenderCameraRig)
             {
@@ -37,7 +37,7 @@ namespace DawnVR.Modules
             #endregion
 
             steamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
-            mirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/Mirror/Mirror.shader");
+            mirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
         }
 
         private static readonly bool shouldRenderCameraRig = false;
