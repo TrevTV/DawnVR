@@ -477,7 +477,6 @@ namespace DawnVR.Modules
 
         public static bool MirrorReflectionAwake(T_55EA835B __instance)
         {
-            // todo: make a camera and rendertexture instead of just saying "no, leave"
             __instance.enabled = false;
             __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
             VRMirrorReflection reflection = __instance.gameObject.AddComponent<VRMirrorReflection>();
