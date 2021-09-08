@@ -199,27 +199,27 @@ namespace DawnVR.Modules.VR
 			else ChangeHandModel(chloeHandRenderers);
 
 			switch (gameMode)
-            {
-                case eGameMode.kCustomization:
+			{
+				case eGameMode.kCustomization:
 					break;
 				case eGameMode.kCutscene:
 					Camera.CutsceneVision(true);
-                    if (transform.parent == ChloeComponent.transform)
-                        SetParent(null, null, false);
-                    SetMeshActive(true);
+					if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
+						SetParent(null, null, false);
+					SetMeshActive(true);
 					break;
-                case eGameMode.kDialog:
+				case eGameMode.kDialog:
 					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
 					break;
-                case eGameMode.kFreeRoam:
+				case eGameMode.kFreeRoam:
 					Camera.CutsceneVision(false);
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
 					break;
-                case eGameMode.kLoading:
-                    break;
-                case eGameMode.kMainMenu:
+				case eGameMode.kLoading:
+					break;
+				case eGameMode.kMainMenu:
 					Camera.CutsceneVision(false);
 					Camera.BlockVision(true);
 					ChangeHandModel(chloeHandRenderers);
@@ -228,15 +228,15 @@ namespace DawnVR.Modules.VR
 					transform.position = new Vector3(-29.2f, -27.3f, -68.9f);
 					Camera.BlockVision(false);
 					break;
-                case eGameMode.kNone:
-                    SetParent(null);
-                    break;
-                case eGameMode.kPosterView:
+				case eGameMode.kNone:
+					SetParent(null);
 					break;
-                case eGameMode.kVideo:
+				case eGameMode.kPosterView:
+					break;
+				case eGameMode.kVideo:
 					break;
 			}
-        }
+		}
 
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
@@ -290,10 +290,13 @@ namespace DawnVR.Modules.VR
 
 		public void SetMeshActive(bool active)
         {
-			foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-				sMesh.enabled = active;
-
-			ChangeHandShader(active ? Resources.DitherShader : ChloeMaterial.shader);
+			if (ChloeComponent != null)
+            {
+				foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+					sMesh.enabled = active;
+				if (ChloeMaterial != null)
+					ChangeHandShader(active ? Resources.DitherShader : ChloeMaterial.shader);
+			}
 		}
     }
 }

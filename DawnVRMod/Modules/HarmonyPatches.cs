@@ -63,6 +63,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
+            PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes nullrefs after get_MainUICamera() tries to use Camera.main
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
@@ -126,7 +127,8 @@ namespace DawnVR.Modules
             {
                 Vector3 axis = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
                 float modifier = T_A6E913D1.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
-                __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier);
+                try { __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier); }
+                catch { }
             }
             return false;
         }
@@ -604,6 +606,23 @@ namespace DawnVR.Modules
             reflection.m_TextureSize = __instance.m_TextureSize;
             reflection.m_ClipPlaneOffset = __instance.m_ClipPlaneOffset;
             reflection.m_ReflectLayers = __instance.m_ReflectLayers;
+            return false;
+        }
+
+        public static bool GetMainUICamera(ref Camera __result)
+        {
+            Camera camera = null;
+            try { camera = Camera.main; }
+            catch { }
+            if (camera == null)
+            {
+                if (T_34182F31._1444D8BF3 != null)
+                    camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
+            }
+            else if (T_34182F31._1444D8BF3 != camera)
+                T_34182F31._1444D8BF3 = camera;
+
+            __result = camera;
             return false;
         }
 

@@ -1,4 +1,3 @@
 ﻿ - player height is never taken into account
  - as alec noted from his playtests, when spinning in a circle you can gain some slight speed (with the new movement system)
  - some parts of the interaction ui may get hidden behind objects, a good example being one of the stickers in the Parking Lot scene
- - some cutscenes have a wait before they begin where the player is just stuck at (assumingly) 0,0,0, and it seems commit 43089ca97de4bfd073247d7ac1da15d8d9d3ae8f didnt actually fix it
