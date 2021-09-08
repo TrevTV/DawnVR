@@ -15,6 +15,7 @@ namespace DawnVR.Modules.VR
 		private MeshRenderer[] chloeHandRenderers;
 		private MeshRenderer[] maxHandRenderers;
 		private Transform handpadTransform;
+		private bool justExitedCutscene;
 
 		private void Start()
         {
@@ -75,7 +76,7 @@ namespace DawnVR.Modules.VR
 		private void Update()
         {
 			// this could probably be improved, but it works for now
-			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
+			if (!justExitedCutscene && ChloeComponent != null && transform.parent == ChloeComponent.transform)
             {
 				Vector3 oldPosition = transform.position;
 				Vector3 newChloePos = Camera.transform.position;
@@ -241,9 +242,11 @@ namespace DawnVR.Modules.VR
 
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
-			yield return new WaitForSeconds(1);
+			justExitedCutscene = true;
+			yield return new WaitForSeconds(2);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
 			T_F8FE3E1C.s_hideUI = false;
+			justExitedCutscene = false;
 		}
 
         private void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
