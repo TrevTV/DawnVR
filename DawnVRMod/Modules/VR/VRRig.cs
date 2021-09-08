@@ -224,8 +224,7 @@ namespace DawnVR.Modules.VR
 					Camera.CutsceneVision(false);
 					Camera.BlockVision(true);
 					ChangeHandModel(chloeHandRenderers);
-					foreach (MeshRenderer renderer in ActiveHandRenderers)
-						renderer.sharedMaterial.shader = Resources.DitheredHandMaterial.shader;
+					ChangeHandShader(Resources.DitherShader);
 					transform.rotation = Quaternion.Euler(0, 85, 0);
 					transform.position = new Vector3(-29.2f, -27.3f, -68.9f);
 					Camera.BlockVision(false);
@@ -280,13 +279,20 @@ namespace DawnVR.Modules.VR
 				renderer.gameObject.SetActive(true);
 		}
 
+		public void ChangeHandShader(Shader shader)
+        {
+			foreach (MeshRenderer renderer in chloeHandRenderers)
+				renderer.material.shader = shader;
+			foreach (MeshRenderer renderer in maxHandRenderers)
+				renderer.material.shader = shader;
+		}
+
 		public void SetMeshActive(bool active)
         {
 			foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 				sMesh.enabled = active;
 
-			foreach (MeshRenderer renderer in ActiveHandRenderers)
-				renderer.sharedMaterial.shader = active ? Resources.DitheredHandMaterial.shader : ChloeMaterial.shader;
+			ChangeHandShader(active ? Resources.DitherShader : ChloeMaterial.shader);
 		}
     }
 }

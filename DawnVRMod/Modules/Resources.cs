@@ -9,7 +9,7 @@ namespace DawnVR.Modules
         public static GameObject VRCameraRig => vrCameraRig;
         public static Shader SteamFadeShader => steamFadeShader;
         public static Shader MirrorShader => mirrorShader;
-        public static Material DitheredHandMaterial => ditheredHandMaterial;
+        public static Shader DitherShader => ditherShader;
 
         public static void Init()
         {
@@ -25,8 +25,8 @@ namespace DawnVR.Modules
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
             pose1.transform.Find("CustomModel (Chloe)/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
-            ditheredHandMaterial = pose1.transform.Find("CustomModel (Chloe)").GetComponent<MeshRenderer>().material;
-            ditheredHandMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            ditherShader = pose1.transform.Find("CustomModel (Chloe)").GetComponent<MeshRenderer>().material.shader;
+            ditherShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
             if (shouldRenderCameraRig)
             {
                 Shader standard = Shader.Find("Standard");
@@ -44,6 +44,6 @@ namespace DawnVR.Modules
         private static GameObject vrCameraRig;
         private static Shader steamFadeShader;
         private static Shader mirrorShader;
-        private static Material ditheredHandMaterial;
+        private static Shader ditherShader;
     }
 }
