@@ -22,46 +22,46 @@ namespace DawnVR.Modules
             // todo: find cause of input enabling delay, im sure its from one of these patches
             HarmonyInstance = hInstance;
             // Debug Stuff
-            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
-            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
+            PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen)); // skips most of the splash screens
+            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // Input Handling
-            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(InputManagerInit));
-            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle));
-            PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum));
-            PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState));
-            PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis));
+            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(InputManagerInit)); // makes the game think we're using an xbox controller
+            PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle)); // overrides it so it doesnt actually calculate the angle, as VRRig and CharControllerMove handles that
+            PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState", new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
+            PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
+            PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis)); // redirect input to vr controllers
 
             // Rig Parent Updating
-            PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel));
-            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode));
+            PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene
+            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode)); // lets VRRig know when the game's mode changes
 
             // Objective Manager
-            PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), nameof(SetReminderTexture));
-            PatchPre(typeof(T_1928221C).GetMethod("Update", HarmonyLib.AccessTools.all), nameof(DontRunMe));
+            PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), nameof(SetReminderTexture)); // adds the reminder to the vr hands
+            PatchPre(typeof(T_1928221C).GetMethod("Update", HarmonyLib.AccessTools.all), nameof(DontRunMe)); // makes it so the objective view button doesnt work since it's useless in vr
 
             // Highlight Manager
-            PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract));
-            PatchPre(typeof(T_1C1609D7).GetMethod("Update"), nameof(CUICameraRelativeUpdate));
-            PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition));
-            PatchPre(typeof(T_F8FE3E1C).GetMethod("Update"), nameof(DontRunMe));
-            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI
-            PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI
-            PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI
+            PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract)); // prevents some weird bug
+            PatchPre(typeof(T_1C1609D7).GetMethod("Update"), nameof(CUICameraRelativeUpdate)); // overrides the ui3d camera with the vrcamera rotation
+            PatchPre(typeof(T_2D9F19A8).GetMethod("UpdatePosition"), nameof(CUIAnchorUpdatePosition)); // makes it so OverlayPosition isnt needed
+            PatchPre(typeof(T_F8FE3E1C).GetMethod("Update"), nameof(DontRunMe)); // honestly can't remember why this is here
+            PatchPre(typeof(T_8F74F848).GetMethod("CheckOnScreen"), nameof(IsHotspotOnScreen)); // HotSpotUI, makes it use the vr camera for calculations
+            PatchPre(typeof(T_572A4969).GetMethod("CheckOnScreen"), nameof(IsInteractOnScreen)); // InteractUI, makes it use the vr camera for calculations
+            PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI, makes it use the vr camera for calculations
 
             // Tutorial Fixes
-            PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo));
+            PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
 
             // Misc
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart));
-            PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText));
-            PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition));
-            PatchPre(typeof(T_3BE79CFB).GetMethod("Start", HarmonyLib.AccessTools.all), nameof(BoundaryStart));
-            PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart));
-            PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove));
-            PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe));
-            PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake));
-            PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade));
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // mainly updates VRRig's chloe and material
+            PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
+            PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition)); // moves VRRig to follow the camera during a cutscene
+            PatchPre(typeof(T_3BE79CFB).GetMethod("Start", HarmonyLib.AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
+            PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
+            PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart)); // prevents bug with FollowCamera disabling interaction
+            PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
+            PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
+            PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
