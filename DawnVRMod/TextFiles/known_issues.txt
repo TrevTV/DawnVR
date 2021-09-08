@@ -1,4 +1,3 @@
 ﻿ - player height is never taken into account
  - as alec noted from his playtests, when spinning in a circle you can gain some slight speed (with the new movement system)
- - when loading into a scene there may be a wait before the player can move, i haven't been able to track down why this occurs
  - some parts of the interaction ui may get hidden behind objects, a good example being one of the stickers in the Parking Lot scene
