@@ -270,6 +270,8 @@ namespace DawnVR.Modules.VR
 
 		public void ChangeHandModel(MeshRenderer[] renderers)
         {
+			if (ActiveHandRenderers == renderers) return;
+
 			foreach (MeshRenderer renderer in ActiveHandRenderers)
 				renderer.gameObject.SetActive(false);
 			ActiveHandRenderers = renderers;
