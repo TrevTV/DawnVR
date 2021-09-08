@@ -203,7 +203,6 @@ namespace DawnVR.Modules.VR
                 case eGameMode.kCustomization:
 					break;
 				case eGameMode.kCutscene:
-					// todo: fade to black (steamvr has a built in thing?)
 					Camera.CutsceneVision(true);
                     if (transform.parent == ChloeComponent.transform)
                         SetParent(null, null, false);
