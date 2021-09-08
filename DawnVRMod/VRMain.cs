@@ -6,6 +6,9 @@ using UnityEngine;
 using System.Linq;
 using Valve.VR;
 using System;
+using System.Net;
+using System.Net.NetworkInformation;
+using Ping = System.Net.NetworkInformation.Ping;
 
 namespace DawnVR
 {
@@ -20,12 +23,14 @@ namespace DawnVR
 
     public class VRMain : MelonMod
     {
+        private const string githubApiUrl = "https://api.github.com/repos/TrevTV/DawnVR/releases/latest";
         private bool vrEnabled;
         private bool steamInitRunning;
 
         public override void OnApplicationStart()
         {
-            // todo: add check for any updates on github
+            //CheckForUpdates();
+
             if (Environment.GetCommandLineArgs().Contains("OpenVR"))
                 vrEnabled = true;
             else
@@ -44,6 +49,39 @@ namespace DawnVR
             HarmonyPatches.Init(HarmonyInstance);
             if (Preferences.EnableInternalLogging)
                 OutputRedirect.Init(HarmonyInstance);
+        }
+
+        private void CheckForUpdates()
+        {
+            #region Check For Internet
+
+            Ping ping = new Ping();
+            PingOptions pingOptions = new PingOptions();
+            PingReply reply = ping.Send("8.8.8.8", 1000, new byte[32], pingOptions);
+            if (reply.Status != IPStatus.Success)
+            {
+                MelonLogger.Warning("You are not connected to the internet, skipping update check.");
+                return;
+            }
+
+            #endregion
+
+            using (WebClient client = new WebClient())
+            {
+                client.Headers["User-Agent"] = "DawnVR";
+                string apiResonse = client.DownloadString(githubApiUrl);
+                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(apiResonse);
+                Version version = new Version(node["tag_name"]);
+                if (version > new Version(BuildInfo.Version))
+                {
+                    MelonLogger.Warning("============================================================");
+                    MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
+                    MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
+                    MelonLogger.Warning("============================================================");
+                }
+                else
+                    MelonLogger.Msg("Up to date.");
+            }
         }
 
         public override void OnUpdate()
