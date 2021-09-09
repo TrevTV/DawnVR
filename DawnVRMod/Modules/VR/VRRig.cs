@@ -52,23 +52,32 @@ namespace DawnVR.Modules.VR
 
 		private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
-			if (T_A6E913D1.Instance == null || T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
-			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
-			ChloeComponent._11C77E995 = transform.rotation;
+			try
+            {
+				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
+				ChloeComponent._11C77E995 = transform.rotation;
+			}
+			catch { }
 		}
 
 		private void OnThumbstickLeft(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
-			if (T_A6E913D1.Instance == null || T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
-			transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
-			ChloeComponent._11C77E995 = transform.rotation;
+			try
+            {
+				transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
+				ChloeComponent._11C77E995 = transform.rotation;
+			}
+			catch { }
 		}
 
 		private void OnThumbstickRight(Valve.VR.SteamVR_Action_Boolean fromAction, Valve.VR.SteamVR_Input_Sources fromSource)
 		{
-			if (T_A6E913D1.Instance == null || T_A6E913D1.Instance.m_levelManager.LoadInProgress) return;
-			transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
-			ChloeComponent._11C77E995 = transform.rotation;
+			try
+            {
+				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
+				ChloeComponent._11C77E995 = transform.rotation;
+			}
+			catch { }
 		}
 
 		#endregion

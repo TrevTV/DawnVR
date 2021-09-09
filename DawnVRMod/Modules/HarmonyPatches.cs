@@ -6,6 +6,7 @@ using MelonLoader;
 using System.Reflection;
 using DawnVR.Modules.VR;
 using UnityEngine._1F1547F66;
+using UnityEngine.SceneManagement;
 
 namespace DawnVR.Modules
 {
@@ -611,19 +612,22 @@ namespace DawnVR.Modules
 
         public static bool GetMainUICamera(ref Camera __result)
         {
-            Camera camera = null;
-            try { camera = Camera.main; }
-            catch { }
-            if (camera == null)
+            if (T_A6E913D1.Instance.m_levelManager.MenuScene != null && T_A6E913D1.Instance.m_levelManager.MenuScene == SceneManager.GetActiveScene().name)
             {
-                if (T_34182F31._1444D8BF3 != null)
-                    camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
-            }
-            else if (T_34182F31._1444D8BF3 != camera)
-                T_34182F31._1444D8BF3 = camera;
+                Camera camera = null;
+                try { camera = Camera.main; } catch { }
+                if (camera == null)
+                {
+                    if (T_34182F31._1444D8BF3 != null)
+                        camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
+                }
+                else if (T_34182F31._1444D8BF3 != camera)
+                    T_34182F31._1444D8BF3 = camera;
 
-            __result = camera;
-            return false;
+                __result = camera;
+                return false;
+            }
+            return true;
         }
 
         private static readonly string[] scrollingTextOptions =
