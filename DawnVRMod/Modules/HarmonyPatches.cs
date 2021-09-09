@@ -20,7 +20,6 @@ namespace DawnVR.Modules
 
         public static void Init(HarmonyLib.Harmony hInstance)
         {
-            // todo: find cause of input enabling delay, im sure its from one of these patches
             HarmonyInstance = hInstance;
             // Debug Stuff
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen)); // skips most of the splash screens
