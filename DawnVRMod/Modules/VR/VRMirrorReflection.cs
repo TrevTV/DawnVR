@@ -22,6 +22,7 @@ namespace DawnVR.Modules.VR
         private int m_OldReflectionTextureSize = 0;
 
         private int m_frameCounter = 0;
+        private Renderer renderer;
 
         private static bool s_InsideRendering = false;
 
@@ -40,8 +41,7 @@ namespace DawnVR.Modules.VR
                 return;
             }
 
-            var rend = GetComponent<Renderer>();
-            if (!enabled || !rend || !rend.sharedMaterial || !rend.enabled)
+            if (!enabled || !renderer || !renderer.sharedMaterial || !renderer.enabled)
                 return;
 
             Camera cam = VRRig.Instance.Camera.Component;
@@ -55,9 +55,9 @@ namespace DawnVR.Modules.VR
 
             m_frameCounter = m_framesNeededToUpdate;
 
-            RenderCamera(cam, rend, Camera.StereoscopicEye.Left, ref m_ReflectionTextureLeft);
+            RenderCamera(cam, renderer, Camera.StereoscopicEye.Left, ref m_ReflectionTextureLeft);
             if (cam.stereoEnabled)
-                RenderCamera(cam, rend, Camera.StereoscopicEye.Right, ref m_ReflectionTextureRight);
+                RenderCamera(cam, renderer, Camera.StereoscopicEye.Right, ref m_ReflectionTextureRight);
         }
 
         private void RenderCamera(Camera cam, Renderer rend, Camera.StereoscopicEye eye, ref RenderTexture reflectionTexture)
@@ -189,6 +189,11 @@ namespace DawnVR.Modules.VR
             dest.fieldOfView = src.fieldOfView;
             dest.aspect = src.aspect;
             dest.orthographicSize = src.orthographicSize;
+        }
+
+        private void Start()
+        {
+            renderer = GetComponent<Renderer>();
         }
 
         // On-demand create any objects we need
