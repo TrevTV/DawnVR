@@ -65,6 +65,15 @@
     <Compile Include="AssemblyLoadingTools.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\OutputRedirect.cs" />
+    <Compile Include="Modules\Patches\NoVR.cs" />
+    <Compile Include="Modules\Patches\ObjectiveManager.cs" />
+    <Compile Include="Modules\Patches\HighlightManager.cs" />
+    <Compile Include="Modules\Patches\UIFixes.cs" />
+    <Compile Include="Modules\Patches\InteractionFixes.cs" />
+    <Compile Include="Modules\Patches\RigParentModifers.cs" />
+    <Compile Include="Modules\Patches\RigMovement.cs" />
+    <Compile Include="Modules\Patches\InputOverrides.cs" />
+    <Compile Include="Modules\Patches\Debug.cs" />
     <Compile Include="Modules\Preferences.cs" />
     <Compile Include="Modules\Resources.cs" />
     <Compile Include="Modules\VR\VRMirrorReflection.cs" />
