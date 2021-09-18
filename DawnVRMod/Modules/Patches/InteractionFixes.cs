@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using MelonLoader;
 
 namespace DawnVR.Modules
 {
@@ -26,6 +25,7 @@ namespace DawnVR.Modules
                 }
                 __instance.m_haltTransitionPreemtively = false;
             }
+
             if (__instance.Character == null) return false;
 
             __instance._13A040863 = __instance.Character.transform.position;

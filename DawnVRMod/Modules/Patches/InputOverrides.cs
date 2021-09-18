@@ -6,8 +6,7 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        public static void ManagerInit(T_6FCAE66C __instance)
-            => __instance._1C6FBAE09 = eControlType.kXboxOne;
+        public static void ManagerInit(T_6FCAE66C __instance) => __instance._1C6FBAE09 = eControlType.kXboxOne;
 
         public static eInputState GetInputState_Binding(T_6FCAE66C inputManInstance, T_9005A419 binding)
         {
@@ -70,18 +69,6 @@ namespace DawnVR.Modules
                 case eJoystickKey.kSelect:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                     break;
-                /*case eJoystickKey.kDPadUp:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickUp(VRInput.Hand.Left));
-                    break;
-                case eJoystickKey.kDPadRight:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickRight(VRInput.Hand.Left));
-                    break;
-                case eJoystickKey.kDPadLeft:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickLeft(VRInput.Hand.Left));
-                    break;
-                case eJoystickKey.kDPadDown:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetThumbstickDown(VRInput.Hand.Left));
-                    break;*/
                 case eJoystickKey.kR1:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
                     break;
@@ -126,7 +113,6 @@ namespace DawnVR.Modules
                 default:
                     break;
             }
-
             return false;
         }
 
@@ -162,7 +148,6 @@ namespace DawnVR.Modules
                 default:
                     break;
             }
-
             return false;
         }
     }

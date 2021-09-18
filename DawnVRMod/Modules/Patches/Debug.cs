@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace DawnVR.Modules
+﻿namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {

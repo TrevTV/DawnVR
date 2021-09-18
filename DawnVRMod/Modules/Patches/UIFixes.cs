@@ -35,7 +35,6 @@ namespace DawnVR.Modules
                 _1A2D6C82C.a = _13C05413A;
                 SteamVR_Fade.Start(_1A2D6C82C, 0);
             }
-
             return false;
         }
 
@@ -46,7 +45,6 @@ namespace DawnVR.Modules
                 __instance._133003896(T_64B68373.eCurrentLesson.kCloseWindow); // NextLesson
                 return false;
             }
-
             return true;
         }
     }

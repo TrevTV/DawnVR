@@ -81,10 +81,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition2));
         }
 
-        public static bool DontRunMe()
-        {
-            return false;
-        }
+        public static bool DontRunMe() => false;
 
         #region Misc
 

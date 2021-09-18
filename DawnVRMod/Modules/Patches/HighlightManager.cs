@@ -69,6 +69,7 @@ namespace DawnVR.Modules
                 if (hotspotObj != null)
                     hotspotObj.Select(false, false);
             }
+
             __result = false;
             return false;
         }
@@ -99,6 +100,7 @@ namespace DawnVR.Modules
                 return false;
             }
             __instance._1649E566F();
+
             __result = false;
             return false;
         }
