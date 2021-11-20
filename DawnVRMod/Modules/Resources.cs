@@ -6,27 +6,27 @@ namespace DawnVR.Modules
 {
     internal static class Resources
     {
-        public static GameObject VRCameraRig => vrCameraRig;
-        public static Shader SteamFadeShader => steamFadeShader;
-        public static Shader MirrorShader => mirrorShader;
-        public static Shader DitherShader => ditherShader;
+        public static GameObject VRCameraRig { get; private set; }
+        public static Shader SteamFadeShader { get; private set; }
+        public static Shader MirrorShader { get; private set; }
+        public static Shader DitherShader { get; private set; }
 
         public static void Init()
         {
             #region VRCameraRig
 
             AssetBundle camRig = ResourceLoader.GetAssetBundle("data");
-            vrCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
-            vrCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
-            SteamVR_Behaviour_Pose pose1 = vrCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
-            SteamVR_Behaviour_Pose pose2 = vrCameraRig.transform.Find("Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
+            VRCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
+            VRCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
+            SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
+            SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
             pose1.poseAction = SteamVR_Actions._default.Pose;
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
             pose2.inputSource = SteamVR_Input_Sources.RightHand;
             pose1.transform.Find("CustomModel (Chloe)/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
-            ditherShader = pose1.transform.Find("CustomModel (Chloe)").GetComponent<MeshRenderer>().material.shader;
-            ditherShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            DitherShader = pose1.transform.Find("CustomModel (Chloe)").GetComponent<MeshRenderer>().material.shader;
+            DitherShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
             if (shouldRenderCameraRig)
             {
                 Shader standard = Shader.Find("Standard");
@@ -36,14 +36,10 @@ namespace DawnVR.Modules
 
             #endregion
 
-            steamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
-            mirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
+            SteamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
+            MirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
         }
 
         private static readonly bool shouldRenderCameraRig = false;
-        private static GameObject vrCameraRig;
-        private static Shader steamFadeShader;
-        private static Shader mirrorShader;
-        private static Shader ditherShader;
     }
 }
