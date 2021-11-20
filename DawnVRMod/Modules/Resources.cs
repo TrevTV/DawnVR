@@ -15,7 +15,7 @@ namespace DawnVR.Modules
         {
             #region VRCameraRig
 
-            AssetBundle camRig = ResourceLoader.GetAssetBundle("camerarig");
+            AssetBundle camRig = ResourceLoader.GetAssetBundle("data");
             vrCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
             vrCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
             SteamVR_Behaviour_Pose pose1 = vrCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
