@@ -84,21 +84,6 @@ namespace DawnVR
             }
         }
 
-        public override void OnUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                MelonLogger.Msg("Is Freeroam? (true) " + (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kFreeRoam));
-                MelonLogger.Msg("Is Debug? (false) " + T_A6E913D1.Instance.m_gameModeManager.isDebug);
-                MelonLogger.Msg("Is That Thing? (true) " + (!T_408CFC35.s_inHotspotRange || T_A6E913D1.Instance.m_inputManager.GetInputState(eGameInput.kInteract, true, true, true) == eInputState.kNone || T_A6E913D1.Instance.m_inputManager.GetInputState(eGameInput.kInteract, true, true, true) == eInputState.kUp));
-                MelonLogger.Msg("Is FollowCam Null? (true) " + (T_A6E913D1.Instance.m_followCamera != null));
-                MelonLogger.Msg("Is Interaction Blocked? (false) " + T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked);
-                MelonLogger.Msg("Is GenericBlock? (false) " + (T_A6E913D1.Instance.m_gameModeManager.genericMovementBlock));
-                MelonLogger.Msg("Is Freelook? (false) " + (T_A6E913D1.Instance.m_followCamera.m_isFreelook));
-                MelonLogger.Msg("Is Paused? (false) " + (T_A6E913D1.Instance.Paused));
-            }
-        }
-
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {
             if (!vrEnabled) return;

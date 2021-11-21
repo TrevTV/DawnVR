@@ -250,7 +250,7 @@ namespace DawnVR.Modules.VR
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
 			justExitedCutscene = true;
-			yield return new WaitForSeconds(2);
+			yield return new WaitForSeconds(1);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
 			T_F8FE3E1C.s_hideUI = false;
 			justExitedCutscene = false;
