@@ -249,7 +249,6 @@ namespace DawnVR.Modules.VR
 
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
-			//MelonLoader.MelonLogger.Msg("fuck you :)");
 			justExitedCutscene = true;
 			yield return new WaitForSeconds(2);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
@@ -305,7 +304,7 @@ namespace DawnVR.Modules.VR
 				foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 					sMesh.enabled = active;
 				if (ChloeMaterial != null)
-					ChangeHandShader(active ? Resources.DitherShader : ChloeMaterial.shader);
+					ChangeHandShader(active ? Resources.DitherShader : Shader.Find("Custom/LISCharacterDeferred"));
 			}
 		}
     }
