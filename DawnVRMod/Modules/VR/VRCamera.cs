@@ -47,8 +47,16 @@ namespace DawnVR.Modules.VR
 
         public void CutsceneVision(bool enabled)
         {
-            if (Preferences.EnableCutsceneBorder)
+            if (Preferences.EnableCutsceneBorder && cutsceneBlocker != null)
                 cutsceneBlocker.SetActive(enabled);
+        }
+
+        public void ReparentCutsceneVision(Transform t, Vector3 newLocalPosition, Vector3 newLocalRotation)
+        {
+            if (cutsceneBlocker == null) return;
+            cutsceneBlocker.transform.parent = t;
+            cutsceneBlocker.transform.localPosition = newLocalPosition;
+            cutsceneBlocker.transform.localRotation = Quaternion.Euler(newLocalRotation);
         }
     }
 }

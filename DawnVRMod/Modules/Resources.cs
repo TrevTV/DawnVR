@@ -11,8 +11,6 @@ namespace DawnVR.Modules
         public static Shader MirrorShader { get; private set; }
         public static Shader DitherShader { get; private set; }
 
-        public static GameObject CutsceneRoom { get; private set; }
-
         public static void Init()
         {
             #region VRCameraRig
@@ -40,8 +38,6 @@ namespace DawnVR.Modules
 
             SteamFadeShader = dataBundle.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
             MirrorShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
-
-            CutsceneRoom = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/CutsceneBox.prefab");
         }
 
         private static readonly bool shouldRenderCameraRig = false;

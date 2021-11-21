@@ -5,8 +5,8 @@ namespace DawnVR.Modules.VR
     internal class VRCutsceneHandler : MonoBehaviour
     {
         private bool cutsceneRunning;
-        private Camera cutsceneCamera;
-        private GameObject cutsceneRoom;
+        private Transform cameraLock;
+        private Camera headsetCamera;
         private RenderTexture cutsceneRenderTexture;
 
         private void Start()
@@ -17,14 +17,13 @@ namespace DawnVR.Modules.VR
 
         private void LateUpdate()
         {
-            if (cutsceneCamera != null && cutsceneCamera.enabled)
+            if (headsetCamera != null && headsetCamera.enabled)
             {
-                // todo: maybe take rotation from vr camera
-                cutsceneCamera.transform.position = T_34182F31.main.transform.position;
-                cutsceneCamera.transform.rotation = T_34182F31.main.transform.rotation;
-                cutsceneCamera.fieldOfView = T_34182F31.main.fieldOfView;
-                cutsceneCamera.nearClipPlane = T_34182F31.main.nearClipPlane;
-                cutsceneCamera.farClipPlane = T_34182F31.main.farClipPlane;
+                cameraLock.localPosition = (headsetCamera.transform.localPosition * -1) + T_34182F31.main.transform.position;
+                cameraLock.localRotation = Quaternion.Euler(0f, T_34182F31.main.transform.localRotation.y, 0f);
+                headsetCamera.fieldOfView = T_34182F31.main.fieldOfView;
+                headsetCamera.nearClipPlane = T_34182F31.main.nearClipPlane;
+                headsetCamera.farClipPlane = T_34182F31.main.farClipPlane;
             }
         }
 
@@ -36,36 +35,34 @@ namespace DawnVR.Modules.VR
             CheckCutsceneRequirements();
 
             cutsceneRunning = true;
-            cutsceneRoom.SetActive(true);
-            cutsceneCamera.enabled = true;
+            headsetCamera.enabled = true;
 
-            VRRig.Instance.SetParent(null, new Vector3(0f, 1000f, 0f));
+            VRRig.Instance.Camera.ReparentCutsceneVision(headsetCamera.transform, new Vector3(0, 0, 1.25f), new Vector3(-90f, -180f, 90));
+            VRRig.Instance.Camera.CutsceneVision(true);
+            VRRig.Instance.Camera.gameObject.SetActive(false);
         }
 
         public void EndCutscene()
         {
             cutsceneRunning = false;
-            if (cutsceneRoom != null)
-                cutsceneRoom.SetActive(false);
-            if (cutsceneCamera != null)
-                cutsceneCamera.enabled = false;
+            if (headsetCamera != null)
+                headsetCamera.enabled = false;
+
+            VRRig.Instance.Camera.gameObject.SetActive(true);
+            VRRig.Instance.Camera.CutsceneVision(false);
         }
 
         private void CheckCutsceneRequirements()
         {
-            if (cutsceneRoom == null)
-            {
-                cutsceneRoom = GameObject.Instantiate(Resources.CutsceneRoom);
-                cutsceneRoom.transform.position = new Vector3(0f, 1000f, 0f);
-                cutsceneRoom.transform.Find("Screen").GetComponent<MeshRenderer>().sharedMaterial.mainTexture = cutsceneRenderTexture;
-            }
+            if (cameraLock == null)
+                cameraLock = new GameObject("CameraLock").transform;
 
-            if (cutsceneCamera == null)
+            if (headsetCamera == null)
             {
                 GameObject camObj = new GameObject("VRCutsceneCamera");
-                cutsceneCamera = camObj.AddComponent<Camera>();
-                cutsceneCamera.depth = 100;
-                cutsceneCamera.targetTexture = cutsceneRenderTexture;
+                headsetCamera = camObj.AddComponent<Camera>();
+                headsetCamera.depth = 100;
+                headsetCamera.transform.parent = cameraLock;
             }
         }
     }
