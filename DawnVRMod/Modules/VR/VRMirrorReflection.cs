@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR;
 
-// slightly modified from https://forum.unity.com/threads/mirror-reflections-in-vr.416728/
+// heavily cleaned up version from https://forum.unity.com/threads/mirror-reflections-in-vr.416728/
 namespace DawnVR.Modules.VR
 {
     public class VRMirrorReflection : MonoBehaviour
     {
-        public bool m_DisablePixelLights = true;
+        private static bool CurrentlyRendering;
+
+        public Camera camera;
         public int m_TextureSize = 256;
         public float m_ClipPlaneOffset = 0.07f;
         public int m_framesNeededToUpdate = 0;
@@ -15,118 +16,78 @@ namespace DawnVR.Modules.VR
 
         public LayerMask m_ReflectLayers = -1;
 
-        private Dictionary<Camera, Camera> m_ReflectionCameras = new Dictionary<Camera, Camera>();
-
-        private RenderTexture m_ReflectionTextureLeft = null;
-        private RenderTexture m_ReflectionTextureRight = null;
-        private int m_OldReflectionTextureSize = 0;
-
-        private int m_frameCounter = 0;
+        private int frameCounter = 0;
         private Renderer renderer;
+        private Camera reflectionCamera;
+        private RenderTexture leftReflectionTexture;
+        private RenderTexture rightReflectionTexture;
 
-        private static bool s_InsideRendering = false;
+        private void Start()
+        {
+            camera = VRRig.Instance.Camera.Component;
+            renderer = GetComponent<Renderer>();
+            SetupReflectionCamera();
+            SetupRenderTexture(ref leftReflectionTexture);
+            SetupRenderTexture(ref rightReflectionTexture);
+        }
 
-        // This is called when it's known that the object will be rendered by some
-        // camera. We render reflections and do other updates here.
-        // Because the script executes in edit mode, reflections for the scene view
-        // camera will just work!
-        public void OnWillRenderObject()
+        private void OnWillRenderObject()
         {
             if (T_55EA835B.s_blockMirrorRenders || (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress))
                 return;
 
-            if (m_frameCounter > 0)
+            if (frameCounter > 0)
             {
-                m_frameCounter--;
+                frameCounter--;
                 return;
             }
 
             if (!enabled || !renderer || !renderer.sharedMaterial || !renderer.enabled)
                 return;
 
-            Camera cam = VRRig.Instance.Camera.Component;
-            if (!cam)
+            if (CurrentlyRendering)
                 return;
 
-            // Safeguard from recursive reflections.
-            if (s_InsideRendering)
-                return;
-            s_InsideRendering = true;
+            CurrentlyRendering = true;
+            frameCounter = m_framesNeededToUpdate;
 
-            m_frameCounter = m_framesNeededToUpdate;
-
-            RenderCamera(cam, renderer, Camera.StereoscopicEye.Left, ref m_ReflectionTextureLeft);
-            if (cam.stereoEnabled)
-                RenderCamera(cam, renderer, Camera.StereoscopicEye.Right, ref m_ReflectionTextureRight);
+            RenderCamera(Camera.StereoscopicEye.Left, ref leftReflectionTexture);
+            RenderCamera(Camera.StereoscopicEye.Right, ref rightReflectionTexture);
         }
 
-        private void RenderCamera(Camera cam, Renderer rend, Camera.StereoscopicEye eye, ref RenderTexture reflectionTexture)
+        private void RenderCamera(Camera.StereoscopicEye eye, ref RenderTexture reflectionTexture)
         {
-            Camera reflectionCamera;
-            CreateMirrorObjects(cam, eye, out reflectionCamera, ref reflectionTexture);
-
-            // find out the reflection plane: position and normal in world space
             Vector3 pos = transform.position;
             Vector3 normal = transform.up;
 
-            // Optionally disable pixel lights for reflection
-            int oldPixelLightCount = QualitySettings.pixelLightCount;
-            if (m_DisablePixelLights)
-                QualitySettings.pixelLightCount = 0;
-
-            CopyCameraProperties(cam, reflectionCamera);
-
-            // Render reflection
-            // Reflect camera around reflection plane
             float d = -Vector3.Dot(normal, pos) - m_ClipPlaneOffset;
             Vector4 reflectionPlane = new Vector4(normal.x, normal.y, normal.z, d);
 
             Matrix4x4 reflection = Matrix4x4.zero;
             CalculateReflectionMatrix(ref reflection, reflectionPlane);
 
-            Vector3 oldEyePos;
-            Matrix4x4 worldToCameraMatrix;
-            if (cam.stereoEnabled)
-            {
-                worldToCameraMatrix = cam.GetStereoViewMatrix(eye) * reflection;
-
-                var eyeOffset = SteamVR.instance.eyes[(int)eye].pos;
-                eyeOffset.z = 0.0f;
-                oldEyePos = cam.transform.position + cam.transform.TransformVector(eyeOffset);
-            }
-            else
-            {
-                worldToCameraMatrix = cam.worldToCameraMatrix * reflection;
-                oldEyePos = cam.transform.position;
-            }
-
+            var eyeOffset = SteamVR.instance.eyes[(int)eye].pos;
+            eyeOffset.z = 0.0f;
+            Vector3 oldEyePos = camera.transform.position + camera.transform.TransformVector(eyeOffset);
+            Matrix4x4 worldToCameraMatrix = camera.GetStereoViewMatrix(eye) * reflection;
             Vector3 newEyePos = reflection.MultiplyPoint(oldEyePos);
-            reflectionCamera.transform.position = newEyePos;
 
+            reflectionCamera.transform.position = newEyePos;
             reflectionCamera.worldToCameraMatrix = worldToCameraMatrix;
 
-            // Setup oblique projection matrix so that near plane is our reflection
-            // plane. This way we clip everything below/above it for free.
             Vector4 clipPlane = CameraSpacePlane(worldToCameraMatrix, pos, normal, 1.0f);
-
-            Matrix4x4 projectionMatrix;
-            if (cam.stereoEnabled) projectionMatrix = HMDMatrix4x4ToMatrix4x4(SteamVR.instance.hmd.GetProjectionMatrix((EVREye)eye, cam.nearClipPlane, cam.farClipPlane));
-            else projectionMatrix = cam.projectionMatrix;
-
-            //projectionMatrix = cam.CalculateObliqueMatrix(clipPlane);
+            Matrix4x4 projectionMatrix = HMDMatrix4x4ToMatrix4x4(SteamVR.instance.hmd.GetProjectionMatrix((EVREye)eye, camera.nearClipPlane, camera.farClipPlane));
             MakeProjectionMatrixOblique(ref projectionMatrix, clipPlane);
 
             reflectionCamera.projectionMatrix = projectionMatrix;
-            reflectionCamera.cullingMask = m_ReflectLayers.value;
             reflectionCamera.targetTexture = reflectionTexture;
+
             GL.invertCulling = true;
-            //Vector3 euler = cam.transform.eulerAngles;
-            //reflectionCamera.transform.eulerAngles = new Vector3(0, euler.y, euler.z);
-            reflectionCamera.transform.rotation = cam.transform.rotation;
+            reflectionCamera.transform.rotation = camera.transform.rotation;
             reflectionCamera.Render();
-            //reflectionCamera.transform.position = oldEyePos;
             GL.invertCulling = false;
-            Material[] materials = rend.sharedMaterials;
+
+            Material[] materials = renderer.sharedMaterials;
             string property = "_ReflectionTex" + eye.ToString();
             foreach (Material mat in materials)
             {
@@ -134,115 +95,9 @@ namespace DawnVR.Modules.VR
                     mat.SetTexture(property, reflectionTexture);
             }
 
-            // Restore pixel light count
-            if (m_DisablePixelLights)
-                QualitySettings.pixelLightCount = oldPixelLightCount;
-
-            s_InsideRendering = false;
+            CurrentlyRendering = false;
         }
 
-        // Cleanup all the objects we possibly have created
-        private void OnDisable()
-        {
-            if (m_ReflectionTextureLeft)
-            {
-                DestroyImmediate(m_ReflectionTextureLeft);
-                m_ReflectionTextureLeft = null;
-            }
-            if (m_ReflectionTextureRight)
-            {
-                DestroyImmediate(m_ReflectionTextureRight);
-                m_ReflectionTextureRight = null;
-            }
-            foreach (var kvp in m_ReflectionCameras)
-                DestroyImmediate(((Camera)kvp.Value).gameObject);
-            m_ReflectionCameras.Clear();
-        }
-
-        private void CopyCameraProperties(Camera src, Camera dest)
-        {
-            if (dest == null)
-                return;
-            // set camera to clear the same way as current camera
-            dest.clearFlags = src.clearFlags;
-            dest.backgroundColor = src.backgroundColor;
-            if (src.clearFlags == CameraClearFlags.Skybox)
-            {
-                Skybox sky = src.GetComponent(typeof(Skybox)) as Skybox;
-                Skybox mysky = dest.GetComponent(typeof(Skybox)) as Skybox;
-                if (!sky || !sky.material)
-                {
-                    mysky.enabled = false;
-                }
-                else
-                {
-                    mysky.enabled = true;
-                    mysky.material = sky.material;
-                }
-            }
-            // update other values to match current camera.
-            // even if we are supplying custom camera&projection matrices,
-            // some of values are used elsewhere (e.g. skybox uses far plane)
-            dest.farClipPlane = src.farClipPlane;
-            dest.nearClipPlane = src.nearClipPlane;
-            dest.orthographic = src.orthographic;
-            dest.fieldOfView = src.fieldOfView;
-            dest.aspect = src.aspect;
-            dest.orthographicSize = src.orthographicSize;
-        }
-
-        private void Start()
-        {
-            renderer = GetComponent<Renderer>();
-        }
-
-        // On-demand create any objects we need
-        private void CreateMirrorObjects(Camera currentCamera, Camera.StereoscopicEye eye, out Camera reflectionCamera, ref RenderTexture reflectionTexture)
-        {
-            reflectionCamera = null;
-
-            // Reflection render texture
-            if (!reflectionTexture || m_OldReflectionTextureSize != m_TextureSize)
-            {
-                if (reflectionTexture)
-                    DestroyImmediate(reflectionTexture);
-                reflectionTexture = new RenderTexture(m_TextureSize, m_TextureSize, 16);
-                reflectionTexture.name = "__MirrorReflection" + eye.ToString() + GetInstanceID();
-                reflectionTexture.isPowerOfTwo = true;
-                reflectionTexture.hideFlags = HideFlags.DontSave;
-                if (Screen.height > 800)
-                {
-                    T_8E34015F.QualitySetting fxQuality = T_8E34015F.s_imGraphicsSettings.fxQuality;
-                    if (fxQuality == T_8E34015F.QualitySetting.kHighest || fxQuality == T_8E34015F.QualitySetting.kHigh)
-                        reflectionTexture.antiAliasing = 2;
-                }
-                m_OldReflectionTextureSize = m_TextureSize;
-            }
-
-            // Camera for reflection
-            if (!m_ReflectionCameras.TryGetValue(currentCamera, out reflectionCamera)) // catch both not-in-dictionary and in-dictionary-but-deleted-GO
-            {
-                GameObject go = new GameObject("Mirror Reflection Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(), typeof(Camera), typeof(Skybox));
-                reflectionCamera = go.GetComponent<Camera>();
-                reflectionCamera.enabled = false;
-                reflectionCamera.transform.position = transform.position;
-                reflectionCamera.transform.rotation = transform.rotation;
-                reflectionCamera.gameObject.AddComponent<FlareLayer>();
-                reflectionCamera.cullingMask = (-17 & m_ReflectLayers.value & ~(1 << LayerMask.NameToLayer("EditorGizmo")) & ~(1 << LayerMask.NameToLayer("UI3D")) & ~(1 << LayerMask.NameToLayer("ObjectiveUI")));
-                go.hideFlags = HideFlags.DontSave;
-                m_ReflectionCameras.Add(currentCamera, reflectionCamera);
-            }
-        }
-
-        // Extended sign: returns -1, 0 or 1 based on sign of a
-        private static float sgn(float a)
-        {
-            if (a > 0.0f) return 1.0f;
-            if (a < 0.0f) return -1.0f;
-            return 0.0f;
-        }
-
-        // Given position/normal of the plane, calculates plane in camera space.
         private Vector4 CameraSpacePlane(Matrix4x4 worldToCameraMatrix, Vector3 pos, Vector3 normal, float sideSign)
         {
             Vector3 offsetPos = pos + normal * m_ClipPlaneOffset;
@@ -251,8 +106,31 @@ namespace DawnVR.Modules.VR
             return new Vector4(cnormal.x, cnormal.y, cnormal.z, -Vector3.Dot(cpos, cnormal));
         }
 
-        // Calculates reflection matrix around the given plane
-        private static void CalculateReflectionMatrix(ref Matrix4x4 reflectionMat, Vector4 plane)
+        private void MakeProjectionMatrixOblique(ref Matrix4x4 matrix, Vector4 clipPlane)
+        {
+            Vector4 q;
+
+            q.x = (sgn(clipPlane.x) + matrix[8]) / matrix[0];
+            q.y = (sgn(clipPlane.y) + matrix[9]) / matrix[5];
+            q.z = -1.0F;
+            q.w = (1.0F + matrix[10]) / matrix[14];
+
+            Vector4 c = clipPlane * (2.0F / Vector3.Dot(clipPlane, q));
+
+            matrix[2] = c.x;
+            matrix[6] = c.y;
+            matrix[10] = c.z + 1.0F;
+            matrix[14] = c.w;
+
+            float sgn(float a)
+            {
+                if (a > 0.0f) return 1.0f;
+                if (a < 0.0f) return -1.0f;
+                return 0.0f;
+            }
+        }
+
+        private void CalculateReflectionMatrix(ref Matrix4x4 reflectionMat, Vector4 plane)
         {
             reflectionMat.m00 = (1F - 2F * plane[0] * plane[0]);
             reflectionMat.m01 = (-2F * plane[0] * plane[1]);
@@ -275,32 +153,7 @@ namespace DawnVR.Modules.VR
             reflectionMat.m33 = 1F;
         }
 
-        // taken from http://www.terathon.com/code/oblique.html
-        private static void MakeProjectionMatrixOblique(ref Matrix4x4 matrix, Vector4 clipPlane)
-        {
-            Vector4 q;
-
-            // Calculate the clip-space corner point opposite the clipping plane
-            // as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
-            // transform it into camera space by multiplying it
-            // by the inverse of the projection matrix
-
-            q.x = (sgn(clipPlane.x) + matrix[8]) / matrix[0];
-            q.y = (sgn(clipPlane.y) + matrix[9]) / matrix[5];
-            q.z = -1.0F;
-            q.w = (1.0F + matrix[10]) / matrix[14];
-
-            // Calculate the scaled plane vector
-            Vector4 c = clipPlane * (2.0F / Vector3.Dot(clipPlane, q));
-
-            // Replace the third row of the projection matrix
-            matrix[2] = c.x;
-            matrix[6] = c.y;
-            matrix[10] = c.z + 1.0F;
-            matrix[14] = c.w;
-        }
-
-        protected Matrix4x4 HMDMatrix4x4ToMatrix4x4(Valve.VR.HmdMatrix44_t input)
+        private Matrix4x4 HMDMatrix4x4ToMatrix4x4(HmdMatrix44_t input)
         {
             var m = Matrix4x4.identity;
 
@@ -325,6 +178,40 @@ namespace DawnVR.Modules.VR
             m[3, 3] = input.m15;
 
             return m;
+        }
+
+        private void SetupRenderTexture(ref RenderTexture rt)
+        {
+            rt = new RenderTexture(m_TextureSize, m_TextureSize, 16);
+            rt.name = "MirrorReflection";
+            rt.isPowerOfTwo = true;
+            rt.hideFlags = HideFlags.DontSave;
+            rt.antiAliasing = 2;
+        }
+
+        private void SetupReflectionCamera()
+        {
+            GameObject go = new GameObject("MirrorReflectionCamera");
+            go.hideFlags = HideFlags.DontSave;
+            go.transform.parent = transform; // todo: test this
+            go.transform.position = Vector3.zero;
+            go.transform.rotation = Quaternion.identity;
+            reflectionCamera = go.AddComponent<Camera>();
+            reflectionCamera.enabled = false;
+            reflectionCamera.cullingMask = (-17 & m_ReflectLayers.value & ~(1 << LayerMask.NameToLayer("EditorGizmo")) & ~(1 << LayerMask.NameToLayer("UI3D")) & ~(1 << LayerMask.NameToLayer("ObjectiveUI")));
+            CopyCameraProperties(camera, reflectionCamera);
+
+            void CopyCameraProperties(Camera src, Camera dest)
+            {
+                dest.clearFlags = src.clearFlags;
+                dest.backgroundColor = src.backgroundColor;
+                dest.farClipPlane = src.farClipPlane;
+                dest.nearClipPlane = src.nearClipPlane;
+                dest.orthographic = src.orthographic;
+                dest.fieldOfView = src.fieldOfView;
+                dest.aspect = src.aspect;
+                dest.orthographicSize = src.orthographicSize;
+            }
         }
     }
 }

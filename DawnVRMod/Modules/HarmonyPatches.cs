@@ -113,12 +113,10 @@ namespace DawnVR.Modules
 
         public static bool MirrorReflectionAwake(T_55EA835B __instance)
         {
-            // todo: mirror in episode 1 is broken for some reason
-            // "Recursive culling with the same camera is not possible"
             __instance.enabled = false;
             __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
             VRMirrorReflection reflection = __instance.gameObject.AddComponent<VRMirrorReflection>();
-            reflection.m_DisablePixelLights = __instance.m_DisablePixelLights;
+            __instance.gameObject.layer = 16; // sets layer to "UI3D" to cull it from other mirrors
             reflection.m_TextureSize = __instance.m_TextureSize;
             reflection.m_ClipPlaneOffset = __instance.m_ClipPlaneOffset;
             reflection.m_ReflectLayers = __instance.m_ReflectLayers;
