@@ -30,7 +30,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis)); // redirect input to vr controllers
 
             // RigMovement
-            PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition)); // moves VRRig to follow the camera during a cutscene
+            //PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition)); // moves VRRig to follow the camera during a cutscene
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle)); // overrides it so it doesnt actually calculate the angle, as VRRig and CharControllerMove handles that
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
 
@@ -113,6 +113,8 @@ namespace DawnVR.Modules
 
         public static bool MirrorReflectionAwake(T_55EA835B __instance)
         {
+            // todo: mirror in episode 1 is broken for some reason
+            // "Recursive culling with the same camera is not possible"
             __instance.enabled = false;
             __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
             VRMirrorReflection reflection = __instance.gameObject.AddComponent<VRMirrorReflection>();

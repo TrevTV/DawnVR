@@ -11,12 +11,14 @@ namespace DawnVR.Modules
         public static Shader MirrorShader { get; private set; }
         public static Shader DitherShader { get; private set; }
 
+        public static GameObject CutsceneRoom { get; private set; }
+
         public static void Init()
         {
             #region VRCameraRig
 
-            AssetBundle camRig = ResourceLoader.GetAssetBundle("data");
-            VRCameraRig = camRig.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
+            AssetBundle dataBundle = ResourceLoader.GetAssetBundle("data");
+            VRCameraRig = dataBundle.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
             VRCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
             SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
             SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
@@ -36,8 +38,10 @@ namespace DawnVR.Modules
 
             #endregion
 
-            SteamFadeShader = camRig.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
-            MirrorShader = camRig.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
+            SteamFadeShader = dataBundle.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
+            MirrorShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
+
+            CutsceneRoom = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/CutsceneBox.prefab");
         }
 
         private static readonly bool shouldRenderCameraRig = false;

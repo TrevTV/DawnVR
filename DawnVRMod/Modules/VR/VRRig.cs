@@ -11,6 +11,7 @@ namespace DawnVR.Modules.VR
 		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
+		public VRCutsceneHandler CutsceneHandler;
 
 		private MeshRenderer[] chloeHandRenderers;
 		private MeshRenderer[] maxHandRenderers;
@@ -22,6 +23,7 @@ namespace DawnVR.Modules.VR
 			// todo: seated mode, alec said he could give me some of his code for this
             DontDestroyOnLoad(gameObject);
             Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
+			CutsceneHandler = gameObject.AddComponent<VRCutsceneHandler>();
             Input = new VRInput();
 
 			chloeHandRenderers = new MeshRenderer[]
@@ -207,21 +209,21 @@ namespace DawnVR.Modules.VR
 			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
 			else ChangeHandModel(chloeHandRenderers);
 
+			CutsceneHandler.EndCutscene();
+
 			switch (gameMode)
 			{
-				case eGameMode.kCustomization:
-					break;
 				case eGameMode.kCutscene:
-					Camera.CutsceneVision(true);
-					if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
-						SetParent(null, null, false);
 					SetMeshActive(true);
-					break;
+					CutsceneHandler.SetupCutscene();
+                    break;
 				case eGameMode.kDialog:
-					// nothing special should be needed for this, at most it could need the same treatment as kCutscene
+				case eGameMode.kPosterView:
+				case eGameMode.kCustomization:
+					CutsceneHandler.SetupCutscene();
 					break;
 				case eGameMode.kFreeRoam:
-					Camera.CutsceneVision(false);
+					//Camera.CutsceneVision(false);
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
@@ -229,7 +231,7 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kLoading:
 					break;
 				case eGameMode.kMainMenu:
-					Camera.CutsceneVision(false);
+					//Camera.CutsceneVision(false);
 					Camera.BlockVision(true);
 					ChangeHandModel(chloeHandRenderers);
 					ChangeHandShader(Resources.DitherShader);
@@ -240,8 +242,6 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kNone:
 					SetParent(null);
 					break;
-				case eGameMode.kPosterView:
-					break;
 				case eGameMode.kVideo:
 					break;
 			}
@@ -249,6 +249,7 @@ namespace DawnVR.Modules.VR
 
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
+			//MelonLoader.MelonLogger.Msg("fuck you :)");
 			justExitedCutscene = true;
 			yield return new WaitForSeconds(2);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
@@ -256,7 +257,7 @@ namespace DawnVR.Modules.VR
 			justExitedCutscene = false;
 		}
 
-        private void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
+        public void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
         {
             transform.parent = t;
             if (resetPos)
