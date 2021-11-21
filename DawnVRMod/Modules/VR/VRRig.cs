@@ -223,7 +223,6 @@ namespace DawnVR.Modules.VR
 					CutsceneHandler.SetupCutscene();
 					break;
 				case eGameMode.kFreeRoam:
-					//Camera.CutsceneVision(false);
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
@@ -231,7 +230,6 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kLoading:
 					break;
 				case eGameMode.kMainMenu:
-					//Camera.CutsceneVision(false);
 					Camera.BlockVision(true);
 					ChangeHandModel(chloeHandRenderers);
 					ChangeHandShader(Resources.DitherShader);
