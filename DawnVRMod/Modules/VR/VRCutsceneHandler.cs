@@ -4,7 +4,9 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCutsceneHandler : MonoBehaviour
     {
-        private bool cutsceneRunning;
+        public bool IsCutsceneActive { get; private set; }
+        public Camera CurrentCutsceneCamera => cutsceneCamera;
+
         private Camera cutsceneCamera;
         private GameObject cutsceneRoom;
         private RenderTexture cutsceneRenderTexture;
@@ -30,12 +32,12 @@ namespace DawnVR.Modules.VR
 
         public void SetupCutscene()
         {
-            if (cutsceneRunning)
+            if (IsCutsceneActive)
                 return;
 
             CheckCutsceneRequirements();
 
-            cutsceneRunning = true;
+            IsCutsceneActive = true;
             cutsceneRoom.SetActive(true);
             cutsceneCamera.enabled = true;
 
@@ -44,7 +46,7 @@ namespace DawnVR.Modules.VR
 
         public void EndCutscene()
         {
-            cutsceneRunning = false;
+            IsCutsceneActive = false;
             if (cutsceneRoom != null)
                 cutsceneRoom.SetActive(false);
             if (cutsceneCamera != null)

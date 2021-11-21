@@ -51,8 +51,14 @@ namespace DawnVR.Modules.VR
             CurrentlyRendering = true;
             frameCounter = m_framesNeededToUpdate;
 
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                camera = VRRig.Instance.CutsceneHandler.CurrentCutsceneCamera;
+            else
+                camera = VRRig.Instance.Camera.Component;
+
             RenderCamera(Camera.StereoscopicEye.Left, ref leftReflectionTexture);
-            RenderCamera(Camera.StereoscopicEye.Right, ref rightReflectionTexture);
+            if (!VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                RenderCamera(Camera.StereoscopicEye.Right, ref rightReflectionTexture);
         }
 
         private void RenderCamera(Camera.StereoscopicEye eye, ref RenderTexture reflectionTexture)
@@ -66,17 +72,31 @@ namespace DawnVR.Modules.VR
             Matrix4x4 reflection = Matrix4x4.zero;
             CalculateReflectionMatrix(ref reflection, reflectionPlane);
 
-            var eyeOffset = SteamVR.instance.eyes[(int)eye].pos;
-            eyeOffset.z = 0.0f;
-            Vector3 oldEyePos = camera.transform.position + camera.transform.TransformVector(eyeOffset);
-            Matrix4x4 worldToCameraMatrix = camera.GetStereoViewMatrix(eye) * reflection;
+            Vector3 oldEyePos;
+            Matrix4x4 worldToCameraMatrix;
+            if (!VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            {
+                worldToCameraMatrix = camera.GetStereoViewMatrix(eye) * reflection;
+
+                var eyeOffset = SteamVR.instance.eyes[(int)eye].pos;
+                eyeOffset.z = 0.0f;
+                oldEyePos = camera.transform.position + camera.transform.TransformVector(eyeOffset);
+            }
+            else
+            {
+                worldToCameraMatrix = camera.worldToCameraMatrix * reflection;
+                oldEyePos = camera.transform.position;
+            }
+
             Vector3 newEyePos = reflection.MultiplyPoint(oldEyePos);
 
             reflectionCamera.transform.position = newEyePos;
             reflectionCamera.worldToCameraMatrix = worldToCameraMatrix;
 
             Vector4 clipPlane = CameraSpacePlane(worldToCameraMatrix, pos, normal, 1.0f);
-            Matrix4x4 projectionMatrix = HMDMatrix4x4ToMatrix4x4(SteamVR.instance.hmd.GetProjectionMatrix((EVREye)eye, camera.nearClipPlane, camera.farClipPlane));
+            Matrix4x4 projectionMatrix = VRRig.Instance.CutsceneHandler.IsCutsceneActive
+                ? camera.projectionMatrix
+                : HMDMatrix4x4ToMatrix4x4(SteamVR.instance.hmd.GetProjectionMatrix((EVREye)eye, camera.nearClipPlane, camera.farClipPlane));
             MakeProjectionMatrixOblique(ref projectionMatrix, clipPlane);
 
             reflectionCamera.projectionMatrix = projectionMatrix;
