@@ -36,6 +36,7 @@ namespace DawnVR.Modules
 
             // RigParentModifer
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene
+            PatchPre(typeof(T_A6E913D1).GetMethod("Restart"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode)); // lets VRRig know when the game's mode changes
 
             // ObjectiveManager

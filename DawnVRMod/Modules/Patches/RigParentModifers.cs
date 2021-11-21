@@ -16,6 +16,6 @@ namespace DawnVR.Modules
             }
         }
 
-        public static void UnloadCurrentLevel() => VRRig.Instance.UpdateRigParent(eGameMode.kNone);
+        public static void UnloadCurrentLevel() => VRRig.Instance.SetParent(null);
     }
 }

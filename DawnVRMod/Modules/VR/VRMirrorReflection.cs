@@ -213,7 +213,7 @@ namespace DawnVR.Modules.VR
         {
             GameObject go = new GameObject("MirrorReflectionCamera");
             go.hideFlags = HideFlags.DontSave;
-            go.transform.parent = transform; // todo: test this
+            go.transform.parent = transform;
             go.transform.position = Vector3.zero;
             go.transform.rotation = Quaternion.identity;
             reflectionCamera = go.AddComponent<Camera>();
