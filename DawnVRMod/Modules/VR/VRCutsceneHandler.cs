@@ -11,6 +11,10 @@ namespace DawnVR.Modules.VR
         private GameObject cutsceneRoom;
         private RenderTexture cutsceneRenderTexture;
 
+        // todo: i believe there are 2 points of the game where you can change chloe's outfit, it may need to be implemented later
+        private readonly Vector3 customizationPosition = new Vector3(1.1717f, 1.4407f, -0.62f);
+        private readonly Quaternion customizationRotation = Quaternion.Euler(13.5597f, 232.9865f, 0f);
+
         private void Start()
         {
             cutsceneRenderTexture = new RenderTexture(1920, 1080, 16);
@@ -21,9 +25,17 @@ namespace DawnVR.Modules.VR
         {
             if (cutsceneCamera != null && cutsceneCamera.enabled)
             {
-                // todo: maybe take rotation from vr camera
-                cutsceneCamera.transform.position = T_34182F31.main.transform.position;
-                cutsceneCamera.transform.rotation = T_34182F31.main.transform.rotation;
+                if (!T_A6E913D1.Instance.m_followCamera.m_isCustomizationFreeLook)
+                {
+                    cutsceneCamera.transform.position = T_34182F31.main.transform.position;
+                    cutsceneCamera.transform.rotation = T_34182F31.main.transform.rotation;
+                }
+                else
+                {
+                    cutsceneCamera.transform.position = customizationPosition;
+                    cutsceneCamera.transform.rotation = customizationRotation;
+                }
+
                 cutsceneCamera.fieldOfView = T_34182F31.main.fieldOfView;
                 cutsceneCamera.nearClipPlane = T_34182F31.main.nearClipPlane;
                 cutsceneCamera.farClipPlane = T_34182F31.main.farClipPlane;

@@ -200,8 +200,11 @@ namespace DawnVR.Modules.VR
         public void UpdateRigParent(eGameMode gameMode)
         {
 			// prevents double renders of ui elements, both in headset, and on screen
-			T_D4EA31BB.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
-			T_D4EA31BB.s_ui3DCamera.m_camera.targetDisplay = 10;
+			if (T_D4EA31BB.s_ui3DCamera?.m_camera != null)
+            {
+				T_D4EA31BB.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
+				T_D4EA31BB.s_ui3DCamera.m_camera.targetDisplay = 10;
+            }
 			// disable unused camera, improves performance
 			T_34182F31.main.enabled = false;
 

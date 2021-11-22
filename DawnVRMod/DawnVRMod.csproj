@@ -68,6 +68,7 @@
     <Compile Include="Modules\Patches\NoVR.cs" />
     <Compile Include="Modules\Patches\ObjectiveManager.cs" />
     <Compile Include="Modules\Patches\HighlightManager.cs" />
+    <Compile Include="Modules\Patches\CustomizationFixes.cs" />
     <Compile Include="Modules\Patches\UIFixes.cs" />
     <Compile Include="Modules\Patches\InteractionFixes.cs" />
     <Compile Include="Modules\Patches\RigParentModifers.cs" />
