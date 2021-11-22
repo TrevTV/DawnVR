@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static MelonLoader.MelonLogger;
 
 namespace DawnVR.Modules
 {
