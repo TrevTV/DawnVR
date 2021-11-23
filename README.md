@@ -20,8 +20,9 @@ VR mod for Life Is Strange: Before The Storm
 - `UseSnapTurning` allows you to toggle snap turning `(default: false)`
 - `SnapTurnAngle` allows you to change the angle that snap turning rotates by `(default: 45)`
 
-### Visuals
-- `EnableCutsceneBorder` allows you to toggle the border that is visible during cutscenes `(default: true)`
+### Spectator Camera
+- `SpectatorEnabled` enables a separate camera for the monitor which has a higher FOV by default `(default: false)`
+- `SpectatorFOV` allows you to change the FOV of the spectator camera `(default: 90)`
 
 ### Debugging
 - `EnableInternalLogging` allows you to redirect internal logging calls from the game and have them shown in the MelonLoader console `(default: false)`

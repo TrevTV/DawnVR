@@ -13,6 +13,8 @@ namespace DawnVR.Modules.VR
         private Transform uiRenderer;
         private GameObject visionBlocker;
 
+        private Camera spectatorCamera;
+
         private void Start()
         {
             Component = GetComponent<Camera>();
@@ -38,6 +40,36 @@ namespace DawnVR.Modules.VR
             OverlayShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
             #endregion
+
+            CreateSpectatorCamera();
+        }
+
+        private void CreateSpectatorCamera()
+        {
+            if (!Preferences.SpectatorEnabled.Value)
+                return;
+
+            Transform specTransform = new GameObject("Spectator").transform;
+            specTransform.parent = transform;
+            spectatorCamera = specTransform.gameObject.AddComponent<Camera>();
+            CopyCameraProperties(Component, spectatorCamera);
+            spectatorCamera.depth = 100;
+            spectatorCamera.stereoTargetEye = StereoTargetEyeMask.None;
+            spectatorCamera.fieldOfView = Preferences.SpectatorFOV.Value;
+            specTransform.localPosition = Vector3.zero;
+            specTransform.localRotation = Quaternion.identity;
+
+            void CopyCameraProperties(Camera src, Camera dest)
+            {
+                dest.clearFlags = src.clearFlags;
+                dest.backgroundColor = src.backgroundColor;
+                dest.farClipPlane = src.farClipPlane;
+                dest.nearClipPlane = src.nearClipPlane;
+                dest.orthographic = src.orthographic;
+                dest.fieldOfView = src.fieldOfView;
+                dest.aspect = src.aspect;
+                dest.orthographicSize = src.orthographicSize;
+            }
         }
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
