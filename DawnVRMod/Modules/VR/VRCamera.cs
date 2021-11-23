@@ -12,7 +12,6 @@ namespace DawnVR.Modules.VR
         private Camera uiCamera;
         private Transform uiRenderer;
         private GameObject visionBlocker;
-        private GameObject cutsceneBlocker;
 
         private void Start()
         {
@@ -20,9 +19,7 @@ namespace DawnVR.Modules.VR
             gameObject.AddComponent<SteamVR_Fade>();
 
             visionBlocker = transform.Find("VisionBlocker").gameObject;
-            cutsceneBlocker = transform.Find("CutsceneVision").gameObject;
-            cutsceneBlocker.GetComponent<MeshRenderer>().material.renderQueue = 5000;
-            cutsceneBlocker.transform.localScale = new Vector3(2.5f, 3f, 4f);
+            GameObject cutsceneBlocker = transform.Find("CutsceneVision").gameObject;
             cutsceneBlocker.SetActive(false);
 
             Component.backgroundColor = Color.black;
@@ -44,11 +41,5 @@ namespace DawnVR.Modules.VR
         }
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
-
-        public void CutsceneVision(bool enabled)
-        {
-            if (Preferences.EnableCutsceneBorder)
-                cutsceneBlocker.SetActive(enabled);
-        }
     }
 }
