@@ -17,6 +17,7 @@ namespace DawnVR.Modules.VR
 		private MeshRenderer[] maxHandRenderers;
 		private Transform handpadTransform;
 		private bool justExitedCutscene;
+		private Vector3 beforeCutscenePos;
 
 		private void Start()
         {
@@ -217,6 +218,8 @@ namespace DawnVR.Modules.VR
 			switch (gameMode)
 			{
 				case eGameMode.kCutscene:
+					if (ChloeComponent != null)
+						beforeCutscenePos = ChloeComponent.transform.position;
 					SetMeshActive(true);
 					CutsceneHandler.SetupCutscene();
                     break;
@@ -251,11 +254,15 @@ namespace DawnVR.Modules.VR
 		private System.Collections.IEnumerator EnableFreeRoam()
         {
 			justExitedCutscene = true;
+			if (beforeCutscenePos != Vector3.zero)
+				ChloeComponent.transform.position = beforeCutscenePos;
 			yield return new WaitForSeconds(1);
 			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
 			T_F8FE3E1C.s_hideUI = false;
 			justExitedCutscene = false;
 		}
+
+		public void ClearCutscenePos() => beforeCutscenePos = Vector3.zero;
 
         public void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
         {
