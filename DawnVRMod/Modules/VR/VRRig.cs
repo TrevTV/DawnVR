@@ -41,9 +41,9 @@ namespace DawnVR.Modules.VR
 			handpadTransform = chloeHandRenderers[0].transform.Find("handpad");
 			ActiveHandRenderers = chloeHandRenderers;
 
-			if (Preferences.UseSmoothTurning)
+			if (Preferences.UseSmoothTurning.Value)
 				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
-            else if (Preferences.UseSnapTurning)
+            else if (Preferences.UseSnapTurning.Value)
             {
 				Input.GetThumbstickLeft(VRInput.Hand.Right).onStateDown += OnThumbstickLeft;
 				Input.GetThumbstickRight(VRInput.Hand.Right).onStateDown += OnThumbstickRight;
@@ -56,7 +56,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed * axis.x * Time.deltaTime);
+				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed.Value * axis.x * Time.deltaTime);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
@@ -66,7 +66,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle);
+				transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle.Value);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
@@ -76,7 +76,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle);
+				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle.Value);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
