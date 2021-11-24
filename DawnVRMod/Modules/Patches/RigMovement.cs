@@ -1,5 +1,6 @@
 ﻿using DawnVR.Modules.VR;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace DawnVR.Modules
 {
@@ -16,8 +17,8 @@ namespace DawnVR.Modules
             {
                 Vector3 axis = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
                 float modifier = T_A6E913D1.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
-                try { __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier); }
-                catch { }
+                if (IsAgentOnNavMesh(__instance.gameObject)) 
+                    __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier);
             }
             return false;
         }
@@ -46,6 +47,27 @@ namespace DawnVR.Modules
                 rot.z = 0;
                 VRRig.Instance.transform.eulerAngles = rot;
             }
+        }
+
+        // taken from https://stackoverflow.com/questions/45416515/check-if-disabled-navmesh-agent-player-is-on-navmesh
+        public static bool IsAgentOnNavMesh(GameObject agentObject)
+        {
+            Vector3 agentPosition = agentObject.transform.position;
+            NavMeshHit hit;
+
+            // Check for nearest point on navmesh to agent, within onMeshThreshold
+            if (NavMesh.SamplePosition(agentPosition, out hit, 0.125f, NavMesh.AllAreas))
+            {
+                // Check if the positions are vertically aligned
+                if (Mathf.Approximately(agentPosition.x, hit.position.x)
+                    && Mathf.Approximately(agentPosition.z, hit.position.z))
+                {
+                    // Lastly, check if object is below navmesh
+                    return agentPosition.y >= hit.position.y;
+                }
+            }
+
+            return false;
         }
     }
 }
