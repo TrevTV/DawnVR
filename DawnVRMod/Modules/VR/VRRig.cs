@@ -231,7 +231,8 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kFreeRoam:
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
-					MelonLoader.MelonCoroutines.Start(EnableFreeRoam());
+					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
+					T_F8FE3E1C.s_hideUI = false;
 					break;
 				case eGameMode.kLoading:
 					break;
@@ -249,17 +250,6 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kVideo:
 					break;
 			}
-		}
-
-		private System.Collections.IEnumerator EnableFreeRoam()
-        {
-			justExitedCutscene = true;
-			if (beforeCutscenePos != Vector3.zero)
-				ChloeComponent.transform.position = beforeCutscenePos;
-			yield return new WaitForSeconds(1);
-			T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
-			T_F8FE3E1C.s_hideUI = false;
-			justExitedCutscene = false;
 		}
 
 		public void ClearCutscenePos() => beforeCutscenePos = Vector3.zero;
