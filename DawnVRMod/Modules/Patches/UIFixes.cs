@@ -8,22 +8,26 @@ namespace DawnVR.Modules
     {
         public static bool GetMainUICamera(ref Camera __result)
         {
-            if (T_A6E913D1.Instance.m_levelManager.MenuScene != null && T_A6E913D1.Instance.m_levelManager.MenuScene == SceneManager.GetActiveScene().name)
+            Camera camera = null;
+            try { camera = Camera.main; } catch { }
+            if (camera == null)
             {
-                Camera camera = null;
-                try { camera = Camera.main; } catch { }
-                if (camera == null)
-                {
-                    if (T_34182F31._1444D8BF3 != null)
-                        camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
-                }
-                else if (T_34182F31._1444D8BF3 != camera)
-                    T_34182F31._1444D8BF3 = camera;
-
-                __result = camera;
-                return false;
+                if (T_34182F31._1444D8BF3 != null)
+                    camera = T_34182F31._1444D8BF3.gameObject?.GetComponentInChildren<Camera>(true);
             }
-            return true;
+            else if (T_34182F31._1444D8BF3 != camera)
+                T_34182F31._1444D8BF3 = camera;
+
+            __result = camera;
+            return false;
+        }
+
+        public static bool SetCameraCullingMask(Camera _13A97A3A2, int _1A676C459)
+        {
+            if (_13A97A3A2 != null)
+                _13A97A3A2.cullingMask = _1A676C459;
+
+            return false;
         }
 
         public static bool UpdateUIFade(float _13C05413A, Color _1A2D6C82C)

@@ -16,7 +16,6 @@ namespace DawnVR.Modules.VR
 		private MeshRenderer[] chloeHandRenderers;
 		private MeshRenderer[] maxHandRenderers;
 		private Transform handpadTransform;
-		private bool justExitedCutscene;
 		private Vector3 beforeCutscenePos;
 
 		private void Start()
@@ -88,7 +87,7 @@ namespace DawnVR.Modules.VR
 		private void Update()
         {
 			// this could probably be improved, but it works for now
-			if (!justExitedCutscene && ChloeComponent != null && transform.parent == ChloeComponent.transform)
+			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
             {
 				Vector3 oldPosition = transform.position;
 				Vector3 newChloePos = Camera.transform.position;

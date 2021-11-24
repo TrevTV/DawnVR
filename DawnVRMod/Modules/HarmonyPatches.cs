@@ -34,6 +34,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle)); // overrides it so it doesnt actually calculate the angle, as VRRig and CharControllerMove handles that
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
             PatchPre(typeof(T_C3DD66D9).GetMethod("Update"), nameof(CharControllerUpdate)); // copy-paste of CharController::Update to fix a small bug, jank but i dont care
+            PatchPre(typeof(T_884A92DB).GetProperty("isFreeroamStart").GetSetMethod(), nameof(DontRunMe));
 
             // RigParentModifer
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene
@@ -55,6 +56,8 @@ namespace DawnVR.Modules
 
             // UIFixes
             PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes nullrefs after get_MainUICamera() tries to use Camera.main
+            PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraCullingMask"), nameof(SetCameraCullingMask)); // fix random nullrefs part 1
+            PatchPre(typeof(T_D4EA31BB).GetMethod("Reset"), nameof(DontRunMe)); // fix random nullrefs part 2
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
             PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
 
