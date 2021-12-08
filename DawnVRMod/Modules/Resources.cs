@@ -20,8 +20,8 @@ namespace DawnVR.Modules
             AssetBundle dataBundle = ResourceLoader.GetAssetBundle("data");
             VRCameraRig = dataBundle.LoadAssetWithHF<GameObject>("Assets/SteamVR/Prefabs/[VRCameraRig].prefab");
             VRCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
-            SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
-            SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
+            SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("CameraHolder/Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
+            SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("CameraHolder/Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
             pose1.poseAction = SteamVR_Actions._default.Pose;
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;

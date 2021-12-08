@@ -16,26 +16,27 @@ namespace DawnVR.Modules.VR
 		private MeshRenderer[] chloeHandRenderers;
 		private MeshRenderer[] maxHandRenderers;
 		private Transform handpadTransform;
-		private Vector3 beforeCutscenePos;
+		private Vector3 lastPos;
 
 		private void Start()
         {
 			// todo: seated mode, alec said he could give me some of his code for this
             DontDestroyOnLoad(gameObject);
-            Camera = transform.Find("Camera").gameObject.AddComponent<VRCamera>();
+			Transform cameraHolder = transform.Find("CameraHolder");
+			Camera = cameraHolder.Find("Camera").gameObject.AddComponent<VRCamera>();
 			CutsceneHandler = gameObject.AddComponent<VRCutsceneHandler>();
             Input = new VRInput();
 
 			chloeHandRenderers = new MeshRenderer[]
 			{
-				transform.Find("Controller (left)/CustomModel (Chloe)").GetComponent<MeshRenderer>(),
-				transform.Find("Controller (right)/CustomModel (Chloe)").GetComponent<MeshRenderer>()
+				cameraHolder.Find("Controller (left)/CustomModel (Chloe)").GetComponent<MeshRenderer>(),
+				cameraHolder.Find("Controller (right)/CustomModel (Chloe)").GetComponent<MeshRenderer>()
 			};
 
 			maxHandRenderers = new MeshRenderer[]
 			{
-				transform.Find("Controller (left)/CustomModel (Max)").GetComponent<MeshRenderer>(),
-				transform.Find("Controller (right)/CustomModel (Max)").GetComponent<MeshRenderer>()
+				cameraHolder.Find("Controller (left)/CustomModel (Max)").GetComponent<MeshRenderer>(),
+				cameraHolder.Find("Controller (right)/CustomModel (Max)").GetComponent<MeshRenderer>()
 			};
 
 			handpadTransform = chloeHandRenderers[0].transform.Find("handpad");
@@ -86,16 +87,6 @@ namespace DawnVR.Modules.VR
 
 		private void Update()
         {
-			// this could probably be improved, but it works for now
-			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
-            {
-				Vector3 oldPosition = transform.position;
-				Vector3 newChloePos = Camera.transform.position;
-				newChloePos.y = ChloeComponent.transform.position.y;
-				ChloeComponent.transform.position = newChloePos;
-				transform.position = oldPosition;
-			}
-
 			#region Modified FreeRoamWindow.Update()
 
 			T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
@@ -197,7 +188,19 @@ namespace DawnVR.Modules.VR
             #endregion
         }
 
-        public void UpdateRigParent(eGameMode gameMode)
+		private void FixedUpdate()
+        {
+			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
+			{
+                Vector3 offset = Camera.transform.localPosition - lastPos;
+                offset.y = 0;
+                ChloeComponent.transform.localPosition += offset;
+				Camera.Holder.localPosition -= offset;
+                lastPos = Camera.transform.localPosition;
+            }
+		}
+
+		public void UpdateRigParent(eGameMode gameMode)
         {
 			// prevents double renders of ui elements, both in headset, and on screen
 			if (T_D4EA31BB.s_ui3DCamera?.m_camera != null)
@@ -217,8 +220,6 @@ namespace DawnVR.Modules.VR
 			switch (gameMode)
 			{
 				case eGameMode.kCutscene:
-					if (ChloeComponent != null)
-						beforeCutscenePos = ChloeComponent.transform.position;
 					SetMeshActive(true);
 					CutsceneHandler.SetupCutscene();
                     break;
@@ -250,8 +251,6 @@ namespace DawnVR.Modules.VR
 					break;
 			}
 		}
-
-		public void ClearCutscenePos() => beforeCutscenePos = Vector3.zero;
 
         public void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
         {

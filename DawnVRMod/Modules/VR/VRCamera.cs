@@ -8,6 +8,7 @@ namespace DawnVR.Modules.VR
         public Camera Component;
         public Shader OverlayShader;
         public RenderTexture RenderToVRTexture;
+        public Transform Holder;
 
         private Camera uiCamera;
         private Transform uiRenderer;
@@ -20,6 +21,7 @@ namespace DawnVR.Modules.VR
             Component = GetComponent<Camera>();
             gameObject.AddComponent<SteamVR_Fade>();
 
+            Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
             GameObject cutsceneBlocker = transform.Find("CutsceneVision").gameObject;
             cutsceneBlocker.SetActive(false);

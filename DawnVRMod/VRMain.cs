@@ -12,6 +12,12 @@ using Ping = System.Net.NetworkInformation.Ping;
 
 namespace DawnVR
 {
+    // playthrough notes
+    // customization broke somewhat
+
+    // todo
+    // hand poses with alec's code: https://canary.discord.com/channels/@me/727403137337524264/917616739813064724
+    // seated/standing with offset using alec's code: https://canary.discord.com/channels/@me/727403137337524264/917571166443552769
     public static class BuildInfo
     {
         public const string Name = "DawnVR";

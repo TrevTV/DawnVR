@@ -13,14 +13,9 @@ namespace DawnVR.Modules
                 if (_1C57B7248 == eGameMode.kFreeRoam && (VRRig.Instance.ChloeComponent == null || VRRig.Instance.ChloeComponent.enabled == false))
                     VRRig.Instance.UpdateCachedChloe(T_A6E913D1.Instance.m_mainCharacter);
                 VRRig.Instance?.UpdateRigParent(_1C57B7248);
-                VRRig.Instance?.ClearCutscenePos();
             }
         }
 
-        public static void UnloadCurrentLevel()
-        {
-            VRRig.Instance.ClearCutscenePos();
-            VRRig.Instance.SetParent(null);
-        }
+        public static void UnloadCurrentLevel() => VRRig.Instance.SetParent(null);
     }
 }
