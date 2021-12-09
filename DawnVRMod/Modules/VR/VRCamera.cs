@@ -40,6 +40,7 @@ namespace DawnVR.Modules.VR
             uiRenderer.GetComponent<MeshRenderer>().material.mainTexture = RenderToVRTexture;
             OverlayShader = uiRenderer.GetComponent<MeshRenderer>().material.shader;
             OverlayShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            uiRenderer.gameObject.SetActive(true);
 
             #endregion
 
