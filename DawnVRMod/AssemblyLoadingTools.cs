@@ -21,6 +21,13 @@ namespace DawnVR
             return AssetBundle.LoadFromMemory(memoryStream.ToArray());
         }
 
+        public static string GetText(string name)
+        {
+            using (Stream stream = CurrentAsm.GetManifestResourceStream("DawnVR.Resources." + name))
+            using (StreamReader reader = new StreamReader(stream))
+                return reader.ReadToEnd();
+        }
+
         public static bool WriteResourceToFile(string path, string name)
         {
             try

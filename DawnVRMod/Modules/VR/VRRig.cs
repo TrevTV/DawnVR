@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace DawnVR.Modules.VR
 {
@@ -6,15 +7,15 @@ namespace DawnVR.Modules.VR
     {
         public static VRRig Instance;
 
-		public MeshRenderer[] ActiveHandRenderers;
+		public Renderer[] ActiveHandRenderers;
 		public T_C3DD66D9 ChloeComponent;
 		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
 		public VRCutsceneHandler CutsceneHandler;
 
-		private MeshRenderer[] chloeHandRenderers;
-		private MeshRenderer[] maxHandRenderers;
+		private Renderer[] chloeHandRenderers;
+		private Renderer[] maxHandRenderers;
 		private Transform handpadTransform;
 		private Vector3 lastPos;
 
@@ -27,19 +28,21 @@ namespace DawnVR.Modules.VR
 			CutsceneHandler = gameObject.AddComponent<VRCutsceneHandler>();
             Input = new VRInput();
 
-			chloeHandRenderers = new MeshRenderer[]
+			SetupHandposes(cameraHolder);
+
+			chloeHandRenderers = new Renderer[]
 			{
-				cameraHolder.Find("Controller (left)/CustomModel (Chloe)").GetComponent<MeshRenderer>(),
-				cameraHolder.Find("Controller (right)/CustomModel (Chloe)").GetComponent<MeshRenderer>()
+				cameraHolder.Find("Controller (left)/CustomModel (Chloe)").GetComponentInChildren<SkinnedMeshRenderer>(),
+				cameraHolder.Find("Controller (right)/CustomModel (Chloe)").GetComponentInChildren<SkinnedMeshRenderer>()
 			};
 
-			maxHandRenderers = new MeshRenderer[]
+			maxHandRenderers = new Renderer[]
 			{
-				cameraHolder.Find("Controller (left)/CustomModel (Max)").GetComponent<MeshRenderer>(),
-				cameraHolder.Find("Controller (right)/CustomModel (Max)").GetComponent<MeshRenderer>()
+				cameraHolder.Find("Controller (left)/CustomModel (Max)").GetComponentInChildren<MeshRenderer>(), // todo: give max rigged hands
+				cameraHolder.Find("Controller (right)/CustomModel (Max)").GetComponentInChildren<MeshRenderer>()
 			};
 
-			handpadTransform = chloeHandRenderers[0].transform.Find("handpad");
+			handpadTransform = chloeHandRenderers[0].transform.parent.Find("handpad");
 			ActiveHandRenderers = chloeHandRenderers;
 
 			if (Preferences.UseSmoothTurning.Value)
@@ -51,13 +54,27 @@ namespace DawnVR.Modules.VR
 			}
 		}
 
+		private void SetupHandposes(Transform cameraHolder)
+        {
+			var pose1 = cameraHolder.Find("Controller (left)/CustomModel (Chloe)").gameObject.AddComponent<Handposes.HandposeChanger>();
+			var pose2 = cameraHolder.Find("Controller (right)/CustomModel (Chloe)").gameObject.AddComponent<Handposes.HandposeChanger>();
+			pose1.source = Valve.VR.SteamVR_Input_Sources.LeftHand;
+			pose2.source = Valve.VR.SteamVR_Input_Sources.RightHand;
+			pose1.maxPoseJson = Resources.OpenLeft;
+			pose1.minPoseJson = Resources.ClosedLeft;
+			pose2.maxPoseJson = Resources.OpenRight;
+			pose2.minPoseJson = Resources.ClosedRight;
+			pose1.BeginSetup();
+			pose2.BeginSetup();
+		}
+
 		#region Turning Stuff
 
 		private void OnThumbstickAxis(Valve.VR.SteamVR_Action_Vector2 fromAction, Valve.VR.SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed.Value * axis.x * Time.deltaTime);
+				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed.Value * axis.x * Time.deltaTime);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
@@ -67,7 +84,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle.Value);
+				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle.Value);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
@@ -77,7 +94,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
-				transform.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle.Value);
+				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle.Value);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
 			catch { }
@@ -193,7 +210,7 @@ namespace DawnVR.Modules.VR
 			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
 			{
                 Vector3 offset = Camera.transform.localPosition - lastPos;
-                offset.y = 0;
+				offset.y = 0;
                 ChloeComponent.transform.localPosition += offset;
 				Camera.Holder.localPosition -= offset;
                 lastPos = Camera.transform.localPosition;
@@ -273,7 +290,7 @@ namespace DawnVR.Modules.VR
                 UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
         }
 
-		public void ChangeHandModel(MeshRenderer[] renderers)
+		public void ChangeHandModel(Renderer[] renderers)
         {
 			if (ActiveHandRenderers == renderers) return;
 
@@ -287,9 +304,9 @@ namespace DawnVR.Modules.VR
 
 		public void ChangeHandShader(Shader shader)
         {
-			foreach (MeshRenderer renderer in chloeHandRenderers)
+			foreach (Renderer renderer in chloeHandRenderers)
 				renderer.material.shader = shader;
-			foreach (MeshRenderer renderer in maxHandRenderers)
+			foreach (Renderer renderer in maxHandRenderers)
 				renderer.material.shader = shader;
 		}
 
@@ -298,6 +315,7 @@ namespace DawnVR.Modules.VR
 			if (ChloeComponent != null)
             {
 				foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+					if (!chloeHandRenderers.Contains(sMesh) && !maxHandRenderers.Contains(sMesh))
 					sMesh.enabled = active;
 				if (ChloeMaterial != null)
 					ChangeHandShader(active ? Resources.DitherShader : Shader.Find("Custom/LISCharacterDeferred"));
