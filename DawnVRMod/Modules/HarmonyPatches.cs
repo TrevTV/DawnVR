@@ -34,7 +34,8 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle)); // overrides it so it doesnt actually calculate the angle, as VRRig and CharControllerMove handles that
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
             PatchPre(typeof(T_C3DD66D9).GetMethod("Update"), nameof(CharControllerUpdate)); // copy-paste of CharController::Update to fix a small bug, jank but i dont care
-            PatchPre(typeof(T_884A92DB).GetProperty("isFreeroamStart").GetSetMethod(), nameof(DontRunMe));
+            PatchPre(typeof(T_884A92DB).GetProperty("isFreeroamStart").GetSetMethod(), nameof(DontRunMe)); // fixes some movement issues
+            PatchPre(typeof(T_51AF6A60).GetMethod("Start"), nameof(AddVRCalibrationButton)); // adds the VR Calibration button to the main menu
 
             // RigParentModifer
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene

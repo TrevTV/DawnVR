@@ -260,8 +260,22 @@ namespace DawnVR.Modules
             }
         }
 
-        // taken from https://stackoverflow.com/questions/45416515/check-if-disabled-navmesh-agent-player-is-on-navmesh
-        public static bool IsAgentOnNavMesh(GameObject agentObject)
+		public static void AddVRCalibrationButton(T_51AF6A60 __instance)
+		{
+			if (__instance.transform.parent.name == "MainMenu")
+			{
+				GameObject newButton = GameObject.Instantiate(__instance.transform.Find("Buttons/ExitGame").gameObject);
+				newButton.transform.parent = __instance.transform.Find("Buttons");
+				newButton.name = "VRCalibration";
+				newButton.GetComponent<T_A243E23D>().text = "VR Calibration";
+				T_9E2FDFCF button = newButton.GetComponent<T_9E2FDFCF>();
+				__instance.AddButton(button);
+				button.m_callback = new T_B72FD206(VRRig.Instance, nameof(VRRig.BeginCalibration));
+			}
+		}
+
+		// taken from https://stackoverflow.com/questions/45416515/check-if-disabled-navmesh-agent-player-is-on-navmesh
+		public static bool IsAgentOnNavMesh(GameObject agentObject)
         {
             Vector3 agentPosition = agentObject.transform.position;
             NavMeshHit hit;

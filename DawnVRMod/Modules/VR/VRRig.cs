@@ -294,7 +294,12 @@ namespace DawnVR.Modules.VR
             }
         }
 
-        public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
+		public void BeginCalibration()
+        {
+			// todo: calibration
+        }
+
+		public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
             ChloeComponent = newChloe;
             if (updateParent)
