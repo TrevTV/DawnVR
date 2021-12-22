@@ -38,11 +38,13 @@ Make sure you have the `-vrmode OpenVR` paramater setup and that SteamVR is open
 ### How can I temporarily disable the mod?
 In the Steam launch parameters, simply replace OpenVR with None, the mod will recognize that change and will let the game load normally.
 
+## Licensing
+- [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause License. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
+
 ## Credits
 - [MrPurple](https://github.com/MrPurple6411) & [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)
 - [DrBibop](https://github.com/DrBibop) for the RoR2 mod and for helping me with some VR rig handling
 - [Sinai](https://github.com/sinai-dev/) for creating UnityExplorer (and quickly fixing a bug I had) which definitely helped speed up the development process
-- [Valve](https://github.com/ValveSoftware/) for the SteamVR Unity Plugin SDK [licensed under BSD-3](https://github.com/TrevTV/DawnVR/blob/main/LICENSE_STEAMVR)
 - `elliotttate#9942` for some assistance in the Flatscreen to VR Modding Discord
 - `alecpizz#0311` for helping me with some rig stuff, giving me some code, and testing parts of the mod
 - `Parzival#7273` for the idea of a monitor-like border during cutscenes
