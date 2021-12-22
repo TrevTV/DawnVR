@@ -221,8 +221,9 @@ namespace DawnVR.Modules.VR
 			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
 			{
                 Vector3 offset = Camera.transform.localPosition - lastPos;
+				offset = Camera.Holder.TransformDirection(offset);
 				offset.y = 0;
-                ChloeComponent.transform.localPosition += offset;
+				ChloeComponent.transform.localPosition += offset;
 				Camera.Holder.localPosition -= offset;
                 lastPos = Camera.transform.localPosition;
             }
@@ -294,10 +295,25 @@ namespace DawnVR.Modules.VR
             }
         }
 
+		public float floorOffset;
+		public float irlHeight;
+
 		public void BeginCalibration()
         {
 			// todo: calibration
+/*if (sitStandMode.Equals(PlayerSitStandMode.Seated))
+        {
+            seatedOffset = irlHeight - player.cam.localPosition.y - floorOffset;
+            player.heightOffset = seatedOffset;
+            scale = ((player.height) / (irlHeight / 10f));
         }
+			else
+			{
+				floorOffset = irlHeight - player.cam.localPosition.y;
+				player.heightOffset = -floorOffset;
+				scale = ((player.height) / (irlHeight / 10f));
+			}*/
+		}
 
 		public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
