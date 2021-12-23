@@ -28,7 +28,8 @@ namespace DawnVR
 
     public class VRMain : MelonMod
     {
-        private const string githubApiUrl = "https://api.github.com/repos/TrevTV/DawnVR/releases/latest";
+        // todo: fix update check, this is set to the ml repo temporarily
+        private const string githubApiUrl = "https://api.github.com/repos/LavaGang/MelonLoader/releases/latest";
         private bool vrEnabled;
         private bool steamInitRunning;
 
@@ -58,7 +59,30 @@ namespace DawnVR
 
         private void CheckForUpdates()
         {
-            #region Check For Internet
+            UpdateHandler.Setup();
+
+            if (!UpdateHandler.IsConnectedToInternet())
+            {
+                MelonLogger.Warning("You are not connected to the internet, skipping update check.");
+                return;
+            }
+
+            MelonLogger.Msg("Before!");
+            string latestRelease = UpdateHandler.GetLatestDawnRelease(githubApiUrl);
+            MelonLogger.Msg("data: " + latestRelease);
+            /*SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(latestRelease);
+            Version version = new Version(node["tag_name"]);
+            if (version > new Version(BuildInfo.Version))
+            {
+                MelonLogger.Warning("============================================================");
+                MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
+                MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
+                MelonLogger.Warning("============================================================");
+            }
+            else
+                MelonLogger.Msg("Up to date.");*/
+
+            /*#region Check For Internet
 
             Ping ping = new Ping();
             PingOptions pingOptions = new PingOptions();
@@ -86,7 +110,7 @@ namespace DawnVR
                 }
                 else
                     MelonLogger.Msg("Up to date.");
-            }
+            }*/
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
@@ -96,6 +120,8 @@ namespace DawnVR
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
                 MelonCoroutines.Start(InitSteamVR());
         }
+
+        public override void OnApplicationQuit() => UpdateHandler.Dispose();
 
         private IEnumerator InitSteamVR()
         {

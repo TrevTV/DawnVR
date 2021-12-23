@@ -77,6 +77,7 @@
     <Compile Include="Modules\Patches\Debug.cs" />
     <Compile Include="Modules\Preferences.cs" />
     <Compile Include="Modules\Resources.cs" />
+    <Compile Include="Modules\UpdateHandler.cs" />
     <Compile Include="Modules\VR\Handposes\Handpose.cs" />
     <Compile Include="Modules\VR\Handposes\HandposeChanger.cs" />
     <Compile Include="Modules\VR\VRCutsceneHandler.cs" />
@@ -170,6 +171,7 @@
     <EmbeddedResource Include="Resources\data" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\DawnUpdateChecker.dll" />
     <Content Include="TextFiles\credits.txt" />
     <Content Include="TextFiles\internals_notes.txt" />
     <Content Include="TextFiles\known_issues.txt" />

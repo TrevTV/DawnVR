@@ -39,7 +39,7 @@ Make sure you have the `-vrmode OpenVR` paramater setup and that SteamVR is open
 In the Steam launch parameters, simply replace OpenVR with None, the mod will recognize that change and will let the game load normally.
 
 ## Licensing
-- [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause License. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
+- [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause license. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
 
 ## Credits
 - [MrPurple](https://github.com/MrPurple6411) & [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)
