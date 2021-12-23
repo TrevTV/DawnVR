@@ -28,14 +28,16 @@ namespace DawnVR
 
     public class VRMain : MelonMod
     {
-        // todo: fix update check, this is set to the ml repo temporarily
-        private const string githubApiUrl = "https://api.github.com/repos/LavaGang/MelonLoader/releases/latest";
+        private const string githubApiUrl = "https://api.github.com/repos/TrevTV/DawnVR/releases/latest";
         private bool vrEnabled;
         private bool steamInitRunning;
 
         public override void OnApplicationStart()
         {
-            //CheckForUpdates();
+            Preferences.Init();
+
+            if (Preferences.CheckForUpdatesOnStart.Value)
+                CheckForUpdates();
 
             if (Environment.GetCommandLineArgs().Contains("OpenVR"))
                 vrEnabled = true;
@@ -51,7 +53,6 @@ namespace DawnVR
             }
 
             Modules.Resources.Init();
-            Preferences.Init();
             HarmonyPatches.Init(HarmonyInstance);
             if (Preferences.EnableInternalLogging.Value)
                 OutputRedirect.Init(HarmonyInstance);
@@ -59,19 +60,32 @@ namespace DawnVR
 
         private void CheckForUpdates()
         {
-            UpdateHandler.Setup();
+            MelonLogger.Msg("Checking for updates...");
 
-            if (!UpdateHandler.IsConnectedToInternet())
+            string scriptPath = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "CheckForUpdate.ps1");
+
+            if (!System.IO.File.Exists(scriptPath))
+                ResourceLoader.WriteResourceToFile(scriptPath, "CheckForUpdate.ps1");
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.FileName = "powershell.exe";
+            process.StartInfo.Arguments = $"-file \"{scriptPath}\" \"{githubApiUrl}\"";
+
+            process.Start();
+            string returnVal = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            if (returnVal == "ERR:NO_INTERNET")
             {
                 MelonLogger.Warning("You are not connected to the internet, skipping update check.");
                 return;
             }
 
-            MelonLogger.Msg("Before!");
-            string latestRelease = UpdateHandler.GetLatestDawnRelease(githubApiUrl);
-            MelonLogger.Msg("data: " + latestRelease);
-            /*SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(latestRelease);
-            Version version = new Version(node["tag_name"]);
+            SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(returnVal);
+            Version version = new Version(node["tag_name"].Value);
+
             if (version > new Version(BuildInfo.Version))
             {
                 MelonLogger.Warning("============================================================");
@@ -80,37 +94,7 @@ namespace DawnVR
                 MelonLogger.Warning("============================================================");
             }
             else
-                MelonLogger.Msg("Up to date.");*/
-
-            /*#region Check For Internet
-
-            Ping ping = new Ping();
-            PingOptions pingOptions = new PingOptions();
-            PingReply reply = ping.Send("8.8.8.8", 1000, new byte[32], pingOptions);
-            if (reply.Status != IPStatus.Success)
-            {
-                MelonLogger.Warning("You are not connected to the internet, skipping update check.");
-                return;
-            }
-
-            #endregion
-
-            using (WebClient client = new WebClient())
-            {
-                client.Headers["User-Agent"] = "DawnVR";
-                string apiResonse = client.DownloadString(githubApiUrl);
-                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(apiResonse);
-                Version version = new Version(node["tag_name"]);
-                if (version > new Version(BuildInfo.Version))
-                {
-                    MelonLogger.Warning("============================================================");
-                    MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
-                    MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
-                    MelonLogger.Warning("============================================================");
-                }
-                else
-                    MelonLogger.Msg("Up to date.");
-            }*/
+                MelonLogger.Msg("Up to date.");
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
@@ -120,8 +104,6 @@ namespace DawnVR
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
                 MelonCoroutines.Start(InitSteamVR());
         }
-
-        public override void OnApplicationQuit() => UpdateHandler.Dispose();
 
         private IEnumerator InitSteamVR()
         {
