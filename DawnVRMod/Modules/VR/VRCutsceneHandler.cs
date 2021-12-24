@@ -53,7 +53,7 @@ namespace DawnVR.Modules.VR
             cutsceneRoom.SetActive(true);
             cutsceneCamera.enabled = true;
 
-            VRRig.Instance.SetParent(null, new Vector3(0f, 1000f, 0f));
+            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
         }
 
         public void EndCutscene()

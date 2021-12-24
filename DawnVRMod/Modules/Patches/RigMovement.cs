@@ -24,7 +24,30 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool CharControllerUpdate(T_C3DD66D9 __instance)
+		public static bool CharControllerRotate(T_C3DD66D9 __instance)
+        {
+			if (__instance._18AA52927 != __instance._1A5A07929 && __instance._1B3BFB7ED != 0)
+			{
+				float num = T_D3A1C202.MinimumAngle(__instance._1A5A07929, T_D3A1C202.NormalizeAngle(__instance._18AA52927, 360f), 360f);
+				Vector3 zero = Vector3.zero;
+				if (Mathf.FloorToInt(__instance.m_currProgression) != 0)
+				{
+					zero.y = Mathf.SmoothDamp(__instance._1A5A07929, __instance._1A5A07929 + num, ref __instance._177026BB2, 0.2f) - __instance._1A5A07929;
+				}
+				else if (Mathf.CeilToInt(__instance.m_currProgression) != 0)
+				{
+					zero.y = Mathf.SmoothDamp(__instance._1A5A07929, __instance._1A5A07929 + num, ref __instance._177026BB2, 0.3f) - __instance._1A5A07929;
+				}
+				__instance._1A5A07929 += zero.y;
+				__instance._1A5A07929 = T_D3A1C202.NormalizeAngle(__instance._1A5A07929, 360f);
+				//__instance.m_rotateTrans.localEulerAngles = new Vector3(__instance.m_rotateTrans.localEulerAngles.x, __instance._1A5A07929, __instance.m_rotateTrans.localEulerAngles.z);
+			}
+
+			return false;
+		}
+
+
+		public static bool CharControllerUpdate(T_C3DD66D9 __instance)
         {
 			if (!__instance._1291EFDCF)
 			{
