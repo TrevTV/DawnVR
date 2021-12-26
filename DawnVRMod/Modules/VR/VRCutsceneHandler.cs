@@ -70,7 +70,7 @@ namespace DawnVR.Modules.VR
             if (cutsceneRoom == null)
             {
                 cutsceneRoom = GameObject.Instantiate(Resources.CutsceneRoom);
-                cutsceneRoom.transform.position = new Vector3(0f, 1000f, 0f);
+                cutsceneRoom.transform.position = new Vector3(0f, 1100f, 0f);
                 cutsceneRoom.transform.Find("Screen").GetComponent<MeshRenderer>().sharedMaterial.mainTexture = cutsceneRenderTexture;
             }
 
