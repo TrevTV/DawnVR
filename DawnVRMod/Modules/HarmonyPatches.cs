@@ -89,7 +89,6 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
-            PatchPost(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(SetCurrentViewCookie));
         }
 
         public static bool DontRunMe() => false;

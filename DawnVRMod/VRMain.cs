@@ -6,21 +6,19 @@ using UnityEngine;
 using System.Linq;
 using Valve.VR;
 using System;
-using System.Net;
-using System.Net.NetworkInformation;
-using Ping = System.Net.NetworkInformation.Ping;
 
 namespace DawnVR
 {
     // playthrough notes
     // customization broke somewhat
+    // dream sequence position likes to move around
 
     // todo addition list
     // seated/standing with offset using alec's code: https://canary.discord.com/channels/@me/727403137337524264/917571166443552769
     public static class BuildInfo
     {
         public const string Name = "DawnVR";
-        public const string Author = "trev";
+        public const string Author = "trev (full credits in README)";
         public const string Company = null;
         public const string Version = "0.0.1";
         public const string DownloadLink = null;
