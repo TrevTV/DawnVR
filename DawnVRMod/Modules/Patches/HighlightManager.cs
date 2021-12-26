@@ -7,12 +7,18 @@ namespace DawnVR.Modules
     {
         public static bool CUICameraRelativeUpdate(T_1C1609D7 __instance)
         {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
             __instance.transform.rotation = VRRig.Instance.Camera.transform.rotation;
             return false;
         }
 
         public static bool CUIAnchorUpdatePosition(T_2D9F19A8 __instance)
         {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
             if (__instance.m_anchorObj != null)
             {
                 Transform parent = __instance.transform.parent;
@@ -21,10 +27,117 @@ namespace DawnVR.Modules
             return false;
         }
 
+        public static bool FreeroamWindowUpdate()
+        {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
+            T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
+
+            if (!window.gameObject.activeInHierarchy) return false;
+
+            if (T_F8FE3E1C.s_currentTriggers.Count > 0)
+            {
+                float num = 180f;
+                if (T_F8FE3E1C.s_isFreeLook)
+                    num = VRRig.Instance.Camera.Component.fieldOfView / 3f;
+                int triggerIndex = -1;
+                float num3 = 1f;
+                float d = window.m_interactUI.transform.localScale.x;
+                for (int i = 0; i < T_F8FE3E1C.s_currentTriggers.Count; i++)
+                {
+                    if (!(T_F8FE3E1C.s_currentTriggers[i].m_pointAt == null))
+                    {
+                        float num4 = Vector3.Distance(T_F8FE3E1C.s_currentTriggers[i].m_pointAt.transform.position, VRRig.Instance.Camera.transform.position);
+                        if (T_F8FE3E1C.s_isFreeLook)
+                        {
+                            d = 1f;
+                            num3 = (Mathf.Max(0f, num4 - 2f) + 1f) * window.m_distanceScaleFactor * (VRRig.Instance.Camera.Component.fieldOfView / 30f);
+                            num3 /= 2;
+                            T_F8FE3E1C.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num3, num3, 1f);
+                        }
+                        else
+                        {
+                            float num5 = 1f;
+                            if (T_F8FE3E1C.s_currentTriggers[i] != null && T_F8FE3E1C.s_currentTriggers[i].m_nameUI != null)
+                            {
+                                num5 = (Mathf.Max(0f, num4 - 3f) + 1f) * 0.28f;
+                                num5 = Mathf.Max(1f, num5);
+                                num5 = Mathf.Min(num5, 3.5f);
+                                T_F8FE3E1C.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num5, num5, 1f);
+                            }
+                            if (window.m_interactUI.hotSpotObj == T_F8FE3E1C.s_currentTriggers[i])
+                            {
+                                d = num5;
+                            }
+                        }
+
+                        Vector3 vector = T_F8FE3E1C.s_currentTriggers[i].m_pointAt.transform.position - VRRig.Instance.Camera.transform.position;
+                        float angle = Vector3.Angle(vector, VRRig.Instance.Camera.transform.forward);
+                        // angle interact doesnt seem to be imporant so this will just stay commented
+                        /*if (T_F8FE3E1C.s_currentTriggers[i].usesAngleInteract)
+                        {
+                            vector.y = 0f;
+							float num7 = Vector3.Angle(-vector, Vector3.forward);
+							Vector3 vector2 = Vector3.Cross(vector, Vector3.forward);
+							if (vector2.y < 0f)
+								num7 *= -1f;
+
+							bool angleValid = false;
+							float num0 = T_D3A1C202.NormalizeAngle(T_F8FE3E1C.s_currentTriggers[i].m_LeftInteractAngle, 360f);
+							float num2 = T_D3A1C202.NormalizeAngle(T_F8FE3E1C.s_currentTriggers[i].m_RightInteractAngle, 360f);
+							num7 = T_D3A1C202.NormalizeAngle(num7, normalizeAngle);
+							if (num0 > num2)
+							{
+								angleValid = true;
+								if (num7 < num0 && num7 > num2)
+									angleValid = false;
+							}
+							if (num7 > num0 && num7 < num2)
+								angleValid = true;
+							if (!angleValid)
+								continue;
+						}*/
+
+                        if (angle < num)
+                        {
+                            if (T_F8FE3E1C.s_isFreeLook)
+                            {
+                                num = angle;
+                                triggerIndex = i;
+                                window.m_interactUI.transform.localScale = new Vector3(num3, num3, 1f);
+                            }
+                            else
+                            {
+                                num = angle;
+                                triggerIndex = i;
+                                window.m_interactUI.transform.localScale = Vector2.one * d;
+                            }
+                        }
+                    }
+                }
+
+                if (triggerIndex >= 0)
+                    window.ShowInteractUI(triggerIndex);
+                else
+                    window.HideInteractUI();
+            }
+            else
+            {
+                window.m_interactUI.ClearHotSpot();
+                window.HideInteractUI();
+            }
+
+            return false;
+        }
+
         public static void HotspotObjectInteract(T_6FD30C1C _1BAF664A9) => _1BAF664A9.m_lookAt = null;
 
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
             {
                 __result = false;
@@ -47,6 +160,9 @@ namespace DawnVR.Modules
 
         public static bool IsInteractOnScreen(T_572A4969 __instance, ref bool __result)
         {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
             if (__instance.m_anchor != null && __instance.m_anchor.m_anchorObj != null)
             {
                 T_6FD30C1C hotspotObj = __instance._133075675;
@@ -76,6 +192,9 @@ namespace DawnVR.Modules
 
         public static bool IsHoverObjectOnScreen(T_A0A6EA62 __instance, ref bool __result)
         {
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+                return true;
+
             Vector3 vector = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
             if (vector.x > 0f && vector.y > 0f && vector.x < VRRig.Instance.Camera.Component.pixelWidth && vector.y < VRRig.Instance.Camera.Component.pixelHeight)
             {

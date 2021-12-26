@@ -110,109 +110,6 @@ namespace DawnVR.Modules.VR
 
 		#endregion
 
-		private void Update()
-        {
-			#region Modified FreeRoamWindow.Update()
-
-			T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
-
-			if (!window.gameObject.activeInHierarchy) return;
-
-			if (T_F8FE3E1C.s_currentTriggers.Count > 0)
-			{
-				float num = 180f;
-				if (T_F8FE3E1C.s_isFreeLook)
-					num = Camera.Component.fieldOfView / 3f;
-				int triggerIndex = -1;
-				float num3 = 1f;
-				float d = window.m_interactUI.transform.localScale.x;
-				for (int i = 0; i < T_F8FE3E1C.s_currentTriggers.Count; i++)
-				{
-					if (!(T_F8FE3E1C.s_currentTriggers[i].m_pointAt == null))
-					{
-						float num4 = Vector3.Distance(T_F8FE3E1C.s_currentTriggers[i].m_pointAt.transform.position, Camera.transform.position);
-						if (T_F8FE3E1C.s_isFreeLook)
-						{
-							d = 1f;
-							num3 = (Mathf.Max(0f, num4 - 2f) + 1f) * window.m_distanceScaleFactor * (Camera.Component.fieldOfView / 30f);
-							num3 /= 2;
-							T_F8FE3E1C.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num3, num3, 1f);
-						}
-						else
-						{
-							float num5 = 1f;
-							if (T_F8FE3E1C.s_currentTriggers[i] != null && T_F8FE3E1C.s_currentTriggers[i].m_nameUI != null)
-							{
-								num5 = (Mathf.Max(0f, num4 - 3f) + 1f) * 0.28f;
-								num5 = Mathf.Max(1f, num5);
-								num5 = Mathf.Min(num5, 3.5f);
-								T_F8FE3E1C.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num5, num5, 1f);
-							}
-							if (window.m_interactUI.hotSpotObj == T_F8FE3E1C.s_currentTriggers[i])
-							{
-								d = num5;
-							}
-						}
-
-						Vector3 vector = T_F8FE3E1C.s_currentTriggers[i].m_pointAt.transform.position - Camera.transform.position;
-						float angle = Vector3.Angle(vector, Camera.transform.forward);
-						// angle interact doesnt seem to be imporant so this will just stay commented
-						/*if (T_F8FE3E1C.s_currentTriggers[i].usesAngleInteract)
-                        {
-                            vector.y = 0f;
-							float num7 = Vector3.Angle(-vector, Vector3.forward);
-							Vector3 vector2 = Vector3.Cross(vector, Vector3.forward);
-							if (vector2.y < 0f)
-								num7 *= -1f;
-
-							bool angleValid = false;
-							float num0 = T_D3A1C202.NormalizeAngle(T_F8FE3E1C.s_currentTriggers[i].m_LeftInteractAngle, 360f);
-							float num2 = T_D3A1C202.NormalizeAngle(T_F8FE3E1C.s_currentTriggers[i].m_RightInteractAngle, 360f);
-							num7 = T_D3A1C202.NormalizeAngle(num7, normalizeAngle);
-							if (num0 > num2)
-							{
-								angleValid = true;
-								if (num7 < num0 && num7 > num2)
-									angleValid = false;
-							}
-							if (num7 > num0 && num7 < num2)
-								angleValid = true;
-							if (!angleValid)
-								continue;
-						}*/
-
-						if (angle < num)
-						{
-							if (T_F8FE3E1C.s_isFreeLook)
-							{
-								num = angle;
-								triggerIndex = i;
-								window.m_interactUI.transform.localScale = new Vector3(num3, num3, 1f);
-							}
-							else
-                            {
-								num = angle;
-								triggerIndex = i;
-								window.m_interactUI.transform.localScale = Vector2.one * d;
-							}
-						}
-					}
-				}
-
-				if (triggerIndex >= 0)
-					window.ShowInteractUI(triggerIndex);
-				else
-					window.HideInteractUI();
-			}
-			else
-			{
-				window.m_interactUI.ClearHotSpot();
-				window.HideInteractUI();
-			}
-
-            #endregion
-        }
-
 		private void FixedUpdate()
         {
 			// todo: collision is still kinda jank, alec said it may be me needing to add an InverseTransformDirection somewhere
@@ -233,7 +130,7 @@ namespace DawnVR.Modules.VR
             {
 				T_D4EA31BB.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
 				T_D4EA31BB.s_ui3DCamera.m_camera.targetDisplay = 10;
-            }
+			}
 			// disable unused camera, improves performance
 			T_34182F31.main.enabled = false;
 
@@ -252,8 +149,9 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kDialog:
 				case eGameMode.kPosterView:
 				case eGameMode.kCustomization:
-					CutsceneHandler.SetupCutscene();
-					break;
+                    CutsceneHandler.SetupCutscene();
+                    ChloeComponent.Camera.enabled = true;
+                    break;
 				case eGameMode.kFreeRoam:
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
