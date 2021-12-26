@@ -1,5 +1,6 @@
 ﻿using Valve.VR;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace DawnVR.Modules.VR
 {
@@ -11,8 +12,9 @@ namespace DawnVR.Modules.VR
         public Transform Holder;
 
         private Camera uiCamera;
-        private Transform uiRenderer;
+        private GameObject uiRenderer;
         private GameObject visionBlocker;
+        private Dictionary<T_A7F99C25.eCookieChoices, GameObject> overlayCookies;
 
         private Camera spectatorCamera;
 
@@ -23,15 +25,20 @@ namespace DawnVR.Modules.VR
 
             Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
-            GameObject cutsceneBlocker = transform.Find("CutsceneVision").gameObject;
-            cutsceneBlocker.SetActive(false);
+
+            overlayCookies = new Dictionary<T_A7F99C25.eCookieChoices, GameObject>()
+            {
+                { T_A7F99C25.eCookieChoices.kBinoculars, transform.Find("OverlayCookies/Binocular").gameObject }
+                //{ T_A7F99C25.eCookieChoices.kE3Binoculars, transform.Find("OverlayCookies/E3Binocular").gameObject },
+                //{ T_A7F99C25.eCookieChoices.kE4Binoculars, transform.Find("OverlayCookies/E4Binocular").gameObject }
+            };
 
             Component.backgroundColor = Color.black;
 
             #region UI Renderer
 
-            uiRenderer = transform.Find("UIRenderer");
-            uiRenderer.localScale = new Vector3(0.25f, 0.15f, 0.15f);
+            uiRenderer = transform.Find("UIRenderer").gameObject;
+            uiRenderer.transform.localScale = new Vector3(0.25f, 0.15f, 0.15f);
             uiCamera = GameObject.Find("/UIRoot/Camera").GetComponent<Camera>();
             RenderToVRTexture = new RenderTexture(Screen.width, Screen.height, 1);
             uiCamera.targetTexture = RenderToVRTexture;
@@ -76,5 +83,16 @@ namespace DawnVR.Modules.VR
         }
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
+
+        public void EnableCookie(T_A7F99C25.eCookieChoices choice)
+        {
+            if (choice == T_A7F99C25.eCookieChoices.kNone)
+                foreach (GameObject cookie in overlayCookies.Values)
+                    cookie.SetActive(false);
+            else if (overlayCookies.TryGetValue(choice, out GameObject go))
+                go.SetActive(true);
+            else
+                MelonLoader.MelonLogger.Warning($"Unknown cookie {choice} given to VRCamera::EnableCookie!");
+        }
     }
 }

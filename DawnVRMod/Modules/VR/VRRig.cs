@@ -16,7 +16,6 @@ namespace DawnVR.Modules.VR
 
 		private Renderer[] chloeHandRenderers;
 		private Renderer[] maxHandRenderers;
-		private Transform handpadTransform;
 		private Vector3 lastPos;
 
 		private void Start()
@@ -41,7 +40,6 @@ namespace DawnVR.Modules.VR
 				cameraHolder.Find("Controller (right)/CustomModel (Max)").GetComponentInChildren<SkinnedMeshRenderer>()
 			};
 
-			handpadTransform = chloeHandRenderers[0].transform.parent.Find("handpad");
 			ActiveHandRenderers = chloeHandRenderers;
 
 			if (Preferences.UseSmoothTurning.Value)

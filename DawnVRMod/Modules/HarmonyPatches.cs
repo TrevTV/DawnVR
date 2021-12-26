@@ -76,6 +76,7 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // mainly updates VRRig's chloe and material
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
+            PatchPost(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(SetCurrentViewCookie)); // sets overlays for mainly binocular scenes
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
         }
@@ -88,7 +89,7 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
             PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
-            PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition2));
+            PatchPost(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(SetCurrentViewCookie));
         }
 
         public static bool DontRunMe() => false;
@@ -133,9 +134,17 @@ namespace DawnVR.Modules
             return false;
         }
 
+        public static void SetCurrentViewCookie(T_408CFC35 __instance)
+        {
+            T_A7F99C25.eCookieChoices cookie = __instance.currentViewCookie;
+            MelonLogger.Msg("View cookie change to " + cookie.ToString());
+            if (cookie != T_A7F99C25.eCookieChoices.kBinocularSwitch)
+                VRRig.Instance.Camera.EnableCookie(cookie);
+        }
+
         private static readonly string[] scrollingTextOptions =
         {
-            "Join the Flat2VR Discord (https://flat2vr.com) for more Flatscreen To VR mods!",
+            "Join the Flat2VR Discord (http://flat2vr.com) for more Flatscreen To VR mods!",
             "Support me on Ko-fi! https://ko-fi.com/trevtv",
             "I hope Deck Nine approves of this mod...",
             "Thank you for trying my VR mod!"
