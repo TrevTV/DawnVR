@@ -9,17 +9,26 @@ namespace DawnVR.Modules
         private const float speedModifier = 0.05f;
         private const float sprintModifier = 0.08f;
 
-        public static bool CharControllerMove(T_C3DD66D9 __instance, bool _1AF4345B4)
+        public static bool CharControllerMove(T_C3DD66D9 __instance, Vector3 _17EEFAD12, bool _1AF4345B4)
         {
             if (_1AF4345B4)
                 __instance.Rotate();
+
+            Vector3 vector;
+            if (__instance._1C5FA2AD9.animSet.m_motionData[__instance.m_baseAnim] != null)
+                vector = __instance._1C5FA2AD9.animSet.m_motionData[__instance.m_baseAnim].GetPositionAtTime(__instance.m_animStates[__instance.m_baseAnim].time);
+            else
+                vector = Vector3.zero;
+            _17EEFAD12 += vector - __instance._1130AF114;
+			__instance._1130AF114 = vector;
+
             if (__instance.m_moveDirection != Vector3.zero)
             {
                 Vector3 axis = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
                 float modifier = T_A6E913D1.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
-				bool isOnNavMesh = IsAgentOnNavMesh(__instance.gameObject);
-				if (isOnNavMesh) 
-                    __instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier);
+				__instance._11C765B91 = __instance.m_rotateTrans.position;
+				__instance._1CC7DCCB6 = __instance.transform.position + __instance._11C77E995 * _17EEFAD12;
+				__instance.m_navAgent.Move(__instance._11C77E995 * axis * modifier);
             }
             return false;
         }

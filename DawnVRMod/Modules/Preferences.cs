@@ -14,6 +14,7 @@ namespace DawnVR.Modules
         public static MelonPreferences_Entry<int> SpectatorFOV { get; private set; }
 
         public static MelonPreferences_Entry<bool> EnableInternalLogging { get; private set; }
+        public static MelonPreferences_Entry<bool> EnablePlayerCollisionVisualization { get; private set; }
 
         public static void Init()
         {
@@ -30,6 +31,7 @@ namespace DawnVR.Modules
 
             category = MelonPreferences.CreateCategory(debugCategoryName);
             EnableInternalLogging = category.CreateEntry(nameof(EnableInternalLogging), false);
+            EnablePlayerCollisionVisualization = category.CreateEntry(nameof(EnablePlayerCollisionVisualization), false);
 
             MelonPreferences.Save();
         }

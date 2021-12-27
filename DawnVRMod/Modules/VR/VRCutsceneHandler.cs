@@ -41,6 +41,7 @@ namespace DawnVR.Modules.VR
             cutsceneCamera.enabled = true;
 
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
+            cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
         }
 
         public void EndCutscene()

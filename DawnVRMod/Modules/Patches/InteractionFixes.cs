@@ -244,5 +244,22 @@ namespace DawnVR.Modules
 
             return false;
         }
+
+        public static void ChoiceButtonSelection(T_6876113C __instance, bool __result)
+        {
+            if (__result)
+                MelonLoader.MelonCoroutines.Start(EnableInteraction());
+        }
+
+        private static System.Collections.IEnumerator EnableInteraction()
+        {
+            yield return new WaitForSeconds(1);
+            if (!VR.VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            {
+                T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
+                T_A6E913D1.Instance.m_gameModeManager.isDebug = false;
+                T_F8FE3E1C.s_hideUI = false;
+            }
+        }
     }
 }

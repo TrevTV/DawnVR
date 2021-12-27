@@ -57,7 +57,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI, makes it use the vr camera for calculations
 
             // UIFixes
-            PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes nullrefs after get_MainUICamera() tries to use Camera.main
+            //PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes nullrefs after get_MainUICamera() tries to use Camera.main
             PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraCullingMask"), nameof(SetCameraCullingMask)); // fix random nullrefs part 1
             PatchPre(typeof(T_D4EA31BB).GetMethod("Reset"), nameof(DontRunMe)); // fix random nullrefs part 2
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
@@ -68,7 +68,8 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
             //PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart)); // prevents bug with FollowCamera disabling interaction
             //PatchPre(typeof(T_884A92DB).GetMethod("LateUpdate"), nameof(FollowCamLateUpdate)); // part 2 of FollowCamera fix
-            PatchPre(typeof(T_884A92DB).GetMethod("_15EB64374", HarmonyLib.AccessTools.all), nameof(FollowCamUpdateInputVars));
+            PatchPre(typeof(T_884A92DB).GetMethod("_15EB64374", HarmonyLib.AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
+            PatchPost(typeof(T_6876113C).GetMethod("ButtonPressed"), nameof(ChoiceButtonSelection)); // fixes some weird interaction bugs
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // mainly updates VRRig's chloe and material

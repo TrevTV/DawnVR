@@ -18,6 +18,9 @@ namespace DawnVR.Modules.VR
 		private Renderer[] maxHandRenderers;
 		private Vector3 lastPos;
 
+		private GameObject chloeReference;
+		private GameObject vrRigReference;
+
 		private void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -49,7 +52,22 @@ namespace DawnVR.Modules.VR
 				Input.GetThumbstickLeft(VRInput.Hand.Right).onStateDown += OnThumbstickLeft;
 				Input.GetThumbstickRight(VRInput.Hand.Right).onStateDown += OnThumbstickRight;
 			}
-		}
+
+			if (Preferences.EnablePlayerCollisionVisualization.Value)
+            {
+                chloeReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                chloeReference.GetComponent<Collider>().enabled = false;
+                chloeReference.transform.localScale = new Vector3(0.5f, 0.15f, 0.5f);
+                chloeReference.GetComponent<MeshRenderer>().material.color = Color.red;
+                GameObject.DontDestroyOnLoad(chloeReference);
+
+                vrRigReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                vrRigReference.GetComponent<Collider>().enabled = false;
+                vrRigReference.transform.localScale *= 0.15f;
+                vrRigReference.GetComponent<MeshRenderer>().material.color = Color.blue;
+                GameObject.DontDestroyOnLoad(vrRigReference);
+            }
+        }
 
 		private void SetupHandposes(Transform cameraHolder)
         {
@@ -82,6 +100,7 @@ namespace DawnVR.Modules.VR
 		{
 			try
             {
+
 				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed.Value * axis.x * Time.deltaTime);
 				ChloeComponent._11C77E995 = transform.rotation;
 			}
@@ -112,18 +131,25 @@ namespace DawnVR.Modules.VR
 
 		private void FixedUpdate()
         {
-			// todo: collision is still kinda jank, alec said it may be me needing to add an InverseTransformDirection somewhere
-			if (ChloeComponent != null && transform.parent == ChloeComponent.transform)
-			{
+            // todo: collision is still kinda jank, alec said it may be me needing to add an InverseTransformDirection somewhere
+            if (ChloeComponent != null && transform.parent == ChloeComponent.m_rotateTrans)
+            {
                 Vector3 offset = Camera.transform.localPosition - lastPos;
+				offset = Camera.Holder.localRotation * offset;
 				offset.y = 0;
-				ChloeComponent.transform.localPosition += offset;
-				Camera.Holder.localPosition -= offset;
+                ChloeComponent.m_rotateTrans.localPosition += offset;
+                Camera.Holder.localPosition -= offset;
                 lastPos = Camera.transform.localPosition;
+            }
+
+			if (Preferences.EnablePlayerCollisionVisualization.Value)
+            {
+                chloeReference.transform.position = ChloeComponent?.m_rotateTrans?.position ?? Vector3.zero;
+                vrRigReference.transform.position = transform.position;
             }
 		}
 
-		public void UpdateRigParent(eGameMode gameMode)
+        public void UpdateRigParent(eGameMode gameMode)
         {
 			// prevents double renders of ui elements, both in headset, and on screen
 			if (T_D4EA31BB.s_ui3DCamera?.m_camera != null)
@@ -156,8 +182,8 @@ namespace DawnVR.Modules.VR
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
-					T_F8FE3E1C.s_hideUI = false;
-					break;
+                    T_F8FE3E1C.s_hideUI = false;
+                    break;
 				case eGameMode.kLoading:
 					break;
 				case eGameMode.kMainMenu:
@@ -174,7 +200,7 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kVideo:
 					break;
 			}
-		}
+		}	
 
         public void SetParent(Transform t, Vector3? newLocalPosition = null, bool resetPos = true)
         {
