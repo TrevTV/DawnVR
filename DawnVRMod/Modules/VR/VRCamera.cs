@@ -25,6 +25,7 @@ namespace DawnVR.Modules.VR
 
             Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
+            visionBlocker.SetActive(true);
 
             overlayCookies = new Dictionary<T_A7F99C25.eCookieChoices, GameObject>()
             {
@@ -83,16 +84,5 @@ namespace DawnVR.Modules.VR
         }
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
-
-        public void EnableCookie(T_A7F99C25.eCookieChoices choice)
-        {
-            if (choice == T_A7F99C25.eCookieChoices.kNone)
-                foreach (GameObject cookie in overlayCookies.Values)
-                    cookie.SetActive(false);
-            else if (overlayCookies.TryGetValue(choice, out GameObject go))
-                go.SetActive(true);
-            else
-                MelonLoader.MelonLogger.Warning($"Unknown cookie {choice} given to VRCamera::EnableCookie!");
-        }
     }
 }

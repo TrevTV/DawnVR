@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Valve.VR;
-using UnityEngine.SceneManagement;
 
 namespace DawnVR.Modules
 {
@@ -8,17 +7,14 @@ namespace DawnVR.Modules
     {
         public static bool GetMainUICamera(ref Camera __result)
         {
-            Camera camera = null;
-            try { camera = Camera.main; } catch { }
-            if (camera == null)
+            if (T_34182F31._1444D8BF3?.transform?.parent?.gameObject?.activeInHierarchy ?? false)
+                __result = T_34182F31._1444D8BF3;
+            else
             {
-                if (T_34182F31._1444D8BF3 != null)
-                    camera = T_34182F31._1444D8BF3.gameObject?.GetComponentInChildren<Camera>(true);
+                __result = Camera.main;
+                T_34182F31._1444D8BF3 = __result;
             }
-            else if (T_34182F31._1444D8BF3 != camera)
-                T_34182F31._1444D8BF3 = camera;
 
-            __result = camera;
             return false;
         }
 
