@@ -165,6 +165,7 @@ namespace DawnVR.Modules.VR
 			else ChangeHandModel(chloeHandRenderers);
 
 			CutsceneHandler.EndCutscene();
+			Camera.BlockVision(false);
 
 			switch (gameMode)
 			{
@@ -198,6 +199,7 @@ namespace DawnVR.Modules.VR
 					SetParent(null);
 					break;
 				case eGameMode.kVideo:
+					Camera.BlockVision(true);
 					break;
 			}
 		}	
