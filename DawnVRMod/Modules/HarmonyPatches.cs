@@ -152,9 +152,11 @@ namespace DawnVR.Modules
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
                 case T_A7F99C25.eCookieChoices.kE3Binoculars:
-                    // todo:
+                    VRRig.Instance.CutsceneHandler.SetupCutscene();
+                    VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
                 case T_A7F99C25.eCookieChoices.kE4Binoculars:
+                    // todo: implement cookies here
                     break;
             }
         }

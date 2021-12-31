@@ -16,6 +16,8 @@ namespace DawnVR
     // interaction menus get hidden a lot (i have no idea if i can fix this, have tried multiple times)
        // was able to fix the sprite parts, text doesnt like the shader i used for the others
     // videos look terrible, need to find a way to render them to the cutscene box
+    // overlay cookies sometimes render but not well
+    // the fog type stuff at the start of ep3 blocks the ui
 
     // todo addition list
     // seated/standing with offset using alec's code: https://canary.discord.com/channels/@me/727403137337524264/917571166443552769
@@ -30,7 +32,7 @@ namespace DawnVR
 
     public class VRMain : MelonMod
     {
-        private const string githubApiUrl = "https://api.github.com/repos/TrevTV/DawnVR/releases/latest";
+        private const string GithubApiUrl = "https://api.github.com/repos/TrevTV/DawnVR/releases/latest";
         private bool vrEnabled;
         private bool steamInitRunning;
 
@@ -72,7 +74,7 @@ namespace DawnVR
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.FileName = "powershell.exe";
-            process.StartInfo.Arguments = $"-file \"{scriptPath}\" \"{githubApiUrl}\"";
+            process.StartInfo.Arguments = $"-file \"{scriptPath}\" \"{GithubApiUrl}\"";
 
             process.Start();
             string returnVal = process.StandardOutput.ReadToEnd();
