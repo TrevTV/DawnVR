@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using HarmonyLib;
 using UnityEngine;
 using MelonLoader;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
-            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", HarmonyLib.AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+            PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
             PatchPre(typeof(T_6FCAE66C).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
             PatchPre(typeof(T_D9E8342E).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
@@ -45,7 +46,7 @@ namespace DawnVR.Modules
 
             // ObjectiveManager
             PatchPost(typeof(T_81803C2C).GetMethod("SetReminder"), nameof(SetReminderTexture)); // adds the reminder to the vr hands
-            PatchPre(typeof(T_1928221C).GetMethod("Update", HarmonyLib.AccessTools.all), nameof(DontRunMe)); // makes it so the objective view button doesnt work since it's useless in vr
+            PatchPre(typeof(T_1928221C).GetMethod("Update", AccessTools.all), nameof(DontRunMe)); // makes it so the objective view button doesnt work since it's useless in vr
 
             // HighlightManager
             PatchPre(typeof(T_244D769F).GetMethod("Interact"), nameof(HotspotObjectInteract)); // prevents some weird bug
@@ -64,21 +65,21 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
 
             // InteractionFixes
-            PatchPre(typeof(T_3BE79CFB).GetMethod("Start", HarmonyLib.AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
-            PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", HarmonyLib.AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
+            PatchPre(typeof(T_3BE79CFB).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
+            PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
             //PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart)); // prevents bug with FollowCamera disabling interaction
             //PatchPre(typeof(T_884A92DB).GetMethod("LateUpdate"), nameof(FollowCamLateUpdate)); // part 2 of FollowCamera fix
-            PatchPre(typeof(T_884A92DB).GetMethod("_15EB64374", HarmonyLib.AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
+            PatchPre(typeof(T_884A92DB).GetMethod("_15EB64374", AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
             PatchPost(typeof(T_6876113C).GetMethod("ButtonPressed"), nameof(ChoiceButtonSelection)); // fixes some weird interaction bugs
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // mainly updates VRRig's chloe and material
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
-            PatchPre(typeof(T_55EA835B).GetMethod("Awake", HarmonyLib.AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
+            PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             PatchPost(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(SetCurrentViewCookie)); // sets overlays for mainly binocular scenes
-            PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", HarmonyLib.AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
+            PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
-            //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", HarmonyLib.AccessTools.all), nameof(OnPPEnable));
+            //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
         }
 
         public static void InitNoVR(HarmonyLib.Harmony hInstance)
