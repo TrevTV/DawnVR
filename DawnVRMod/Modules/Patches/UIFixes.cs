@@ -18,6 +18,15 @@ namespace DawnVR.Modules
             return false;
         }
 
+        public static void CreateDrawCallMat(T_632CCBA1 __instance)
+        {
+            if (__instance.mainTexture.name.Contains("Fonts"))
+                //__instance.dynamicMaterial.shader = Resources.NGUIOverlayShader;
+                return;
+            else
+                __instance.dynamicMaterial.shader = Resources.NGUIOverlayShader;
+        }
+
         public static bool SetCameraCullingMask(Camera _13A97A3A2, int _1A676C459)
         {
             if (_13A97A3A2 != null)

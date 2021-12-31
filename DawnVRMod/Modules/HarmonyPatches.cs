@@ -63,6 +63,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_D4EA31BB).GetMethod("Reset"), nameof(DontRunMe)); // fix random nullrefs part 2
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
             PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
+            PatchPost(typeof(T_632CCBA1).GetMethod("_158268DAA", AccessTools.all), nameof(CreateDrawCallMat)); // overrides the interaction ui's shader to force it to always stay over everything
 
             // InteractionFixes
             PatchPre(typeof(T_3BE79CFB).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
