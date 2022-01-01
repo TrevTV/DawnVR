@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MelonLoader;
+using UnityEngine;
 using Valve.VR;
 
 namespace DawnVR.Modules
@@ -25,6 +26,18 @@ namespace DawnVR.Modules
                 return;
             else
                 __instance.dynamicMaterial.shader = Resources.NGUIOverlayShader;
+        }
+
+        public static void FixFakeFogQueue(T_E29491C9 __instance)
+        {
+            Transform vignetteArea = __instance.transform.Find("VignetteArea");
+            if (vignetteArea != null)
+            {
+                foreach (MeshRenderer renderer in vignetteArea.Find("OuterVolume").GetComponentsInChildren<MeshRenderer>())
+                    renderer.material.renderQueue = 3000;
+                foreach (MeshRenderer renderer in vignetteArea.Find("FreelookFacades").GetComponentsInChildren<MeshRenderer>())
+                    renderer.material.renderQueue = 3000;
+            }
         }
 
         public static bool SetCameraCullingMask(Camera _13A97A3A2, int _1A676C459)

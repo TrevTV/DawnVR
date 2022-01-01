@@ -17,7 +17,6 @@ namespace DawnVR
        // was able to fix the sprite parts, text doesnt like the shader i used for the others
     // videos look terrible, need to find a way to render them to the cutscene box
     // overlay cookies sometimes render but not well
-    // the fog type stuff at the start of ep3 blocks the ui
 
     // todo addition list
     // seated/standing with offset using alec's code: https://canary.discord.com/channels/@me/727403137337524264/917571166443552769

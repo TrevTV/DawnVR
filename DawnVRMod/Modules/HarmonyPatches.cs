@@ -64,6 +64,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
             PatchPre(typeof(T_64B68373).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
             PatchPost(typeof(T_632CCBA1).GetMethod("_158268DAA", AccessTools.all), nameof(CreateDrawCallMat)); // overrides the interaction ui's shader to force it to always stay over everything
+            PatchPost(typeof(T_E29491C9).GetMethod("Start", AccessTools.all), nameof(FixFakeFogQueue)); // hooks scene root's start, there is probably a better way i dont know of
 
             // InteractionFixes
             PatchPre(typeof(T_3BE79CFB).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
@@ -97,31 +98,8 @@ namespace DawnVR.Modules
 
         #region Misc
 
-        public static void PostCharControllerStart(T_C3DD66D9 __instance)
-        {
-            VRRig.Instance?.UpdateCachedChloe(__instance);
-
-            #region Add Hand Material
-
-            Material material = null;
-            foreach (SkinnedMeshRenderer sMesh in __instance.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Arms"));
-                if (material == null)
-                    material = sMesh.sharedMaterials?.SingleOrDefault((m) => m.name.Contains("Farewell_Body"));
-            }
-            if (material == null)
-            {
-                MelonLogger.Error("Failed to locate the hand material in scene " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-                VRRig.Instance.ChloeMaterial = new Material(Shader.Find("Standard"));
-                return;
-            }
-
-            material.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            VRRig.Instance.ChloeMaterial = material;
-
-            #endregion
-        }
+        public static void PostCharControllerStart(T_C3DD66D9 __instance) 
+            => VRRig.Instance?.UpdateCachedChloe(__instance);
 
         public static bool MirrorReflectionAwake(T_55EA835B __instance)
         {

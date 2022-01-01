@@ -271,8 +271,7 @@ namespace DawnVR.Modules.VR
 				foreach (SkinnedMeshRenderer sMesh in ChloeComponent.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
 					if (!chloeHandRenderers.Contains(sMesh) && !maxHandRenderers.Contains(sMesh))
 						sMesh.enabled = active;
-				if (ChloeMaterial != null)
-					ChangeHandShader(active ? Resources.DitherShader : Shader.Find("Custom/LISCharacterDeferred"));
+				ChangeHandShader(active ? Resources.DitherShader : Shader.Find("Custom/LISCharacterDeferred"));
 			}
 		}
     }
