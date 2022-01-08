@@ -9,14 +9,6 @@ using System;
 
 namespace DawnVR
 {
-    // playthrough notes
-    // dream sequence (or many other similar scenes) position likes to move around
-    // some scene like to flicker between roomscale working right and roomscale not working right (backstage dressing room, junkyard shack)
-    // held items (stored under some variable on CharController) are visible on chloes actual mesh (baseball smash scene)
-    // interaction menus get hidden a lot (i have no idea if i can fix this, have tried multiple times)
-       // was able to fix the sprite parts, text doesnt like the shader i used for the others
-    // videos look terrible, need to find a way to render them to the cutscene box
-
     // todo addition list
     // seated/standing with offset using alec's code: https://canary.discord.com/channels/@me/727403137337524264/917571166443552769
     public static class BuildInfo
