@@ -64,8 +64,6 @@ namespace DawnVR.Modules.VR
             IsCutsceneActive = false;
             if (cutsceneRoom != null)
                 cutsceneRoom.SetActive(false);
-            /*if (amuletCookieView != null)
-                amuletCookieView.SetActive(false);*/
             if (cutsceneCamera != null)
                 cutsceneCamera.enabled = false;
         }

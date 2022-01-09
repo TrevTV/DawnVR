@@ -9,7 +9,6 @@ namespace DawnVR.Modules.VR
 
 		public Renderer[] ActiveHandRenderers;
 		public T_C3DD66D9 ChloeComponent;
-		public Material ChloeMaterial;
 		public VRCamera Camera;
         public VRInput Input;
 		public VRCutsceneHandler CutsceneHandler;
@@ -131,8 +130,9 @@ namespace DawnVR.Modules.VR
 
 		private void FixedUpdate()
         {
-            // todo: collision is still kinda jank, alec said it may be me needing to add an InverseTransformDirection somewhere
-            if (ChloeComponent != null && transform.parent == ChloeComponent.m_rotateTrans)
+			// todo: collision is still somewhat jank
+			// somewhat related to https://github.com/TrevTV/DawnVR/issues/2
+			if (ChloeComponent != null && transform.parent == ChloeComponent.m_rotateTrans)
             {
                 Vector3 offset = Camera.transform.localPosition - lastPos;
 				offset = Camera.Holder.localRotation * offset;
@@ -218,24 +218,8 @@ namespace DawnVR.Modules.VR
             }
         }
 
-		public float floorOffset;
-		public float irlHeight;
-
 		public void BeginCalibration()
         {
-            // todo: calibration
-            /*if (sitStandMode.Equals(PlayerSitStandMode.Seated))
-            {
-                seatedOffset = irlHeight - player.cam.localPosition.y - floorOffset;
-                player.heightOffset = seatedOffset;
-                scale = ((player.height) / (irlHeight / 10f));
-            }
-            else
-            {
-                floorOffset = irlHeight - player.cam.localPosition.y;
-                player.heightOffset = -floorOffset;
-                scale = ((player.height) / (irlHeight / 10f));
-            }*/
         }
 
 		public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
