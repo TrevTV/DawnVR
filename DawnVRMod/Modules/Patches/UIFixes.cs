@@ -1,24 +1,10 @@
-﻿using MelonLoader;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR;
 
 namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        public static bool GetMainUICamera(ref Camera __result)
-        {
-            if (T_34182F31._1444D8BF3?.transform?.parent?.gameObject?.activeInHierarchy ?? false)
-                __result = T_34182F31._1444D8BF3;
-            else
-            {
-                __result = Camera.main;
-                T_34182F31._1444D8BF3 = __result;
-            }
-
-            return false;
-        }
-
         public static void CreateDrawCallMat(T_632CCBA1 __instance)
         {
             if (__instance.mainTexture.name.Contains("Fonts"))

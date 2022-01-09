@@ -31,7 +31,6 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_D9E8342E).GetMethod("GetAxis"), nameof(GetAxis)); // redirect input to vr controllers
 
             // RigMovement
-            //PatchPost(typeof(T_421B9CDF).GetMethod("SetCameraPosition"), nameof(SetCameraPosition)); // moves VRRig to follow the camera during a cutscene
             PatchPre(typeof(T_C3DD66D9).GetMethod("CalculateAngle"), nameof(CalculateCharAngle)); // overrides it so it doesnt actually calculate the angle, as VRRig and CharControllerMove handles that
             PatchPre(typeof(T_C3DD66D9).GetMethod("Move"), nameof(CharControllerMove)); // improves the game's movement controller to better fit vr
             PatchPre(typeof(T_C3DD66D9).GetMethod("Rotate"), nameof(CharControllerRotate)); // slightly improves roomscale collision
@@ -60,7 +59,6 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_A0A6EA62).GetMethod("CheckOnScreen"), nameof(IsHoverObjectOnScreen)); // HoverObjectUI, makes it use the vr camera for calculations
 
             // UIFixes
-            //PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes nullrefs after get_MainUICamera() tries to use Camera.main
             PatchPre(typeof(T_421B9CDF).GetMethod("SetCameraCullingMask"), nameof(SetCameraCullingMask)); // fix random nullrefs part 1
             PatchPre(typeof(T_D4EA31BB).GetMethod("Reset"), nameof(DontRunMe)); // fix random nullrefs part 2
             PatchPre(typeof(T_408CFC35).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
@@ -71,8 +69,6 @@ namespace DawnVR.Modules
             // InteractionFixes
             PatchPre(typeof(T_3BE79CFB).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
             PatchPre(typeof(T_3BE79CFB).GetMethod("OnTriggerEnter", AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
-            //PatchPost(typeof(T_884A92DB).GetMethod("Start"), nameof(FollowCamStart)); // prevents bug with FollowCamera disabling interaction
-            //PatchPre(typeof(T_884A92DB).GetMethod("LateUpdate"), nameof(FollowCamLateUpdate)); // part 2 of FollowCamera fix
             PatchPre(typeof(T_884A92DB).GetMethod("_15EB64374", AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
             PatchPost(typeof(T_6876113C).GetMethod("ButtonPressed"), nameof(ChoiceButtonSelection)); // fixes some weird interaction bugs
 
@@ -83,7 +79,8 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
 
             // Misc
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // mainly updates VRRig's chloe and material
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
+            PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled

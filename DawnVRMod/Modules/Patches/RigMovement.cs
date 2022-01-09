@@ -280,18 +280,6 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void SetCameraPosition(Camera _13A97A3A2, Vector3 _1ACF98885)
-        {
-            if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode != eGameMode.kFreeRoam)
-            {
-                VRRig.Instance.transform.position = _1ACF98885 - Vector3.up;
-                Vector3 rot = _13A97A3A2.transform.eulerAngles;
-                rot.x = 0;
-                rot.z = 0;
-                VRRig.Instance.transform.eulerAngles = rot;
-            }
-        }
-
 		public static void AddVRCalibrationButton(T_51AF6A60 __instance)
 		{
 			if (__instance.transform.parent.name == "MainMenu")
