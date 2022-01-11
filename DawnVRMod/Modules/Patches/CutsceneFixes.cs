@@ -10,6 +10,7 @@ namespace DawnVR.Modules
     internal static partial class HarmonyPatches
     {
         private static bool disabledOverlayCookies;
+        private static bool hasDisabledMovieWindow;
 
         public static bool DisableSettingCurrentViewCookie(T_408CFC35 __instance, T_A7F99C25.eCookieChoices value)
         {
@@ -21,9 +22,6 @@ namespace DawnVR.Modules
             }
 
             SetCurrentViewCookie(value);
-            /*if (value == T_A7F99C25.eCookieChoices.kNone)
-                return true;
-            return false;*/
             return true;
         }
 
@@ -264,6 +262,20 @@ namespace DawnVR.Modules
                 }
             }
             return false;
+        }
+
+        public static void OnMovieWillRenderObject(_1F28E2E62.T_E579AD8A __instance, T_DD163FE9 _17BBCD6A6)
+        {
+            if (__instance.status == _1F28E2E62.T_E579AD8A.Status.Ready || __instance.status == _1F28E2E62.T_E579AD8A.Status.Playing)
+            {
+                if (!hasDisabledMovieWindow)
+                {
+                    GameObject.Find("/UIRoot/Camera/MovieWindow/Widget/Quad").SetActive(false);
+                    hasDisabledMovieWindow = true;
+                }
+
+                VRRig.Instance.CutsceneHandler.SetupCutscene(_17BBCD6A6.material);
+            }
         }
     }
 }

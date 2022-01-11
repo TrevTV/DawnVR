@@ -77,6 +77,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_24E8F007).GetMethod("Update", AccessTools.all), nameof(TelescopePuzzleUpdate)); // fixes the amulet thing in e4
             PatchPre(typeof(T_ADD17E7F).GetMethod("Update", AccessTools.all), nameof(TelescopeRotate)); // fixes the amulet thing in e4
             PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
+            PatchPost(typeof(_1F28E2E62.T_E579AD8A).GetMethod("OnWillRenderObject"), nameof(OnMovieWillRenderObject)); // displays pre-rendered videos in the cutscene box
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
@@ -90,11 +91,8 @@ namespace DawnVR.Modules
         public static void InitNoVR(HarmonyLib.Harmony hInstance)
         {
             HarmonyInstance = hInstance;
-            PatchPre(typeof(T_A6E913D1).GetMethod("IsAllowDebugOptions"), nameof(ReturnTrue));
-            PatchPre(typeof(T_A6E913D1).GetMethod("IsTool"), nameof(ReturnTrue));
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen));
             PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed));
-            PatchPost(typeof(T_6B664603).GetMethod("SetMode"), nameof(OnSetMode2));
         }
 
         public static bool DontRunMe() => false;

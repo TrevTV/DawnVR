@@ -10,7 +10,9 @@ namespace DawnVR.Modules.VR
         public Transform AmuletGlassTransform => amuletGlassTransform;
 
         private Camera cutsceneCamera;
+        private Material mainMaterial;
         private GameObject cutsceneRoom;
+        private MeshRenderer screenRend;
         private GameObject amuletCookieView;
         private Transform amuletGlassTransform;
         private RenderTexture cutsceneRenderTexture;
@@ -44,16 +46,35 @@ namespace DawnVR.Modules.VR
 
         public void SetupCutscene(bool enableAmulet = false)
         {
-            if (IsCutsceneActive)
+            // not the greatest but it does function
+            if (IsCutsceneActive && !screenRend.sharedMaterial.name.Contains("CriMana"))
                 return;
 
             CheckCutsceneRequirements();
+
+            screenRend.sharedMaterial = mainMaterial;
 
             IsCutsceneActive = true;
             cutsceneRoom.SetActive(true);
             cutsceneCamera.enabled = true;
             if (enableAmulet)
                 amuletCookieView.SetActive(true);
+
+            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
+            cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
+        }
+
+        public void SetupCutscene(Material screenMat)
+        {
+            if (IsCutsceneActive)
+                return;
+
+            CheckCutsceneRequirements();
+
+            screenRend.sharedMaterial = screenMat;
+
+            IsCutsceneActive = true;
+            cutsceneRoom.SetActive(true);
 
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
@@ -74,7 +95,9 @@ namespace DawnVR.Modules.VR
             {
                 cutsceneRoom = GameObject.Instantiate(Resources.CutsceneRoom);
                 cutsceneRoom.transform.position = new Vector3(0f, 1100f, 0f);
-                cutsceneRoom.transform.Find("Screen").GetComponent<MeshRenderer>().sharedMaterial.mainTexture = cutsceneRenderTexture;
+                screenRend = cutsceneRoom.transform.Find("Screen").GetComponent<MeshRenderer>();
+                mainMaterial = screenRend.sharedMaterial;
+                mainMaterial.mainTexture = cutsceneRenderTexture;
                 amuletCookieView = cutsceneRoom.transform.Find("Amulet").gameObject;
                 amuletGlassTransform = amuletCookieView.transform.Find("Offset/Glass");
             }

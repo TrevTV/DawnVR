@@ -67,7 +67,6 @@
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\OutputRedirect.cs" />
     <Compile Include="Modules\Patches\CutsceneFixes.cs" />
-    <Compile Include="Modules\Patches\NoVR.cs" />
     <Compile Include="Modules\Patches\ObjectiveManager.cs" />
     <Compile Include="Modules\Patches\HighlightManager.cs" />
     <Compile Include="Modules\Patches\UIFixes.cs" />

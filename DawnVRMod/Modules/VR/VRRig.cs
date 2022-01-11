@@ -164,7 +164,6 @@ namespace DawnVR.Modules.VR
 			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
 			else ChangeHandModel(chloeHandRenderers);
 
-			CutsceneHandler.EndCutscene();
 			Camera.BlockVision(false);
 
 			switch (gameMode)
@@ -180,14 +179,17 @@ namespace DawnVR.Modules.VR
                     ChloeComponent.Camera.enabled = true;
                     break;
 				case eGameMode.kFreeRoam:
+					CutsceneHandler.EndCutscene();
 					SetParent(ChloeComponent.transform);
 					SetMeshActive(false);
 					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
                     T_F8FE3E1C.s_hideUI = false;
                     break;
 				case eGameMode.kLoading:
+					CutsceneHandler.EndCutscene();
 					break;
 				case eGameMode.kMainMenu:
+					CutsceneHandler.EndCutscene();
 					Camera.BlockVision(true);
 					ChangeHandModel(chloeHandRenderers);
 					ChangeHandShader(Resources.DitherShader);
@@ -196,10 +198,12 @@ namespace DawnVR.Modules.VR
 					Camera.BlockVision(false);
 					break;
 				case eGameMode.kNone:
+					CutsceneHandler.EndCutscene();
 					SetParent(null);
 					break;
 				case eGameMode.kVideo:
-					Camera.BlockVision(true);
+					CutsceneHandler.EndCutscene();
+					// mainly handled in CutsceneFixes::OnMovieWillRenderObject
 					break;
 			}
 		}	
