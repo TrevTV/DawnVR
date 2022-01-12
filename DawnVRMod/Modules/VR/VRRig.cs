@@ -132,7 +132,7 @@ namespace DawnVR.Modules.VR
         {
 			// todo: collision is still somewhat jank
 			// somewhat related to https://github.com/TrevTV/DawnVR/issues/2
-			if (ChloeComponent != null && transform.parent == ChloeComponent.m_rotateTrans)
+			if (ChloeComponent != null && transform.parent == ChloeComponent.m_rotateTrans && ChloeComponent.m_navAgent.enabled)
             {
                 Vector3 offset = Camera.transform.localPosition - lastPos;
 				offset = Camera.Holder.localRotation * offset;
@@ -181,6 +181,15 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kFreeRoam:
 					CutsceneHandler.EndCutscene();
 					SetParent(ChloeComponent.transform);
+					if (!T_A6E913D1.Instance.m_followCamera.m_isFreelook)
+                    {
+						// pretty jank fix for some sequences constantly getting offset
+						Vector3 pos = ChloeComponent.transform.Find("Reference/Hips").position;
+						pos.y = -0.3f;
+						transform.position = pos;
+                    }
+
+                    Camera.ResetHolderPosition();
 					SetMeshActive(false);
 					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
                     T_F8FE3E1C.s_hideUI = false;

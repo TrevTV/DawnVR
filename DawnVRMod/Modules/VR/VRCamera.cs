@@ -76,5 +76,7 @@ namespace DawnVR.Modules.VR
         }
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
+
+        public void ResetHolderPosition() => Holder.transform.localPosition = Vector3.zero;
     }
 }

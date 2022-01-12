@@ -61,6 +61,7 @@ namespace DawnVR.Modules.VR
                 amuletCookieView.SetActive(true);
 
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
+            VRRig.Instance.Camera.ResetHolderPosition();
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
         }
 
@@ -77,6 +78,7 @@ namespace DawnVR.Modules.VR
             cutsceneRoom.SetActive(true);
 
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
+            VRRig.Instance.Camera.ResetHolderPosition();
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
         }
 
