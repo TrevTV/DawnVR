@@ -14,7 +14,6 @@ namespace DawnVR.Modules.VR
         private Camera uiCamera;
         private GameObject uiRenderer;
         private GameObject visionBlocker;
-        private Dictionary<T_A7F99C25.eCookieChoices, GameObject> overlayCookies;
 
         private Camera spectatorCamera;
 
@@ -26,13 +25,6 @@ namespace DawnVR.Modules.VR
             Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
             visionBlocker.SetActive(true);
-
-            overlayCookies = new Dictionary<T_A7F99C25.eCookieChoices, GameObject>()
-            {
-                { T_A7F99C25.eCookieChoices.kBinoculars, transform.Find("OverlayCookies/Binocular").gameObject }
-                //{ T_A7F99C25.eCookieChoices.kE3Binoculars, transform.Find("OverlayCookies/E3Binocular").gameObject },
-                //{ T_A7F99C25.eCookieChoices.kE4Binoculars, transform.Find("OverlayCookies/E4Binocular").gameObject }
-            };
 
             Component.backgroundColor = Color.black;
 
