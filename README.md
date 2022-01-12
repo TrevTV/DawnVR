@@ -24,8 +24,12 @@ VR mod for Life Is Strange: Before The Storm
 - `SpectatorEnabled` enables a separate camera for the monitor which has a higher FOV by default `(default: false)`
 - `SpectatorFOV` allows you to change the FOV of the spectator camera `(default: 90)`
 
+### Misc
+- `CheckForUpdatesOnStart` checks for any mod updates every time the game boots `{default: true}`
+
 ### Debugging
 - `EnableInternalLogging` allows you to redirect internal logging calls from the game and have them shown in the MelonLoader console `(default: false)`
+- `EnablePlayerCollisionVisualization` enables capsules that appear the the feet of Chloe, simply to visualize her NavMeshAgent verses the VRRig `(default: false)`
 
 ## FAQ
 
@@ -37,6 +41,9 @@ Make sure you have the `-vrmode OpenVR` paramater setup and that SteamVR is open
 
 ### How can I temporarily disable the mod?
 In the Steam launch parameters, simply replace OpenVR with None, the mod will recognize that change and will let the game load normally.
+
+### Why is the mod using Powershell to get the latest version?
+Be default, Mono doesn't trust any websites, including GitHub. The script is a janky way of still retriving the data.
 
 ## Licensing
 - [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause license. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
