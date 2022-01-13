@@ -1,5 +1,6 @@
 ﻿using DawnVR.Modules.VR;
 using MelonLoader;
+using UnityEngine;
 
 namespace DawnVR.Modules
 {
@@ -13,6 +14,19 @@ namespace DawnVR.Modules
                 if (_1C57B7248 == eGameMode.kFreeRoam && (VRRig.Instance.ChloeComponent == null || VRRig.Instance.ChloeComponent.enabled == false))
                     VRRig.Instance.UpdateCachedChloe(T_A6E913D1.Instance.m_mainCharacter);
                 VRRig.Instance?.UpdateRigParent(_1C57B7248);
+            }
+        }
+
+        public static void OnFreeroamObjectActivate()
+        {
+            if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kFreeRoam)
+            {
+                if (T_A6E913D1.Instance.m_followCamera.m_isFreelook)
+                {
+                    Vector3 pos = VRRig.Instance.ChloeComponent.transform.Find("Reference/Hips").position;
+                    pos.y = -0.3f;
+                    VRRig.Instance.transform.position = pos;
+                }
             }
         }
 

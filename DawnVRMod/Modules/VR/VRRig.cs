@@ -181,14 +181,6 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kFreeRoam:
 					CutsceneHandler.EndCutscene();
 					SetParent(ChloeComponent.transform);
-					if (!T_A6E913D1.Instance.m_followCamera.m_isFreelook)
-                    {
-						// pretty jank fix for some sequences constantly getting offset
-						Vector3 pos = ChloeComponent.transform.Find("Reference/Hips").position;
-						pos.y = -0.3f;
-						transform.position = pos;
-                    }
-
                     Camera.ResetHolderPosition();
 					SetMeshActive(false);
 					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
