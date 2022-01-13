@@ -15,6 +15,7 @@ namespace DawnVR.Modules.VR
         private MeshRenderer screenRend;
         private GameObject amuletCookieView;
         private Transform amuletGlassTransform;
+        private Quaternion rotationBeforeCutscene;
         private RenderTexture cutsceneRenderTexture;
 
         private void Start()
@@ -60,6 +61,7 @@ namespace DawnVR.Modules.VR
             if (enableAmulet)
                 amuletCookieView.SetActive(true);
 
+            rotationBeforeCutscene = VRRig.Instance.transform.rotation;
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             VRRig.Instance.Camera.ResetHolderPosition();
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
@@ -77,6 +79,7 @@ namespace DawnVR.Modules.VR
             IsCutsceneActive = true;
             cutsceneRoom.SetActive(true);
 
+            rotationBeforeCutscene = VRRig.Instance.transform.rotation;
             VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             VRRig.Instance.Camera.ResetHolderPosition();
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
@@ -89,6 +92,8 @@ namespace DawnVR.Modules.VR
                 cutsceneRoom.SetActive(false);
             if (cutsceneCamera != null)
                 cutsceneCamera.enabled = false;
+
+            VRRig.Instance.transform.rotation = rotationBeforeCutscene;
         }
 
         private void CheckCutsceneRequirements()
