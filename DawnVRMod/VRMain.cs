@@ -55,39 +55,46 @@ namespace DawnVR
         {
             MelonLogger.Msg("Checking for updates...");
 
-            string scriptPath = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "CheckForUpdate.ps1");
-
-            if (!System.IO.File.Exists(scriptPath))
-                ResourceLoader.WriteResourceToFile(scriptPath, "CheckForUpdate.ps1");
-
-            var process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.FileName = "powershell.exe";
-            process.StartInfo.Arguments = $"-file \"{scriptPath}\" \"{GithubApiUrl}\"";
-
-            process.Start();
-            string returnVal = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            if (returnVal == "ERR:NO_INTERNET")
+            try
             {
-                MelonLogger.Warning("You are not connected to the internet, skipping update check.");
-                return;
+                string scriptPath = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "CheckForUpdate.ps1");
+
+                if (!System.IO.File.Exists(scriptPath))
+                    ResourceLoader.WriteResourceToFile(scriptPath, "CheckForUpdate.ps1");
+
+                var process = new System.Diagnostics.Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.FileName = "powershell.exe";
+                process.StartInfo.Arguments = $"-file \"{scriptPath}\" \"{GithubApiUrl}\"";
+
+                process.Start();
+                string returnVal = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (returnVal == "ERR:NO_INTERNET")
+                {
+                    MelonLogger.Warning("You are not connected to the internet, skipping update check.");
+                    return;
+                }
+
+                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(returnVal);
+                Version version = new Version(node["tag_name"].Value);
+
+                if (version > new Version(BuildInfo.Version))
+                {
+                    MelonLogger.Warning("============================================================");
+                    MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
+                    MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
+                    MelonLogger.Warning("============================================================");
+                }
+                else
+                    MelonLogger.Msg("Up to date.");
             }
-
-            SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(returnVal);
-            Version version = new Version(node["tag_name"].Value);
-
-            if (version > new Version(BuildInfo.Version))
+            catch
             {
-                MelonLogger.Warning("============================================================");
-                MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
-                MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
-                MelonLogger.Warning("============================================================");
+                MelonLogger.Warning("Failed to check for updates, skipping.");
             }
-            else
-                MelonLogger.Msg("Up to date.");
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
