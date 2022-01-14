@@ -10,7 +10,15 @@ VR mod for Life Is Strange: Before The Storm
 5. Start the game, on first boot after installation the VREnabler plugin will extract the needed files, which may take a minute.
 
 ## Controls
-(?) In-game controls match and can be changed in game using the default settings menu.
+Each VR controller's buttons are mapped to corresponding buttons that would be on a Xbox One controller, as this was the easiest method to implement it.
+
+![Valve Knuckles Controller Diagram](./Assets/KnucklesControls.svg)
+
+![Oculus Touch Controller Diagram](./Assets/TouchControls.svg)
+
+![HTC Vive Wand Controller Diagram](./Assets/ViveControls.svg)
+
+![WMR Motion Controller Diagram](./Assets/WMRControls.svg)
 
 ## Configurable Options
 
