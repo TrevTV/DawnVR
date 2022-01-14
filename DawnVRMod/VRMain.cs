@@ -14,7 +14,7 @@ namespace DawnVR
         public const string Name = "DawnVR";
         public const string Author = "trev (full credits in README)";
         public const string Company = null;
-        public const string Version = "0.0.1";
+        public const string Version = "0.1.0";
         public const string DownloadLink = null;
     }
 

@@ -7,7 +7,8 @@ VR mod for Life Is Strange: Before The Storm
 2. Download the latest release from [here](https://github.com/TrevTV/DawnVR/releases/latest) and open it.
 3. In your game's installation directory, drag all the files from the zip into that directory, Windows should merge the folders.
 4. In your Steam launch parameters (Right click -> Properties -> Launch Options) add `-vrmode OpenVR` (case-sensitive)
-5. Start the game, on first boot after installation the VREnabler plugin will extract the needed files, which may take a minute.
+5. In your game's Steam settings, find `Use Desktop Game Theatre while SteamVR is active` and make sure it is unchecked.
+6. Start the game, on first boot after installation the VREnabler plugin will extract the needed files, which may take a minute.
 
 ## Controls
 Each VR controller's buttons are mapped to corresponding buttons that would be on a Xbox One controller, as this was the easiest method to implement it.
@@ -41,6 +42,9 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 
 ## FAQ
 
+### Do the in-game options effect anything?
+The resolution and FPS cap are determined by SteamVR, completely ignoring the game's settings. The other graphical options do effect visuals and performance.
+
 ### Can this be used on the Linux version?
 No, Deck Nine's offical release (the Windows version) was heavily obfuscated (as you can see in the code), so to make a version for the Linux build would require you to replace all of the obfuscated references with the clean names.
 
@@ -51,16 +55,17 @@ Make sure you have the `-vrmode OpenVR` paramater setup and that SteamVR is open
 In the Steam launch parameters, simply replace OpenVR with None, the mod will recognize that change and will let the game load normally.
 
 ### Why is the mod using Powershell to get the latest version?
-Be default, Mono doesn't trust any websites, including GitHub. The script is a janky way of still retriving the data.
+By default, Mono doesn't trust any websites, including GitHub. The script is a janky way of still retriving the data.
 
 ## Licensing
 - [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause license. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
 
 ## Credits
-- [MrPurple](https://github.com/MrPurple6411) & [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)
+- [MrPurple](https://github.com/MrPurple6411) and [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)
 - [DrBibop](https://github.com/DrBibop) for the RoR2 mod and for helping me with some VR rig handling
 - [Sinai](https://github.com/sinai-dev/) for creating UnityExplorer (and quickly fixing a bug I had) which definitely helped speed up the development process
 - `elliotttate#9942` for some assistance in the Flatscreen to VR Modding Discord
 - `alecpizz#0311` for helping me with some rig stuff, giving me some code, and testing parts of the mod
 - `Parzival#7273` for the idea of a monitor-like border during cutscenes
+- `progrocknic#9377` and `agentm83#7067` for testing the Knuckles controller bindings
 - Probably a few other people I've forgotten
