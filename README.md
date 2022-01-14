@@ -12,13 +12,13 @@ VR mod for Life Is Strange: Before The Storm
 ## Controls
 Each VR controller's buttons are mapped to corresponding buttons that would be on a Xbox One controller, as this was the easiest method to implement it.
 
-![Valve Knuckles Controller Diagram](./Assets/KnucklesControls.svg)
+![Valve Knuckles Controller Diagram](./Assets/KnucklesControls.png)
 
-![Oculus Touch Controller Diagram](./Assets/TouchControls.svg)
+![Oculus Touch Controller Diagram](./Assets/TouchControls.png)
 
-![HTC Vive Wand Controller Diagram](./Assets/ViveControls.svg)
+![HTC Vive Wand Controller Diagram](./Assets/ViveControls.png)
 
-![WMR Motion Controller Diagram](./Assets/WMRControls.svg)
+![WMR Motion Controller Diagram](./Assets/WMRControls.png)
 
 ## Configurable Options
 
