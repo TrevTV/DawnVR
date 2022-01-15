@@ -21,7 +21,7 @@ namespace DawnVR.Modules
             HarmonyInstance = hInstance;
             // Debug
             PatchPost(typeof(T_EDB11480).GetMethod("StartSplash"), nameof(DisableSplashScreen)); // skips most of the splash screens
-            PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
+            //PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
             PatchPre(typeof(T_6FCAE66C).GetMethod("_1B350D183", AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
@@ -74,7 +74,7 @@ namespace DawnVR.Modules
             PatchPost(typeof(T_6876113C).GetMethod("ButtonPressed"), nameof(ChoiceButtonSelection)); // fixes some weird interaction bugs
 
             // CutsceneFixes
-            PatchPre(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(DisableSettingCurrentViewCookie)); // disables overlays in some scenes
+            PatchPost(typeof(T_408CFC35).GetProperty("currentViewCookie").GetSetMethod(), nameof(DisableSettingCurrentViewCookie)); // disables overlays in some scenes
             PatchPre(typeof(T_24E8F007).GetMethod("Update", AccessTools.all), nameof(TelescopePuzzleUpdate)); // fixes the amulet thing in e4
             PatchPre(typeof(T_ADD17E7F).GetMethod("Update", AccessTools.all), nameof(TelescopeRotate)); // fixes the amulet thing in e4
             PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
@@ -85,6 +85,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
+            PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
         }
@@ -112,6 +113,21 @@ namespace DawnVR.Modules
             reflection.m_TextureSize = __instance.m_TextureSize;
             reflection.m_ClipPlaneOffset = __instance.m_ClipPlaneOffset;
             reflection.m_ReflectLayers = __instance.m_ReflectLayers;
+            return false;
+        }
+
+        public static bool GetMainUICamera(ref Camera __result)
+        {
+            Camera camera = Camera.main;
+            if (camera == null)
+            {
+                if (T_34182F31._1444D8BF3 != null)
+                    camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
+            }
+            else if (T_34182F31._1444D8BF3 != camera)
+                T_34182F31._1444D8BF3 = camera;
+
+            __result = camera;
             return false;
         }
 

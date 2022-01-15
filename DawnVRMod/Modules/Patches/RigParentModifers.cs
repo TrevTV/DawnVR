@@ -1,5 +1,6 @@
 ﻿using DawnVR.Modules.VR;
 using MelonLoader;
+using System.Linq;
 using UnityEngine;
 
 namespace DawnVR.Modules
@@ -21,7 +22,7 @@ namespace DawnVR.Modules
         {
             if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kFreeRoam)
             {
-                if (T_A6E913D1.Instance.m_followCamera.m_isFreelook)
+                if (T_A6E913D1.Instance.m_followCamera.m_isFreelook && T_A6E913D1.Instance.m_dawnUI.currentViewCookie == T_A7F99C25.eCookieChoices.kNone)
                 {
                     Vector3 pos = VRRig.Instance.ChloeComponent.transform.Find("Reference/Hips").position;
                     pos.y = -0.3f;

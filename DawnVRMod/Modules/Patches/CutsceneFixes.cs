@@ -12,7 +12,7 @@ namespace DawnVR.Modules
         private static bool disabledOverlayCookies;
         private static bool hasDisabledMovieWindow;
 
-        public static bool DisableSettingCurrentViewCookie(T_408CFC35 __instance, T_A7F99C25.eCookieChoices value)
+        public static void DisableSettingCurrentViewCookie(T_408CFC35 __instance, T_A7F99C25.eCookieChoices value)
         {
             if (!disabledOverlayCookies)
             {
@@ -22,7 +22,6 @@ namespace DawnVR.Modules
             }
 
             SetCurrentViewCookie(value);
-            return true;
         }
 
         public static void SetCurrentViewCookie(T_A7F99C25.eCookieChoices cookie)

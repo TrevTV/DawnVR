@@ -1,15 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace DawnVR.Modules.VR
 {
     internal class VRCutsceneHandler : MonoBehaviour
     {
         public bool IsCutsceneActive { get; private set; }
+        public bool IsIn2DCutsceneMode { get; private set; }
 
         public Camera CurrentCutsceneCamera => cutsceneCamera;
         public Transform AmuletGlassTransform => amuletGlassTransform;
 
+        private Transform cutsceneCameraTransform;
         private Camera cutsceneCamera;
+        private MeshRenderer cutsceneCameraUIRenderer;
         private Material mainMaterial;
         private GameObject cutsceneRoom;
         private MeshRenderer screenRend;
@@ -26,11 +30,20 @@ namespace DawnVR.Modules.VR
 
         private void LateUpdate()
         {
-            if (cutsceneCamera != null && cutsceneCamera.enabled)
+            if (cutsceneCameraTransform != null && cutsceneCamera.enabled)
             {
-                cutsceneCamera.transform.position = T_34182F31.main.transform.position;
-                cutsceneCamera.transform.rotation = T_34182F31.main.transform.rotation;
-                cutsceneCamera.fieldOfView = T_34182F31.main.fieldOfView;
+                if (Preferences.Use2DCutsceneViewer.Value || IsIn2DCutsceneMode)
+                {
+                    cutsceneCameraTransform.position = T_34182F31.main.transform.position;
+                    cutsceneCameraTransform.rotation = T_34182F31.main.transform.rotation;
+                    cutsceneCamera.fieldOfView = T_34182F31.main.fieldOfView;
+                }
+                else
+                {
+                    cutsceneCameraTransform.position = T_34182F31.main.transform.position - new Vector3(0f, cutsceneCamera.transform.localPosition.y, 0f);
+                    cutsceneCameraTransform.rotation = T_34182F31.main.transform.rotation;
+                }
+
                 cutsceneCamera.nearClipPlane = T_34182F31.main.nearClipPlane;
                 cutsceneCamera.farClipPlane = T_34182F31.main.farClipPlane;
 
@@ -47,11 +60,11 @@ namespace DawnVR.Modules.VR
 
         public void SetupCutscene(bool enableAmulet = false)
         {
+            CheckCutsceneRequirements();
+
             // not the greatest but it does function
             if (IsCutsceneActive && !screenRend.sharedMaterial.name.Contains("CriMana"))
                 return;
-
-            CheckCutsceneRequirements();
 
             screenRend.sharedMaterial = mainMaterial;
 
@@ -62,8 +75,8 @@ namespace DawnVR.Modules.VR
                 amuletCookieView.SetActive(true);
 
             rotationBeforeCutscene = VRRig.Instance.transform.rotation;
-            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             VRRig.Instance.Camera.ResetHolderPosition();
+            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
         }
 
@@ -73,15 +86,14 @@ namespace DawnVR.Modules.VR
                 return;
 
             CheckCutsceneRequirements();
-
             screenRend.sharedMaterial = screenMat;
 
             IsCutsceneActive = true;
             cutsceneRoom.SetActive(true);
 
             rotationBeforeCutscene = VRRig.Instance.transform.rotation;
-            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             VRRig.Instance.Camera.ResetHolderPosition();
+            VRRig.Instance.SetParent(null, new Vector3(0f, 1100f, 0f));
             cutsceneRoom.transform.eulerAngles = new Vector3(0f, VRRig.Instance.Camera.transform.eulerAngles.y, 0f);
         }
 
@@ -109,12 +121,41 @@ namespace DawnVR.Modules.VR
                 amuletGlassTransform = amuletCookieView.transform.Find("Offset/Glass");
             }
 
-            if (cutsceneCamera == null)
+            if (cutsceneCameraTransform == null)
             {
-                GameObject camObj = new GameObject("VRCutsceneCamera");
-                cutsceneCamera = camObj.AddComponent<Camera>();
+                cutsceneCameraTransform = new GameObject("VRCutsceneCameraHolder").transform;
+                GameObject vrCamObj = new GameObject("VRCutsceneCamera");
+                vrCamObj.transform.parent = cutsceneCameraTransform;
+                cutsceneCamera = vrCamObj.AddComponent<Camera>();
                 cutsceneCamera.depth = 100;
-                cutsceneCamera.targetTexture = cutsceneRenderTexture;
+                if (Preferences.Use2DCutsceneViewer.Value)
+                    cutsceneCamera.targetTexture = cutsceneRenderTexture;
+                else
+                {
+                    Transform originalUIRendTransform = VRRig.Instance.Camera.transform.Find("UIRenderer");
+                    cutsceneCameraUIRenderer = GameObject.Instantiate(originalUIRendTransform.gameObject).GetComponent<MeshRenderer>();
+                    cutsceneCameraUIRenderer.transform.parent = cutsceneCamera.transform;
+                    cutsceneCameraUIRenderer.transform.localPosition = originalUIRendTransform.localPosition;
+                }
+            }
+
+            if (!Preferences.Use2DCutsceneViewer.Value)
+            {
+                if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization
+                    || T_A6E913D1.Instance.m_dawnUI.currentViewCookie != T_A7F99C25.eCookieChoices.kNone)
+                {
+                    cutsceneCamera.targetTexture = cutsceneRenderTexture;
+                    cutsceneCamera.stereoTargetEye = StereoTargetEyeMask.None;
+                    cutsceneCameraUIRenderer.enabled = false;
+                    IsIn2DCutsceneMode = true;
+                }
+                else
+                {
+                    cutsceneCamera.targetTexture = null;
+                    cutsceneCamera.stereoTargetEye = StereoTargetEyeMask.Both;
+                    cutsceneCameraUIRenderer.enabled = true;
+                    IsIn2DCutsceneMode = false;
+                }
             }
         }
     }
