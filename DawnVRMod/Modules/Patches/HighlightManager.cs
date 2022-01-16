@@ -123,7 +123,7 @@ namespace DawnVR.Modules
                     }
                 }
 
-                if (triggerIndex >= 0)
+                if (triggerIndex >= 0 && ShouldShowUI())
                     window.ShowInteractUI(triggerIndex);
                 else
                     window.HideInteractUI();
@@ -135,6 +135,20 @@ namespace DawnVR.Modules
             }
 
             return false;
+        }
+
+        private static bool ShouldShowUI()
+        {
+            if (VRRig.Instance.Input.IsUsingViveWand)
+            {
+                var source = VRRig.Instance.Input.GetGrip(VRInput.Hand.Left);
+                if (source.state)
+                    return true;
+                else
+                    return false;
+            }
+
+            return true;
         }
 
         public static void HotspotObjectInteract(T_6FD30C1C _1BAF664A9) => _1BAF664A9.m_lookAt = null;

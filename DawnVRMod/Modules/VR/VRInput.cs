@@ -1,6 +1,4 @@
-﻿using System;
-using Valve.VR;
-using UnityEngine;
+﻿using Valve.VR;
 
 namespace DawnVR.Modules.VR
 {
@@ -8,6 +6,19 @@ namespace DawnVR.Modules.VR
     // not making specific contols as this should allow for the in-game remapping to work with vr controllers
     internal class VRInput
     {
+        public bool IsUsingViveWand { get; private set; }
+
+        public VRInput()
+        {
+            // from https://gist.github.com/corycorvus/5e4f76f24b77eef111c28ebdb32edf36#file-detectvr-cs-L64
+            var rightHand = OpenVR.System.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
+            var sb = new System.Text.StringBuilder(64);
+            ETrackedPropertyError propError = ETrackedPropertyError.TrackedProp_UnknownProperty;
+            OpenVR.System.GetStringTrackedDeviceProperty(rightHand, ETrackedDeviceProperty.Prop_RenderModelName_String, sb, 2000, ref propError);
+            string data = sb.ToString().ToLower();
+            IsUsingViveWand = data.Contains("vive") && !data.Contains("cosmos");
+        }
+
         public SteamVR_Action_Boolean GetButtonA() => SteamVR_Actions.default_Bool_ButtonA;
         public SteamVR_Action_Boolean GetButtonB() => SteamVR_Actions.default_Bool_ButtonB;
         public SteamVR_Action_Boolean GetButtonX() => SteamVR_Actions.default_Bool_ButtonX;

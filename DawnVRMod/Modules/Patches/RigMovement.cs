@@ -11,7 +11,10 @@ namespace DawnVR.Modules
 
         public static bool CharControllerMove(T_C3DD66D9 __instance, Vector3 _17EEFAD12, bool _1AF4345B4)
         {
-            if (_1AF4345B4)
+			if (VRRig.Instance.Input.IsUsingViveWand && VRRig.Instance.Input.GetGrip(VRInput.Hand.Left).state)
+				return false;
+
+			if (_1AF4345B4)
                 __instance.Rotate();
 
             Vector3 vector;

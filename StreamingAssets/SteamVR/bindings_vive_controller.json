@@ -165,10 +165,16 @@
             },
             {
                "inputs" : {
+                  "east" : {
+                     "output" : "/actions/default/in/bool_buttonb"
+                  },
                   "north" : {
                      "output" : "/actions/default/in/bool_buttony"
                   },
                   "south" : {
+                     "output" : "/actions/default/in/bool_buttona"
+                  },
+                  "west" : {
                      "output" : "/actions/default/in/bool_buttonx"
                   }
                },
@@ -200,21 +206,6 @@
                   },
                   "west" : {
                      "output" : "/actions/default/in/bool_thumbstickleft"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "click"
-               },
-               "path" : "/user/hand/right/input/trackpad"
-            },
-            {
-               "inputs" : {
-                  "north" : {
-                     "output" : "/actions/default/in/bool_buttonb"
-                  },
-                  "south" : {
-                     "output" : "/actions/default/in/bool_buttona"
                   }
                },
                "mode" : "dpad",
