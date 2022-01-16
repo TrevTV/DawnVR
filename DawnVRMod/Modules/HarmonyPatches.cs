@@ -36,9 +36,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("Rotate"), nameof(CharControllerRotate)); // slightly improves roomscale collision
             PatchPre(typeof(T_C3DD66D9).GetMethod("Update"), nameof(CharControllerUpdate)); // copy-paste of CharController::Update to fix a small bug, jank but i dont care
             PatchPre(typeof(T_884A92DB).GetProperty("isFreeroamStart").GetSetMethod(), nameof(DontRunMe)); // fixes some movement issues
-            // todo: seated/standing with offset using alec's code
-            // https://canary.discord.com/channels/@me/727403137337524264/917571166443552769
-            //PatchPre(typeof(T_51AF6A60).GetMethod("Start"), nameof(AddVRCalibrationButton)); // adds the VR Calibration button to the main menu
+            PatchPre(typeof(T_51AF6A60).GetMethod("Start"), nameof(AddVRCalibrationButton)); // adds the VR Calibration button to the main menu
 
             // RigParentModifer
             PatchPre(typeof(T_91FF9D92).GetMethod("UnloadCurrentLevel"), nameof(UnloadCurrentLevel)); // prevents the vrrig from getting destroyed after unloading a scene

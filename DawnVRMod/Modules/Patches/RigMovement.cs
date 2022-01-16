@@ -290,7 +290,7 @@ namespace DawnVR.Modules
 				newButton.GetComponent<T_A243E23D>().text = "VR Calibration";
 				T_9E2FDFCF button = newButton.GetComponent<T_9E2FDFCF>();
 				__instance.AddButton(button);
-				button.m_callback = new T_B72FD206(VRRig.Instance, nameof(VRRig.BeginCalibration));
+				button.m_callback = new T_B72FD206(VRRig.Instance.Calibrator, nameof(VRCalibration.SetupCalibrator));
 			}
 		}
 

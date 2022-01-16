@@ -18,6 +18,7 @@ namespace DawnVR.Modules
         public static string ClosedRight { get; private set; }
 
         public static GameObject CutsceneRoom { get; private set; }
+        public static GameObject CalibrationUI { get; private set; }
 
         public static void Init()
         {
@@ -49,6 +50,7 @@ namespace DawnVR.Modules
             NGUIOverlayShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/UnlitTransparentColored.shader");
 
             CutsceneRoom = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/CutsceneBox.prefab");
+            CalibrationUI = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/Calibration/CalibrationUI.prefab");
 
             #region Handposes
 

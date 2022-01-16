@@ -11,10 +11,12 @@ namespace DawnVR.Modules.VR
 		public T_C3DD66D9 ChloeComponent;
 		public VRCamera Camera;
         public VRInput Input;
+		public VRCalibration Calibrator;
 		public VRCutsceneHandler CutsceneHandler;
 
 		private Renderer[] chloeHandRenderers;
 		private Renderer[] maxHandRenderers;
+		private float heightOffset;
 		private Vector3 lastPos;
 
 		private GameObject chloeReference;
@@ -25,6 +27,7 @@ namespace DawnVR.Modules.VR
             DontDestroyOnLoad(gameObject);
 			Transform cameraHolder = transform.Find("CameraHolder");
 			Camera = cameraHolder.Find("Camera").gameObject.AddComponent<VRCamera>();
+			Calibrator = gameObject.AddComponent<VRCalibration>();
 			CutsceneHandler = gameObject.AddComponent<VRCutsceneHandler>();
             Input = new VRInput();
 
@@ -217,15 +220,19 @@ namespace DawnVR.Modules.VR
                 if (newLocalPosition.HasValue)
                     transform.localPosition = newLocalPosition.Value;
                 else
-                    transform.localPosition = Vector3.zero;
+                    transform.localPosition = new Vector3(0f, heightOffset, 0f);
 
 				transform.eulerAngles = Vector3.zero;
             }
         }
 
-		public void BeginCalibration()
+		public void SetHeightOffset(float offset)
         {
-        }
+			heightOffset = offset;
+			Vector3 position = transform.position;
+			position.y += heightOffset;
+			transform.position = position;
+		}
 
 		public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
         {
