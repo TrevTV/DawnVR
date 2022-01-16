@@ -9,17 +9,12 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        private static bool disabledOverlayCookies;
         private static bool hasDisabledMovieWindow;
 
-        public static void DisableSettingCurrentViewCookie(T_408CFC35 __instance, T_A7F99C25.eCookieChoices value)
+        public static void DisableSettingCurrentViewCookie(T_A7F99C25.eCookieChoices value)
         {
-            if (!disabledOverlayCookies)
-            {
-                foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<T_D186D1CC>())
-                    rend.enabled = false;
-                disabledOverlayCookies = true;
-            }
+            foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<T_D186D1CC>())
+                rend.enabled = false;
 
             SetCurrentViewCookie(value);
         }

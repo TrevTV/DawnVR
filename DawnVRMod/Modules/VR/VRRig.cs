@@ -175,8 +175,10 @@ namespace DawnVR.Modules.VR
 					SetMeshActive(true);
 					CutsceneHandler.SetupCutscene();
                     break;
-				case eGameMode.kDialog:
 				case eGameMode.kPosterView:
+					Camera.BlockVision(true);
+					break;
+				case eGameMode.kDialog:
 				case eGameMode.kCustomization:
                     CutsceneHandler.SetupCutscene();
                     ChloeComponent.Camera.enabled = true;
