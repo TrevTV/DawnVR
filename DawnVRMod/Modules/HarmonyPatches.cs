@@ -84,6 +84,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
+            PatchPre(typeof(T_C0F7FD02).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
         }

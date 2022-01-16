@@ -49,6 +49,21 @@ namespace DawnVR
             HarmonyPatches.Init(HarmonyInstance);
             if (Preferences.EnableInternalLogging.Value)
                 OutputRedirect.Init(HarmonyInstance);
+
+            // This will always be active in case of hard to recreate errors preventing progress
+            Application.logMessageReceived += OnUnityLogReceived;
+        }
+
+        private void OnUnityLogReceived(string condition, string stackTrace, LogType type)
+        {
+            switch (type)
+            {
+                case LogType.Error:
+                case LogType.Exception:
+                    MelonLogger.Error("[Unity] " + condition);
+                    MelonLogger.Error("[Unity_ST] " + stackTrace);
+                    break;
+            }
         }
 
         private void CheckForUpdates()
