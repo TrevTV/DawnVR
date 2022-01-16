@@ -104,6 +104,8 @@ namespace DawnVR.Modules.VR
                 cutsceneRoom.SetActive(false);
             if (cutsceneCamera != null)
                 cutsceneCamera.enabled = false;
+            if (cutsceneCameraUIRenderer != null)
+                cutsceneCameraUIRenderer.enabled = false;
 
             VRRig.Instance.transform.rotation = rotationBeforeCutscene;
         }
