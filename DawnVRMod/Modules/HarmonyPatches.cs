@@ -78,14 +78,17 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_884A92DB).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
             PatchPost(typeof(_1F28E2E62.T_E579AD8A).GetMethod("OnWillRenderObject"), nameof(OnMovieWillRenderObject)); // displays pre-rendered videos in the cutscene box
 
-            // Misc
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
-            PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
-            PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
+            // Misc Fixes
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
             PatchPre(typeof(T_C0F7FD02).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
             PatchPre(typeof(T_165E4FE4).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
+            PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
+
+            // Misc
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent          
+            PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
+            
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
         }
@@ -104,39 +107,6 @@ namespace DawnVR.Modules
         public static void PostCharControllerStart(T_C3DD66D9 __instance) 
             => VRRig.Instance?.UpdateCachedChloe(__instance);
 
-        public static bool MirrorReflectionAwake(T_55EA835B __instance)
-        {
-            __instance.enabled = false;
-            __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
-            VRMirrorReflection reflection = __instance.gameObject.AddComponent<VRMirrorReflection>();
-            __instance.gameObject.layer = 16; // sets layer to "UI3D" to cull it from other mirrors
-            reflection.m_TextureSize = __instance.m_TextureSize;
-            reflection.m_ClipPlaneOffset = __instance.m_ClipPlaneOffset;
-            reflection.m_ReflectLayers = __instance.m_ReflectLayers;
-            return false;
-        }
-
-        public static bool GetMainUICamera(ref Camera __result)
-        {
-            Camera camera = Camera.main;
-            if (camera == null)
-            {
-                if (T_34182F31._1444D8BF3 != null)
-                    camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
-            }
-            else if (T_34182F31._1444D8BF3 != camera)
-                T_34182F31._1444D8BF3 = camera;
-
-            __result = camera;
-            return false;
-        }
-
-        public static void DestroyAtomListener(T_165E4FE4 __instance)
-        {
-            if (__instance.name == "Main Camera")
-                GameObject.Destroy(__instance);
-        }
-
         private static readonly string[] scrollingTextOptions =
         {
             "Join the Flat2VR Discord (http://flat2vr.com) for more Flatscreen To VR mods!",
@@ -149,16 +119,6 @@ namespace DawnVR.Modules
         {
             __result = scrollingTextOptions[UnityEngine.Random.Range(0, scrollingTextOptions.Length)];
             return false;
-        }
-
-        public static void OnPPEnable(T_190FC323 __instance)
-        {
-            if (VRRig.Instance.Camera.GetComponent<VRPostProcessing>())
-                return;
-
-            __instance.enabled = false;
-            var vpp = VRRig.Instance.Camera.gameObject.AddComponent<VRPostProcessing>();
-            vpp.profile = __instance.profile;
         }
 
         #endregion
