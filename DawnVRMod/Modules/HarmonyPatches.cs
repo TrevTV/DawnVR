@@ -85,6 +85,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_55EA835B).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
             PatchPre(typeof(T_34182F31).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
             PatchPre(typeof(T_C0F7FD02).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
+            PatchPre(typeof(T_165E4FE4).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
         }
@@ -128,6 +129,12 @@ namespace DawnVR.Modules
 
             __result = camera;
             return false;
+        }
+
+        public static void DestroyAtomListener(T_165E4FE4 __instance)
+        {
+            if (__instance.name == "Main Camera")
+                GameObject.Destroy(__instance);
         }
 
         private static readonly string[] scrollingTextOptions =
