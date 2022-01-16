@@ -60,7 +60,7 @@ namespace DawnVR
             {
                 case LogType.Error:
                 case LogType.Exception:
-                    if (stackTrace.Contains("Tomlet")) return;
+                    if (stackTrace.Contains("Tomlet") || condition.StartsWith("The AssetBundle")) return;
                     MelonLogger.Error("[Unity] " + condition);
                     MelonLogger.Error("[Unity_ST] " + stackTrace);
                     break;

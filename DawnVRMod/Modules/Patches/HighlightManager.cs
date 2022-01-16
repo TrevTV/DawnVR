@@ -7,7 +7,7 @@ namespace DawnVR.Modules
     {
         public static bool CUICameraRelativeUpdate(T_1C1609D7 __instance)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             __instance.transform.rotation = VRRig.Instance.Camera.transform.rotation;
@@ -16,7 +16,7 @@ namespace DawnVR.Modules
 
         public static bool CUIAnchorUpdatePosition(T_2D9F19A8 __instance)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             if (__instance.m_anchorObj != null)
@@ -29,7 +29,7 @@ namespace DawnVR.Modules
 
         public static bool FreeroamWindowUpdate()
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             T_F8FE3E1C window = T_E7B3064D.Singleton.GetWindow<T_F8FE3E1C>("FreeRoamWindow");
@@ -135,7 +135,7 @@ namespace DawnVR.Modules
 
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
@@ -160,7 +160,7 @@ namespace DawnVR.Modules
 
         public static bool IsInteractOnScreen(T_572A4969 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             if (__instance.m_anchor != null && __instance.m_anchor.m_anchorObj != null)
@@ -192,7 +192,7 @@ namespace DawnVR.Modules
 
         public static bool IsHoverObjectOnScreen(T_A0A6EA62 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
                 return true;
 
             Vector3 vector = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);

@@ -24,6 +24,7 @@ namespace DawnVR.Modules.VR
 
         private void Start()
         {
+            IsIn2DCutsceneMode = Preferences.Use2DCutsceneViewer.Value;
             cutsceneRenderTexture = new RenderTexture(1920, 1080, 16);
             cutsceneRenderTexture.hideFlags = HideFlags.DontUnloadUnusedAsset;
         }
@@ -60,7 +61,7 @@ namespace DawnVR.Modules.VR
 
         public void SetupCutscene(bool enableAmulet = false)
         {
-            CheckCutsceneRequirements();
+            CheckCutsceneRequirements(false);
 
             // not the greatest but it does function
             if (IsCutsceneActive && !screenRend.sharedMaterial.name.Contains("CriMana"))
@@ -85,7 +86,7 @@ namespace DawnVR.Modules.VR
             if (IsCutsceneActive)
                 return;
 
-            CheckCutsceneRequirements();
+            CheckCutsceneRequirements(true);
             screenRend.sharedMaterial = screenMat;
 
             IsCutsceneActive = true;
@@ -110,7 +111,7 @@ namespace DawnVR.Modules.VR
             VRRig.Instance.transform.rotation = rotationBeforeCutscene;
         }
 
-        private void CheckCutsceneRequirements()
+        private void CheckCutsceneRequirements(bool video)
         {
             if (cutsceneRoom == null)
             {
@@ -144,7 +145,8 @@ namespace DawnVR.Modules.VR
             if (!Preferences.Use2DCutsceneViewer.Value)
             {
                 if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization
-                    || T_A6E913D1.Instance.m_dawnUI.currentViewCookie != T_A7F99C25.eCookieChoices.kNone)
+                    || T_A6E913D1.Instance.m_dawnUI.currentViewCookie != T_A7F99C25.eCookieChoices.kNone
+                    || video)
                 {
                     cutsceneCamera.targetTexture = cutsceneRenderTexture;
                     cutsceneCamera.stereoTargetEye = StereoTargetEyeMask.None;
