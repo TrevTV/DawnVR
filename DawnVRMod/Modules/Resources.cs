@@ -11,6 +11,8 @@ namespace DawnVR.Modules
         public static Shader MirrorShader { get; private set; }
         public static Shader DitherShader { get; private set; }
         public static Shader NGUIOverlayShader { get; private set; }
+        public static Shader StandardAssetsOverlayShader { get; private set; }
+        public static Texture2D WhitePixelTexture { get; private set; }
 
         public static string OpenLeft { get; private set; }
         public static string OpenRight { get; private set; }
@@ -48,6 +50,8 @@ namespace DawnVR.Modules
             SteamFadeShader = dataBundle.LoadAssetWithHF<Shader>("Assets/SteamVR/Resources/SteamVR_Fade.shader");
             MirrorShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/Mirror/Mirror.shader");
             NGUIOverlayShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/UnlitTransparentColored.shader");
+            StandardAssetsOverlayShader = dataBundle.LoadAssetWithHF<Shader>("Assets/AssetBundleData/CameraRig/BrightnessOverlay/BlendModesOverlay.shader");
+            WhitePixelTexture = dataBundle.LoadAssetWithHF<Texture2D>("Assets/AssetBundleData/CameraRig/BrightnessOverlay/white_pixel.png");
 
             CutsceneRoom = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/CutsceneBox.prefab");
             CalibrationUI = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/Calibration/CalibrationUI.prefab");

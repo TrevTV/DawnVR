@@ -1,6 +1,5 @@
 ﻿using Valve.VR;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace DawnVR.Modules.VR
 {
@@ -17,6 +16,9 @@ namespace DawnVR.Modules.VR
 
         private Camera spectatorCamera;
 
+        private float brightnessIntensity;
+        private Material overlayEffectMaterial;
+
         private void Start()
         {
             Component = GetComponent<Camera>();
@@ -27,6 +29,8 @@ namespace DawnVR.Modules.VR
             visionBlocker.SetActive(true);
 
             Component.backgroundColor = Color.black;
+            overlayEffectMaterial = new Material(Resources.StandardAssetsOverlayShader);
+            brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
 
             #region UI Renderer
 
@@ -45,6 +49,15 @@ namespace DawnVR.Modules.VR
             #endregion
 
             CreateSpectatorCamera();
+        }
+
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            Vector4 UV_Transform = new Vector4(1, 0, 0, 1);
+            overlayEffectMaterial.SetVector("_UV_Transform", UV_Transform);
+            overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity - 1);
+            overlayEffectMaterial.SetTexture("_Overlay", Resources.WhitePixelTexture);
+            Graphics.Blit(source, destination, overlayEffectMaterial, 3);
         }
 
         private void CreateSpectatorCamera()
@@ -74,6 +87,8 @@ namespace DawnVR.Modules.VR
                 dest.orthographicSize = src.orthographicSize;
             }
         }
+
+        public void UpdateBrightness() => brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
 

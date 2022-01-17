@@ -86,7 +86,9 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
 
             // Misc
-            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent          
+            PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
+            PatchPost(typeof(T_32770A6A).GetMethod("OnSliderChange"), nameof(OnChangeBrightnessSetting)); // allows gamma adjustments in-headset
+            PatchPost(typeof(T_32770A6A).GetMethod("Update", AccessTools.all), nameof(OnBrightnessUIUpdate)); // fix gamma slider
             PatchPre(typeof(T_96E81635).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
             
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
@@ -106,6 +108,12 @@ namespace DawnVR.Modules
 
         public static void PostCharControllerStart(T_C3DD66D9 __instance) 
             => VRRig.Instance?.UpdateCachedChloe(__instance);
+
+        public static void OnChangeBrightnessSetting()
+            => VRRig.Instance.Camera.UpdateBrightness();
+
+        public static void OnBrightnessUIUpdate(T_32770A6A __instance)
+            => __instance.m_slider.OnPan(VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Left).axis.normalized / 100);
 
         private static readonly string[] scrollingTextOptions =
         {
