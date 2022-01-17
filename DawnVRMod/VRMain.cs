@@ -120,7 +120,7 @@ namespace DawnVR
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess && !steamInitRunning)
                 MelonCoroutines.Start(InitSteamVR());
 
-            VRRig.Instance?.Calibrator?.Reset();
+            VRRig.Instance?.Calibrator?.ResetUI();
             CurrentSceneName = sceneName;
         }
 

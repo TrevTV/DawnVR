@@ -66,7 +66,7 @@ namespace DawnVR.Modules
                     num -= __instance.m_errorRange;
                     if (num <= 0f)
                     {
-                        Transform camTrans = VRRig.Instance.CutsceneHandler.CurrentCutsceneCamera.transform;
+                        Transform camTrans = VRRig.Instance.CutsceneHandler.CurrentCamera.transform;
                         __instance._13E72D93B = new Ray(camTrans.position, camTrans.forward);
                         RaycastHit[] array = Physics.RaycastAll(__instance._13E72D93B, __instance.m_maxRaycastDistance);
                         bool flag = false;

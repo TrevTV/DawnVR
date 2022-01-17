@@ -4,10 +4,10 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCutsceneHandler : MonoBehaviour
     {
-        public bool IsCutsceneActive { get; private set; }
-        public bool IsIn2DCutsceneMode { get; private set; }
+        public bool IsActive { get; private set; }
+        public bool IsIn2D { get; private set; }
 
-        public Camera CurrentCutsceneCamera => cutsceneCamera;
+        public Camera CurrentCamera => cutsceneCamera;
         public Transform AmuletGlassTransform => amuletGlassTransform;
 
         private Transform cutsceneCameraTransform;
@@ -23,8 +23,8 @@ namespace DawnVR.Modules.VR
 
         private void Start()
         {
-            IsCutsceneActive = false;
-            IsIn2DCutsceneMode = Preferences.Use2DCutsceneViewer.Value;
+            IsActive = false;
+            IsIn2D = Preferences.Use2DCutsceneViewer.Value;
             cutsceneRenderTexture = new RenderTexture(1920, 1080, 16);
             cutsceneRenderTexture.hideFlags = HideFlags.DontUnloadUnusedAsset;
         }
@@ -33,7 +33,7 @@ namespace DawnVR.Modules.VR
         {
             if (cutsceneCameraTransform != null && cutsceneCamera.enabled)
             {
-                if (Preferences.Use2DCutsceneViewer.Value || IsIn2DCutsceneMode)
+                if (Preferences.Use2DCutsceneViewer.Value || IsIn2D)
                 {
                     cutsceneCameraTransform.position = T_34182F31.main.transform.position;
                     cutsceneCameraTransform.rotation = T_34182F31.main.transform.rotation;
@@ -63,12 +63,12 @@ namespace DawnVR.Modules.VR
             CheckCutsceneRequirements(false);
 
             // not the greatest but it does function
-            if (IsCutsceneActive && !screenRend.sharedMaterial.name.Contains("CriMana"))
+            if (IsActive && !screenRend.sharedMaterial.name.Contains("CriMana"))
                 return;
 
             screenRend.sharedMaterial = mainMaterial;
 
-            IsCutsceneActive = true;
+            IsActive = true;
             cutsceneRoom.SetActive(true);
             cutsceneCamera.enabled = true;
             if (enableAmulet)
@@ -82,13 +82,13 @@ namespace DawnVR.Modules.VR
 
         public void SetupCutscene(Material screenMat)
         {
-            if (IsCutsceneActive)
+            if (IsActive)
                 return;
 
             CheckCutsceneRequirements(true);
             screenRend.sharedMaterial = screenMat;
 
-            IsCutsceneActive = true;
+            IsActive = true;
             cutsceneRoom.SetActive(true);
 
             rotationBeforeCutscene = VRRig.Instance.transform.rotation;
@@ -99,7 +99,7 @@ namespace DawnVR.Modules.VR
 
         public void EndCutscene()
         {
-            IsCutsceneActive = false;
+            IsActive = false;
             if (cutsceneRoom != null)
                 cutsceneRoom.SetActive(false);
             if (cutsceneCamera != null)
@@ -152,14 +152,14 @@ namespace DawnVR.Modules.VR
                     cutsceneCamera.targetTexture = cutsceneRenderTexture;
                     cutsceneCamera.stereoTargetEye = StereoTargetEyeMask.None;
                     cutsceneCameraUIRenderer.enabled = false;
-                    IsIn2DCutsceneMode = true;
+                    IsIn2D = true;
                 }
                 else
                 {
                     cutsceneCamera.targetTexture = null;
                     cutsceneCamera.stereoTargetEye = StereoTargetEyeMask.Both;
                     cutsceneCameraUIRenderer.enabled = true;
-                    IsIn2DCutsceneMode = false;
+                    IsIn2D = false;
                 }
             }
         }

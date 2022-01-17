@@ -145,7 +145,7 @@ namespace DawnVR.Modules
         private static System.Collections.IEnumerator EnableInteraction()
         {
             yield return new WaitForSeconds(1);
-            if (!VR.VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (!VR.VRRig.Instance.CutsceneHandler.IsActive)
             {
                 T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
                 T_A6E913D1.Instance.m_gameModeManager.isDebug = false;

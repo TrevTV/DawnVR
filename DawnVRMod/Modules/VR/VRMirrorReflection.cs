@@ -51,13 +51,13 @@ namespace DawnVR.Modules.VR
             CurrentlyRendering = true;
             frameCounter = m_framesNeededToUpdate;
 
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
-                camera = VRRig.Instance.CutsceneHandler.CurrentCutsceneCamera;
+            if (VRRig.Instance.CutsceneHandler.IsActive)
+                camera = VRRig.Instance.CutsceneHandler.CurrentCamera;
             else
                 camera = VRRig.Instance.Camera.Component;
 
             RenderCamera(Camera.StereoscopicEye.Left, ref leftReflectionTexture);
-            if (!VRRig.Instance.CutsceneHandler.IsCutsceneActive || !VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
+            if (!VRRig.Instance.CutsceneHandler.IsActive || !VRRig.Instance.CutsceneHandler.IsIn2D)
                 RenderCamera(Camera.StereoscopicEye.Right, ref rightReflectionTexture);
         }
 
@@ -74,7 +74,7 @@ namespace DawnVR.Modules.VR
 
             Vector3 oldEyePos;
             Matrix4x4 worldToCameraMatrix;
-            if (!VRRig.Instance.CutsceneHandler.IsCutsceneActive || !VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode)
+            if (!VRRig.Instance.CutsceneHandler.IsActive || !VRRig.Instance.CutsceneHandler.IsIn2D)
             {
                 worldToCameraMatrix = camera.GetStereoViewMatrix(eye) * reflection;
 
@@ -94,7 +94,7 @@ namespace DawnVR.Modules.VR
             reflectionCamera.worldToCameraMatrix = worldToCameraMatrix;
 
             Vector4 clipPlane = CameraSpacePlane(worldToCameraMatrix, pos, normal, 1.0f);
-            Matrix4x4 projectionMatrix = VRRig.Instance.CutsceneHandler.IsCutsceneActive && VRRig.Instance.CutsceneHandler.IsIn2DCutsceneMode
+            Matrix4x4 projectionMatrix = VRRig.Instance.CutsceneHandler.IsActive && VRRig.Instance.CutsceneHandler.IsIn2D
                 ? camera.projectionMatrix
                 : HMDMatrix4x4ToMatrix4x4(SteamVR.instance.hmd.GetProjectionMatrix((EVREye)eye, camera.nearClipPlane, camera.farClipPlane));
             MakeProjectionMatrixOblique(ref projectionMatrix, clipPlane);

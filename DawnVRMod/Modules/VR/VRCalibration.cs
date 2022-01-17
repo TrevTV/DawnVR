@@ -23,7 +23,7 @@ namespace DawnVR.Modules.VR
 			irlHeightObj.SetActive(true);
 		}
 
-		public void Reset()
+		public void ResetUI()
         {
 			currentStep = CalibrationStep.None;
 			Destroy(uiRoot);
@@ -47,7 +47,7 @@ namespace DawnVR.Modules.VR
                     {
 						VRRig.Instance.SetHeightOffset(standingHeight - VRRig.Instance.Camera.transform.localPosition.y);
 						T_E7B3064D.Singleton.OpenWindow("MainMenuWindow");
-						Reset();
+						ResetUI();
 					}
                     break;
             }

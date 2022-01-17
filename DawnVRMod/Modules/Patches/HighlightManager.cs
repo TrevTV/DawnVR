@@ -5,7 +5,7 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        private static Camera CutsceneCamera => VRRig.Instance.CutsceneHandler.CurrentCutsceneCamera;
+        private static Camera CutsceneCamera => VRRig.Instance.CutsceneHandler.CurrentCamera;
         private static T_A7F99C25.eCookieChoices CurrentCookie => T_A6E913D1.Instance.m_dawnUI.currentViewCookie;
 
         public static bool CUICameraRelativeUpdate(T_1C1609D7 __instance)
@@ -322,7 +322,7 @@ namespace DawnVR.Modules
 
         public static bool IsHotspotOnScreen(T_8F74F848 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsActive)
                 return true;
 
             if (__instance.m_anchor == null || __instance.m_anchor.m_anchorObj == null)
@@ -347,7 +347,7 @@ namespace DawnVR.Modules
 
         public static bool IsInteractOnScreen(T_572A4969 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsActive)
                 return true;
 
             if (__instance.m_anchor != null && __instance.m_anchor.m_anchorObj != null)
@@ -379,7 +379,7 @@ namespace DawnVR.Modules
 
         public static bool IsHoverObjectOnScreen(T_A0A6EA62 __instance, ref bool __result)
         {
-            if (VRRig.Instance.CutsceneHandler.IsCutsceneActive)
+            if (VRRig.Instance.CutsceneHandler.IsActive)
                 return true;
 
             Vector3 vector = VRRig.Instance.Camera.Component.WorldToScreenPoint(__instance.m_anchor.m_anchorObj.transform.position);
