@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DawnVR.Modules.VR
 {
@@ -24,6 +23,7 @@ namespace DawnVR.Modules.VR
 
         private void Start()
         {
+            IsCutsceneActive = false;
             IsIn2DCutsceneMode = Preferences.Use2DCutsceneViewer.Value;
             cutsceneRenderTexture = new RenderTexture(1920, 1080, 16);
             cutsceneRenderTexture.hideFlags = HideFlags.DontUnloadUnusedAsset;
@@ -50,8 +50,7 @@ namespace DawnVR.Modules.VR
 
                 if (VRMain.CurrentSceneName == "E4_S03_Backyard")
                 {
-                    T_A7F99C25 window = T_E7B3064D.Singleton.GetWindow<T_A7F99C25>("OverlayCookie");
-                    if (window.gameObject.activeInHierarchy)
+                    if (T_A6E913D1.Instance.m_dawnUI.currentViewCookie == T_A7F99C25.eCookieChoices.kE4Binoculars)
                         amuletCookieView.SetActive(true);
                     else
                         amuletCookieView.SetActive(false);
@@ -107,6 +106,8 @@ namespace DawnVR.Modules.VR
                 cutsceneCamera.enabled = false;
             if (cutsceneCameraUIRenderer != null)
                 cutsceneCameraUIRenderer.enabled = false;
+            if (amuletCookieView != null)
+                amuletCookieView.SetActive(false);
 
             VRRig.Instance.transform.rotation = rotationBeforeCutscene;
         }

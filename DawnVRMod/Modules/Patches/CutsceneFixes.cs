@@ -44,9 +44,7 @@ namespace DawnVR.Modules
         }
 
         public static void TelescopeRotate(T_ADD17E7F __instance)
-        {
-            __instance.m_bottle = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject;
-        }
+            => __instance.m_bottle = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject;
 
         public static bool TelescopePuzzleUpdate(T_24E8F007 __instance)
         {
@@ -260,7 +258,7 @@ namespace DawnVR.Modules
 
         public static void OnMovieWillRenderObject(_1F28E2E62.T_E579AD8A __instance, T_DD163FE9 _17BBCD6A6)
         {
-            if (__instance.status == _1F28E2E62.T_E579AD8A.Status.Ready || __instance.status == _1F28E2E62.T_E579AD8A.Status.Playing)
+            if (__instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Ready || __instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Playing)
             {
                 if (!hasDisabledMovieWindow)
                 {
