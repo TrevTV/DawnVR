@@ -172,11 +172,6 @@
     <EmbeddedResource Include="Resources\data" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TextFiles\credits.txt" />
-    <Content Include="TextFiles\internals_notes.txt" />
-    <Content Include="TextFiles\known_issues.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Handposes\ClosedRight.json" />
     <EmbeddedResource Include="Resources\Handposes\ClosedLeft.json" />
     <EmbeddedResource Include="Resources\Handposes\OpenLeft.json" />
