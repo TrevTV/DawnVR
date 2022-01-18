@@ -1,3 +1,0 @@
-﻿ - player height is never taken into account
- - as alec noted from his playtests, when spinning in a circle you can gain some slight speed (with the new movement system)
- - some parts of the interaction ui may get hidden behind objects, a good example being one of the stickers in the Parking Lot scene
