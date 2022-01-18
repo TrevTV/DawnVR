@@ -34,7 +34,8 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 - `SpectatorFOV` allows you to change the FOV of the spectator camera `(default: 90)`
 
 ### Misc
-- `CheckForUpdatesOnStart` checks for any mod updates every time the game boots `{default: true}`
+- `CheckForUpdatesOnStart` checks for any mod updates every time the game boots `(default: true)`
+- `Use2DCutsceneViewer` puts you in a bordered box for cutscenes, disabling this renders cutscenes in VR and allowing you to move your head around `(default: true)`
 
 ### Debugging
 - `EnableInternalLogging` allows you to redirect internal logging calls from the game and have them shown in the MelonLoader console `(default: false)`
