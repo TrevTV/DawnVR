@@ -25,6 +25,7 @@ namespace DawnVR.Modules.VR
             gameObject.AddComponent<SteamVR_Fade>();
 
             Component.hdr = true;
+            Component.ResetAspect();
 
             Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
@@ -77,6 +78,7 @@ namespace DawnVR.Modules.VR
             spectatorCamera.fieldOfView = Preferences.SpectatorFOV.Value;
             specTransform.localPosition = Vector3.zero;
             specTransform.localRotation = Quaternion.identity;
+            spectatorCamera.ResetAspect();
 
             void CopyCameraProperties(Camera src, Camera dest)
             {
