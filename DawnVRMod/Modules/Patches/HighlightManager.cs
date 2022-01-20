@@ -22,6 +22,9 @@ namespace DawnVR.Modules
 
         public static bool CUIAnchorUpdatePosition(T_2D9F19A8 __instance)
         {
+            if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization)
+                return true;
+
             if (__instance.m_anchorObj != null)
             {
                 Transform parent = __instance.transform.parent;
