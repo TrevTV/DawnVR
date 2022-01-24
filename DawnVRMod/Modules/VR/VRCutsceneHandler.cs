@@ -132,6 +132,7 @@ namespace DawnVR.Modules.VR
                 vrCamObj.transform.parent = cutsceneCameraTransform;
                 cutsceneCamera = vrCamObj.AddComponent<Camera>();
                 cutsceneCamera.depth = 100;
+                cutsceneCamera.hdr = true;
                 if (Preferences.Use2DCutsceneViewer.Value)
                     cutsceneCamera.targetTexture = cutsceneRenderTexture;
                 else
