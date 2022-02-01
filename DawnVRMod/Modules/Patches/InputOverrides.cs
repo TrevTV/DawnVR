@@ -1,4 +1,5 @@
 ﻿using DawnVR.Modules.VR;
+using UnityEngine;
 using System.Linq;
 using Valve.VR;
 
@@ -6,6 +7,11 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
+        // used for unlocking UIRenderer from the headset
+        private const float delayBetweenPresses = 0.2f;
+        private static bool pressedFirstTime = false;
+        private static float lastPressedTime;
+
         public static void ManagerInit(T_6FCAE66C __instance) => __instance._1C6FBAE09 = eControlType.kXboxOne;
 
         public static eInputState GetInputState_Binding(T_6FCAE66C inputManInstance, T_9005A419 binding)
@@ -67,7 +73,25 @@ namespace DawnVR.Modules
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                     break;
                 case eJoystickKey.kSelect:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
+                    var inputState = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
+                    if (inputState == eInputState.kDown)
+                    {
+                        if (pressedFirstTime)
+                        {
+                            bool isDoublePress = Time.time - lastPressedTime <= delayBetweenPresses;
+                            if (isDoublePress)
+                            {
+                                VRRig.Instance.Camera.ToggleUIRendererParent();
+                                pressedFirstTime = false;
+                            }
+                        }
+                        else
+                            pressedFirstTime = true;
+                        lastPressedTime = Time.time;
+                    }
+
+                    if (pressedFirstTime && Time.time - lastPressedTime > delayBetweenPresses)
+                        __result = inputState;
                     break;
                 case eJoystickKey.kR1:
                     __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));

@@ -93,6 +93,23 @@ namespace DawnVR.Modules.VR
             }
         }
 
+        public void ToggleUIRendererParent()
+        {
+            Transform uiRendTrans = uiRenderer.transform;
+            if (uiRendTrans.parent == transform)
+            {
+                uiRendTrans.parent = VRRig.Instance.transform;
+                uiRendTrans.localPosition = new Vector3(0f, 1.5f, 2.25f);
+                uiRendTrans.localRotation = Quaternion.Euler(-270f, -90f, 90);
+            }
+            else
+            {
+                uiRendTrans.parent = transform;
+                uiRendTrans.localPosition = new Vector3(0f, 0f, 2.25f);
+                uiRendTrans.localRotation = Quaternion.Euler(-270f, -90f, 90);
+            }
+        }
+
         public void UpdateBrightness() => brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
