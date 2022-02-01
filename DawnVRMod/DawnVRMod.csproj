@@ -35,6 +35,16 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
+    <OutputPath>bin\Release_RM\</OutputPath>
+    <DefineConstants>TRACE;REMASTER</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-Public">
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Assembly-CSharp-Public.dll</HintPath>
@@ -162,6 +172,7 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackingReferenceManager.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Utils.cs" />
+    <Compile Include="ObfuscationTools.cs" />
     <Compile Include="VRMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\VR\VRCamera.cs" />
