@@ -56,6 +56,19 @@ namespace DawnVR.Modules.VR
                 return eInputState.kNone;
         }
 
+        public static Hand GetOtherHand(Hand hand)
+        {
+            switch (hand)
+            {
+                case Hand.Left:
+                    return Hand.Right;
+                case Hand.Right:
+                    return Hand.Left;
+                default:
+                    return hand;
+            }
+        }
+
         private SteamVR_Input_Sources GetSourceFromHand(Hand hand)
         {
             switch (hand)

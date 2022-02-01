@@ -27,7 +27,8 @@ namespace DawnVR.Modules
 
             if (__instance.m_moveDirection != Vector3.zero)
             {
-                Vector3 axis = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
+				var steamVRAxis = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis;
+				Vector3 axis = new Vector3(steamVRAxis.x, 0f, steamVRAxis.y);
                 float modifier = T_A6E913D1.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
 				__instance._11C765B91 = __instance.m_rotateTrans.position;
 				__instance._1CC7DCCB6 = __instance.transform.position + __instance._11C77E995 * _17EEFAD12;

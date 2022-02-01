@@ -48,11 +48,11 @@ namespace DawnVR.Modules.VR
 			ActiveHandRenderers = chloeHandRenderers;
 
 			if (Preferences.UseSmoothTurning.Value)
-				Input.GetThumbstickVector(VRInput.Hand.Right).onAxis += OnThumbstickAxis;
+				Input.GetThumbstickVector(VRInput.GetOtherHand(Preferences.MovementThumbstick.Value)).onAxis += OnThumbstickAxis;
             else if (Preferences.UseSnapTurning.Value)
             {
-				Input.GetThumbstickLeft(VRInput.Hand.Right).onStateDown += OnThumbstickLeft;
-				Input.GetThumbstickRight(VRInput.Hand.Right).onStateDown += OnThumbstickRight;
+				Input.GetThumbstickLeft(VRInput.GetOtherHand(Preferences.MovementThumbstick.Value)).onStateDown += OnThumbstickLeft;
+				Input.GetThumbstickRight(VRInput.GetOtherHand(Preferences.MovementThumbstick.Value)).onStateDown += OnThumbstickRight;
 			}
 
 			if (Preferences.EnablePlayerCollisionVisualization.Value)
