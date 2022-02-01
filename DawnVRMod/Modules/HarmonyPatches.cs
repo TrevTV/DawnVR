@@ -84,6 +84,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(T_C0F7FD02).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
             PatchPre(typeof(T_165E4FE4).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
             PatchPre(typeof(T_C3DD66D9).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
+            PatchPre(typeof(T_FD3AF1C2).GetMethod("Trigger"), nameof(ParallelHighlightTrigger)); // fixes a random null ref
 
             // Misc
             PatchPost(typeof(T_C3DD66D9).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
