@@ -36,6 +36,7 @@ namespace DawnVR.Modules.VR
 			chloeHandRenderers = new Renderer[]
 			{
 				cameraHolder.Find("Controller (left)/CustomModel (Chloe)").GetComponentInChildren<SkinnedMeshRenderer>(),
+				cameraHolder.Find("Controller (left)/CustomModel (Chloe)/RachelBracelet").GetComponent<MeshRenderer>(),
 				cameraHolder.Find("Controller (right)/CustomModel (Chloe)").GetComponentInChildren<SkinnedMeshRenderer>()
 			};
 
@@ -186,7 +187,15 @@ namespace DawnVR.Modules.VR
 				case eGameMode.kFreeRoam:
 					CutsceneHandler.EndCutscene();
 					SetParent(ChloeComponent.transform);
-                    Camera.ResetHolderPosition();
+
+					// not that pretty but i don't care
+					Transform rachelBracelet = T_C3DD66D9.s_mainCharacterMesh?.transform?.parent?.Find("CH_M_Rachel_Bracelet_Mesh");
+					if (rachelBracelet != null && rachelBracelet.gameObject.activeInHierarchy)
+						chloeHandRenderers[1].gameObject.SetActive(true);
+					else
+						chloeHandRenderers[1].gameObject.SetActive(false);
+
+					Camera.ResetHolderPosition();
 					SetMeshActive(false);
 					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
                     T_F8FE3E1C.s_hideUI = false;
