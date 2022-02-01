@@ -51,7 +51,11 @@ namespace DawnVR
                 OutputRedirect.Init(HarmonyInstance);
 
             // This will always be active in case of hard to recreate errors preventing progress
+#if REMASTER
+            Application.add_logMessageReceived(new Action<string, string, LogType>(OnUnityLogReceived));
+#else
             Application.logMessageReceived += OnUnityLogReceived;
+#endif
         }
 
         private void OnUnityLogReceived(string condition, string stackTrace, LogType type)

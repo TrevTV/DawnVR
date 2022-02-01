@@ -1,28 +1,35 @@
 ﻿using UnityEngine;
-using UnityEngine._1F1547F66;
 using DawnVR.Modules.VR;
 using System.Collections.Generic;
+#if REMASTER
+using UnityEngine.PostProcessing;
+#else
+using UnityEngine._1F1547F66;
+using GameMaster = T_A6E913D1;
+using ST_ParallelHighlight = T_FD3AF1C2;
+#endif
+
 
 namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        public static bool ParallelHighlightTrigger(T_FD3AF1C2 __instance, bool _186835D38)
+        public static bool ParallelHighlightTrigger(ST_ParallelHighlight __instance, bool __0)
         {
             // i can't replicate the issue so i'm just throwing a try catch onto it
             try
             {
                 if (__instance.m_highlight != null)
-                    __instance.m_highlight.UISelect(_186835D38);
+                    __instance.m_highlight.UISelect(__0);
 
-                if (__instance.m_send && T_A6E913D1.Instance != null)
+                if (__instance.m_send && GameMaster.Instance != null)
                 {
-                    List<T_E6DAC959> tagsFromPrefix = T_A6E913D1.Instance.m_tagManager.GetTagsFromPrefix(__instance.m_channelPrefix);
+                    var tagsFromPrefix = GameMaster.Instance.m_tagManager.GetTagsFromPrefix(__instance.m_channelPrefix);
                     for (int i = 0; i < tagsFromPrefix.Count; i++)
                     {
-                        T_FD3AF1C2 component = tagsFromPrefix[i].GetComponent<T_FD3AF1C2>();
+                        ST_ParallelHighlight component = tagsFromPrefix[i].GetComponent<ST_ParallelHighlight>();
                         if (component != null)
-                            component.Trigger(_186835D38);
+                            component.Trigger(__0);
                     }
                 }
             }

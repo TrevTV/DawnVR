@@ -25,15 +25,20 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_OG|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release_OG\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyCSharp>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Assembly-CSharp-Public.dll</AssemblyCSharp>
+    <UnityEngine>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.dll</UnityEngine>
+    <UnityEngineUI>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.UI.dll</UnityEngineUI>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
     <OutputPath>bin\Release_RM\</OutputPath>
@@ -44,10 +49,15 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <AssemblyCSharp>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\Assembly-CSharp.dll</AssemblyCSharp>
+    <UnityEngine>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.CoreModule.dll</UnityEngine>
+    <UnityEngineUI>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.UI.dll</UnityEngineUI>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-Public">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Assembly-CSharp-Public.dll</HintPath>
+      <HintPath>$(AssemblyCSharp)</HintPath>
     </Reference>
     <Reference Include="MelonLoader">
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\MelonLoader.dll</HintPath>
@@ -66,10 +76,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(UnityEngine)</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(UnityEngineUI)</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
