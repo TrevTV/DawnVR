@@ -1,6 +1,9 @@
 # DawnVR [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S244CYE)
 VR mod for Life Is Strange: Before The Storm
 
+### **For right now, this mod ONLY supports the original version of Before The Storm, support for the remaster is being worked on and progress can be viewed in the [alpha branch](https://github.com/TrevTV/DawnVR/tree/alpha-remaster-support)**
+
+
 ## Installation
 1. Follow the [Automated Installation guide](https://melonwiki.xyz/#/?id=automated-installation) on the MelonLoader wiki page, installing to the Life is Strange: Before the Storm exe.
    - If you do not know where your install's exe is, open Steam, find the game, right click it, and select Manage -> Browse Local Files, this will lead you to your game's installation.
