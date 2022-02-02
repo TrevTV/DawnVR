@@ -1,30 +1,44 @@
-﻿namespace DawnVR.Modules
+﻿#if REMASTER
+using PrototyperData;
+using DataEditor;
+#else
+using GraphManager = T_BF5A5EEC;
+using Sequence = T_58A5E6E2;
+using Timeline = T_156BDACC;
+using TimelineManager = T_14474339;
+using CriAudioManager = T_E8819104;
+using SceneObject = T_4B84CB26;
+using GameMaster = T_A6E913D1;
+using SplashScreenWindow = T_EDB11480;
+#endif
+
+namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        public static bool CutsceneSkipPressed(T_BF5A5EEC __instance)
+        public static bool CutsceneSkipPressed(GraphManager __instance)
         {
-            _15C6DD6D9.T_58A5E6E2 currentMode = __instance.GetCurrentMode<_15C6DD6D9.T_58A5E6E2>();
+            Sequence currentMode = __instance.GetCurrentMode<Sequence>();
             if (currentMode != null)
             {
-                T_156BDACC timeline = T_14474339.GetTimeline(currentMode);
+                Timeline timeline = TimelineManager.GetTimeline(currentMode);
                 if (timeline != null)
                 {
                     float sequenceEndTime = currentMode.sequenceEndTime;
                     float timeS = sequenceEndTime - timeline.CurrentTime;
-                    T_E8819104.Singleton.AdvanceAllSounds(timeS);
+                    CriAudioManager.Singleton.AdvanceAllSounds(timeS);
                     timeline.SetTime(sequenceEndTime);
-                    _169E4A3E.T_4B84CB26.s_forceFullEvaluate = true;
-                    T_14474339.UpdateCurrentTimelinesForFrame();
+                    SceneObject.s_forceFullEvaluate = true;
+                    TimelineManager.UpdateCurrentTimelinesForFrame();
                 }
             }
 
-            if (T_A6E913D1.Instance.m_rumbleManager != null)
-                T_A6E913D1.Instance.m_rumbleManager.ClearAllRumbles(0f);
+            if (GameMaster.Instance.m_rumbleManager != null)
+                GameMaster.Instance.m_rumbleManager.ClearAllRumbles(0f);
 
             return false;
         }
 
-        public static void DisableSplashScreen(T_EDB11480 __instance) => __instance.m_splashList.Clear();
+        public static void DisableSplashScreen(SplashScreenWindow __instance) => __instance.m_splashList.Clear();
     }
 }

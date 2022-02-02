@@ -2,6 +2,11 @@
 using UnityEngine;
 using System.Linq;
 using Valve.VR;
+#if !REMASTER
+using InputManager = T_6FCAE66C;
+using KeyBinding = T_9005A419;
+using JoystickInputManager = T_D9E8342E;
+#endif
 
 namespace DawnVR.Modules
 {
@@ -12,16 +17,16 @@ namespace DawnVR.Modules
         private static bool pressedFirstTime = false;
         private static float lastPressedTime;
 
-        public static void ManagerInit(T_6FCAE66C __instance) => __instance._1C6FBAE09 = eControlType.kXboxOne;
+        public static void ManagerInit(InputManager __instance) => ObfuscationTools.SetFieldValue(__instance, "m_overrideType", eControlType.kXboxOne);
 
-        public static eInputState GetInputState_Binding(T_6FCAE66C inputManInstance, T_9005A419 binding)
+        public static eInputState GetInputState_Binding(InputManager inputManInstance, KeyBinding binding)
         {
             if (inputManInstance.InputBlocked)
                 return eInputState.kNone;
 
             for (int i = 0; i < binding.m_joystick.Count; i++)
             {
-                eInputState buttonState = T_D9E8342E.Singleton.GetButtonState(binding.m_joystick[i]);
+                eInputState buttonState = JoystickInputManager.Singleton.GetButtonState(binding.m_joystick[i]);
                 if (buttonState != eInputState.kNone)
                     return buttonState;
             }
@@ -29,7 +34,7 @@ namespace DawnVR.Modules
             return eInputState.kNone;
         }
 
-        public static bool GetInputState_Enum(T_6FCAE66C __instance, ref eInputState __result, eGameInput _1561EDFFF)
+        public static bool GetInputState_Enum(InputManager __instance, ref eInputState __result, eGameInput __0)
         {
             if (__instance.InputBlocked)
             {
@@ -37,7 +42,7 @@ namespace DawnVR.Modules
                 return false;
             }
 
-            if (_1561EDFFF == eGameInput.kAny)
+            if (__0 == eGameInput.kAny)
             {
                 if (SteamVR_Input.actionsBoolean.Any((a) => a != SteamVR_Actions.default_HeadsetOnHead && a.stateDown))
                 {
@@ -50,9 +55,9 @@ namespace DawnVR.Modules
                     return false;
                 }
             }
-            else if (__instance.m_keyBindings.ContainsKey((int)_1561EDFFF))
+            else if (__instance.m_keyBindings.ContainsKey((int)__0))
             {
-                T_9005A419 keybinding = __instance.m_keyBindings[(int)_1561EDFFF];
+                KeyBinding keybinding = __instance.m_keyBindings[(int)__0];
                 __result = GetInputState_Binding(__instance, keybinding);
                 return false;
             }
@@ -61,11 +66,11 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool GetButtonState(ref eInputState __result, eJoystickKey _13A42C455)
+        public static bool GetButtonState(ref eInputState __result, eJoystickKey __0)
         {
             __result = eInputState.kNone;
 
-            switch (_13A42C455)
+            switch (__0)
             {
                 case eJoystickKey.kNone:
                     break;
@@ -140,11 +145,11 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool GetAxis(ref float __result, eJoystickKey _1BBA85C4E)
+        public static bool GetAxis(ref float __result, eJoystickKey __0)
         {
             __result = 0;
 
-            switch (_1BBA85C4E)
+            switch (__0)
             {
                 case eJoystickKey.kNone:
                     break;

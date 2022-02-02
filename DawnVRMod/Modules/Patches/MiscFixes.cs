@@ -83,7 +83,7 @@ namespace DawnVR.Modules
 
             __instance.enabled = false;
             var vpp = VRRig.Instance.Camera.gameObject.AddComponent<VRPostProcessing>();
-            vpp.profile = __instance.profile;
+            //vpp.profile = __instance.profile;
         }
     }
 }
