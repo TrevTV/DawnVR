@@ -1,5 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
+#if !REMASTER
+using CharController = T_C3DD66D9;
+using UI3DCamera = T_D4EA31BB;
+using DawnMainCamera = T_34182F31;
+using GameMaster = T_A6E913D1;
+using FreeRoamWindow = T_F8FE3E1C;
+#endif
 
 namespace DawnVR.Modules.VR
 {
@@ -8,7 +15,7 @@ namespace DawnVR.Modules.VR
         public static VRRig Instance;
 
 		public Renderer[] ActiveHandRenderers;
-		public T_C3DD66D9 ChloeComponent;
+		public CharController ChloeComponent;
 		public VRCamera Camera;
         public VRInput Input;
 		public VRCalibration Calibrator;
@@ -58,7 +65,8 @@ namespace DawnVR.Modules.VR
 
 			if (Preferences.EnablePlayerCollisionVisualization.Value)
             {
-                chloeReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+				// todo: implement cause funny physics module reference
+                /*chloeReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 chloeReference.GetComponent<Collider>().enabled = false;
                 chloeReference.transform.localScale = new Vector3(0.5f, 0.15f, 0.5f);
                 chloeReference.GetComponent<MeshRenderer>().material.color = Color.red;
@@ -68,7 +76,7 @@ namespace DawnVR.Modules.VR
                 vrRigReference.GetComponent<Collider>().enabled = false;
                 vrRigReference.transform.localScale *= 0.15f;
                 vrRigReference.GetComponent<MeshRenderer>().material.color = Color.blue;
-                GameObject.DontDestroyOnLoad(vrRigReference);
+                GameObject.DontDestroyOnLoad(vrRigReference);*/
             }
         }
 
@@ -105,7 +113,7 @@ namespace DawnVR.Modules.VR
             {
 
 				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, Preferences.SmoothTurnSpeed.Value * axis.x * Time.deltaTime);
-				ChloeComponent._11C77E995 = transform.rotation;
+				ObfuscationTools.SetFieldValue(ChloeComponent, "m_targetRot", transform.rotation);
 			}
 			catch { }
 		}
@@ -115,7 +123,7 @@ namespace DawnVR.Modules.VR
 			try
             {
 				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, -Preferences.SnapTurnAngle.Value);
-				ChloeComponent._11C77E995 = transform.rotation;
+				ObfuscationTools.SetFieldValue(ChloeComponent, "m_targetRot", transform.rotation);
 			}
 			catch { }
 		}
@@ -125,7 +133,7 @@ namespace DawnVR.Modules.VR
 			try
             {
 				Camera.Holder.RotateAround(Camera.transform.position, Vector3.up, Preferences.SnapTurnAngle.Value);
-				ChloeComponent._11C77E995 = transform.rotation;
+				ObfuscationTools.SetFieldValue(ChloeComponent, "m_targetRot", transform.rotation);
 			}
 			catch { }
 		}
@@ -156,15 +164,15 @@ namespace DawnVR.Modules.VR
         public void UpdateRigParent(eGameMode gameMode)
         {
 			// prevents double renders of ui elements, both in headset, and on screen
-			if (T_D4EA31BB.s_ui3DCamera?.m_camera != null)
+			if (UI3DCamera.s_ui3DCamera?.m_camera != null)
             {
-				T_D4EA31BB.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
-				T_D4EA31BB.s_ui3DCamera.m_camera.targetDisplay = 10;
+				UI3DCamera.s_ui3DCamera.m_camera.stereoTargetEye = StereoTargetEyeMask.None;
+				UI3DCamera.s_ui3DCamera.m_camera.targetDisplay = 10;
 			}
 			// disable unused camera, improves performance
-			T_34182F31.main.enabled = false;
+			DawnMainCamera.main.enabled = false;
 
-			int currentEpisode = T_A6E913D1.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
+			int currentEpisode = GameMaster.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
 			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
 			else ChangeHandModel(chloeHandRenderers);
 
@@ -189,7 +197,7 @@ namespace DawnVR.Modules.VR
 					SetParent(ChloeComponent.transform);
 
 					// not that pretty but i don't care
-					Transform rachelBracelet = T_C3DD66D9.s_mainCharacterMesh?.transform?.parent?.Find("CH_M_Rachel_Bracelet_Mesh");
+					Transform rachelBracelet = CharController.s_mainCharacterMesh?.transform?.parent?.Find("CH_M_Rachel_Bracelet_Mesh");
 					if (rachelBracelet != null && rachelBracelet.gameObject.activeInHierarchy)
 						chloeHandRenderers[1].gameObject.SetActive(true);
 					else
@@ -197,8 +205,8 @@ namespace DawnVR.Modules.VR
 
 					Camera.ResetHolderPosition();
 					SetMeshActive(false);
-					T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
-                    T_F8FE3E1C.s_hideUI = false;
+					GameMaster.Instance.m_followCamera.m_isInteractionBlocked = false;
+					FreeRoamWindow.s_hideUI = false;
                     break;
 				case eGameMode.kLoading:
 					CutsceneHandler.EndCutscene();
@@ -245,11 +253,11 @@ namespace DawnVR.Modules.VR
 			transform.position = position;
 		}
 
-		public void UpdateCachedChloe(T_C3DD66D9 newChloe, bool updateParent = true)
+		public void UpdateCachedChloe(CharController newChloe, bool updateParent = true)
         {
             ChloeComponent = newChloe;
             if (updateParent)
-                UpdateRigParent(T_A6E913D1.Instance.m_gameModeManager.CurrentMode);
+                UpdateRigParent(GameMaster.Instance.m_gameModeManager.CurrentMode);
         }
 
 		public void ChangeHandModel(Renderer[] renderers)

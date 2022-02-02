@@ -30,6 +30,11 @@ namespace DawnVR
         {
             Preferences.Init();
 
+#if REMASTER
+            foreach (var mb in Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
+                UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, true); // todo: change to false once testing is done
+#endif
+
             if (Preferences.CheckForUpdatesOnStart.Value)
                 CheckForUpdates();
 
@@ -98,8 +103,8 @@ namespace DawnVR
                     return;
                 }
 
-                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(returnVal);
-                Version version = new Version(node["tag_name"].Value);
+                var node = Newtonsoft.Json.Linq.JObject.Parse(returnVal);
+                Version version = new Version(node["tag_name"].ToString());
 
                 if (version > new Version(BuildInfo.Version))
                 {

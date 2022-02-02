@@ -59,6 +59,9 @@
     <Reference Include="Assembly-CSharp-Public">
       <HintPath>$(AssemblyCSharp)</HintPath>
     </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BONEWORKS\BONEWORKS\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
     <Reference Include="MelonLoader">
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
@@ -66,15 +69,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Steamworks.NET">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Steamworks.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnhollowerBaseLib">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerRuntimeLib">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(UnityEngine)</HintPath>
     </Reference>

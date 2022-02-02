@@ -1,15 +1,15 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine._1F1547F66;
+//using UnityEngine._1F1547F66;
 using System.Collections.Generic;
 
 namespace DawnVR.Modules.VR
 {
-	[RequireComponent(typeof(Camera))]
+	//[RequireComponent(typeof(Camera))]
 	internal class VRPostProcessing : MonoBehaviour
     {
-#pragma warning disable 0649
+/*#pragma warning disable 0649
 		public T_EEA04AB5 profile;
 		public Func<Vector2, Matrix4x4> jitteredMatrixFunc;
 		private Dictionary<Type, KeyValuePair<CameraEvent, CommandBuffer>> m_CommandBuffers;
@@ -413,6 +413,6 @@ namespace DawnVR.Modules.VR
 		{
 			m_Components.Add(component);
 			return component;
-		}
+		}*/
 	}
 }

@@ -1,66 +1,114 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
+using System.Reflection;
+using System.Collections.Generic;
+using HarmonyLib;
 
 namespace DawnVR
 {
     // Taken from the unobfuscated Linux port, original class name "StringHash"
     internal static class ObfuscationTools
     {
-        private static uint HashFNV1a(uint hashInitialValue, string szString)
+        public static T GetFieldValue<T>(object objInstance, string unobfuscatedFieldName, Type type = null)
         {
-            if (string.IsNullOrEmpty(szString))
-                return 0U;
-
-            uint num = hashInitialValue;
-            foreach (byte b in Encoding.ASCII.GetBytes(szString))
-                num = (num * 16777619U ^ b);
-            return num;
-        }
-
-        public static uint MakeTag(string szString)      
-            => HashFNV1a(2166136261U, szString);
-
-        public static string MakeTagString(string szString, string prefix = "__")
-        {
-            if (string.IsNullOrEmpty(szString))
-                return prefix + "00000000";
-            return prefix + HashFNV1a(2166136261U, szString).ToString("X");
-        }
-
-        public static string MakeTagStringPath(string szString, string prefix = "__")
-        {
-            if (string.IsNullOrEmpty(szString))
-                return prefix + "00000000";
-
-            char[] separator = new char[]
+            string fieldName;
+#if REMASTER
+            fieldName = unobfuscatedFieldName;
+#else
+            fieldName = GetRealGenericName(unobfuscatedFieldName);
+#endif
+            if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
+                return (T)fi.GetValue(objInstance);
+            else
             {
-                '\\',
-                '/'
-            };
-
-            string[] array = szString.Split(separator);
-            string text = string.Empty;
-            for (int i = 0; i < array.Length; i++)
-            {
-                text += MakeTagString(array[i].ToLowerInvariant(), "__");
-                if (i < array.Length - 1)
-                    text += "/";
+                FieldInfo field = type != null ? type.GetField(fieldName, AccessTools.all) : objInstance.GetType().GetField(fieldName, AccessTools.all);
+                cachedFieldInfos.Add(unobfuscatedFieldName, field);
+                return (T)field.GetValue(objInstance);
             }
-            return text;
         }
 
-        public static string TagFilenamePath(string szString, string prefix = "__")
+        public static void SetFieldValue(object objInstance, string unobfuscatedFieldName, object value)
         {
-            if (string.IsNullOrEmpty(szString))
-                return prefix + "00000000";
-
-            string text = Path.GetFileNameWithoutExtension(szString);
-            text = MakeTagString(text.ToLowerInvariant(), "__");
-            return Path.GetDirectoryName(szString) + "/" + text + Path.GetExtension(szString);
+            string fieldName;
+#if REMASTER
+            fieldName = unobfuscatedFieldName;
+#else
+            fieldName = GetRealGenericName(unobfuscatedFieldName);
+#endif
+            if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
+                fi.SetValue(objInstance, value);
+            else
+            {
+                FieldInfo field = objInstance.GetType().GetField(fieldName, AccessTools.all);
+                cachedFieldInfos.Add(unobfuscatedFieldName, field);
+                field.SetValue(objInstance, value);
+            }
         }
 
-        public static string ScrambleClassname(string className)
+        public static T GetPropertyValue<T>(object objInstance, string unobfuscatedPropName, Type type = null)
         {
+            string propName;
+#if REMASTER
+            propName = unobfuscatedPropName;
+#else
+            propName = GetRealGenericName(unobfuscatedPropName);
+#endif
+            if (cachedPropInfos.TryGetValue(unobfuscatedPropName, out PropertyInfo fi))
+                return (T)fi.GetValue(objInstance, null);
+            else
+            {
+                PropertyInfo prop = type != null ? type.GetProperty(propName, AccessTools.all) : objInstance.GetType().GetProperty(propName, AccessTools.all);
+                cachedPropInfos.Add(unobfuscatedPropName, prop);
+                return (T)prop.GetValue(objInstance, null);
+            }
+        }
+
+        public static void SetPropertyValue(object objInstance, string unobfuscatedFieldName, object value)
+        {
+            string propName;
+#if REMASTER
+            propName = unobfuscatedFieldName;
+#else
+            propName = GetRealGenericName(unobfuscatedFieldName);
+#endif
+            if (cachedPropInfos.TryGetValue(unobfuscatedFieldName, out PropertyInfo fi))
+                fi.SetValue(objInstance, value);
+            else
+            {
+                PropertyInfo field = objInstance.GetType().GetProperty(propName, AccessTools.all);
+                cachedPropInfos.Add(unobfuscatedFieldName, field);
+                field.SetValue(objInstance, value);
+            }
+        }
+
+        public static Type GetRealType(string className) => assemblyCSharp.GetType(GetRealClassName(className));
+
+        public static uint MakeTag(string szString) => HashFNV1a(kFnv1aOffsetBasis, szString);
+
+        public static string GetRealMethodName(string name)
+        {
+#if REMASTER
+            return name;
+#else
+            return MakeTagString(name, "_1");
+#endif
+        }
+
+        public static string GetRealGenericName(string name)
+        {
+#if REMASTER
+            return name;
+#else
+            return MakeTagString(name, "_1");
+#endif
+        }
+
+        public static string GetRealClassName(string className)
+        {
+#if REMASTER
+            return className;
+#else
             s_stringBuilder.Length = 0;
             string[] array = className.Split('.');
             for (int i = 0; i < array.Length - 1; i++)
@@ -78,20 +126,32 @@ namespace DawnVR
                 s_stringBuilder.Append(MakeTagString(array[array.Length - 1], "T_"));
 
             return s_stringBuilder.ToString();
+#endif
         }
 
-        public static string ScrambleMethodName(string name)
+        public static string MakeTagString(string szString, string prefix = "__")
         {
-            return MakeTagString(name, "_1");
+            if (string.IsNullOrEmpty(szString))
+                return prefix + "00000000";
+            return prefix + HashFNV1a(kFnv1aOffsetBasis, szString).ToString("X");
         }
 
-        public static string ScrambleGenericName(string name)
+        private static uint HashFNV1a(uint hashInitialValue, string szString)
         {
-            return MakeTagString(name, "_1");
+            if (string.IsNullOrEmpty(szString))
+                return 0U;
+
+            uint num = hashInitialValue;
+            foreach (byte b in Encoding.ASCII.GetBytes(szString))
+                num = (num * kFnv1aPrime ^ b);
+            return num;
         }
 
         private const uint kFnv1aPrime = 16777619U;
         private const uint kFnv1aOffsetBasis = 2166136261U;
+        private static Assembly assemblyCSharp = typeof(eJoystickKey).Assembly;
+        private static Dictionary<string, PropertyInfo> cachedPropInfos = new Dictionary<string, PropertyInfo>();
+        private static Dictionary<string, FieldInfo> cachedFieldInfos = new Dictionary<string, FieldInfo>();
         private static StringBuilder s_stringBuilder = new StringBuilder(512);
     }
 }

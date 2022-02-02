@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using Valve.VR;
+#if !REMASTER
+using MirrorReflection = T_55EA835B;
+using GameMaster = T_A6E913D1;
+#endif
 
 // heavily cleaned up version from https://forum.unity.com/threads/mirror-reflections-in-vr.416728/
 namespace DawnVR.Modules.VR
@@ -33,7 +37,7 @@ namespace DawnVR.Modules.VR
 
         private void OnWillRenderObject()
         {
-            if (T_55EA835B.s_blockMirrorRenders || (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress))
+            if (MirrorReflection.s_blockMirrorRenders || (GameMaster.Instance != null && GameMaster.Instance.m_levelManager.LoadInProgress))
                 return;
 
             if (frameCounter > 0)

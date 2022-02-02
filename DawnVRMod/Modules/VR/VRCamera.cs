@@ -1,5 +1,11 @@
 ﻿using Valve.VR;
 using UnityEngine;
+#if REMASTER
+using BrightnessSettingsManager = DawnSettingsManager.BrightnessSettingsManager;
+#else
+using DawnSettingsManager = T_1005C221;
+using BrightnessSettingsManager = T_1005C221.T_429306B8;
+#endif
 
 namespace DawnVR.Modules.VR
 {
@@ -24,7 +30,12 @@ namespace DawnVR.Modules.VR
             Component = GetComponent<Camera>();
             gameObject.AddComponent<SteamVR_Fade>();
 
+#if REMASTER
+            Component.allowHDR = true;
+#else
             Component.hdr = true;
+#endif
+
             Component.ResetAspect();
 
             Holder = transform.parent;
@@ -33,9 +44,9 @@ namespace DawnVR.Modules.VR
 
             Component.backgroundColor = Color.black;
             overlayEffectMaterial = new Material(Resources.StandardAssetsOverlayShader);
-            brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
+            brightnessIntensity = BrightnessSettingsManager.GetBrightness();
 
-            #region UI Renderer
+#region UI Renderer
 
             uiRenderer = transform.Find("UIRenderer").gameObject;
             uiRenderer.transform.localScale = new Vector3(0.25f, 0.15f, 0.15f);
@@ -49,7 +60,7 @@ namespace DawnVR.Modules.VR
             OverlayShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
             uiRenderer.gameObject.SetActive(true);
 
-            #endregion
+#endregion
 
             CreateSpectatorCamera();
         }
@@ -73,7 +84,11 @@ namespace DawnVR.Modules.VR
             spectatorCamera = specTransform.gameObject.AddComponent<Camera>();
             CopyCameraProperties(Component, spectatorCamera);
             spectatorCamera.depth = 100;
+#if REMASTER
+            spectatorCamera.allowHDR = true;
+#else
             spectatorCamera.hdr = true;
+#endif
             spectatorCamera.stereoTargetEye = StereoTargetEyeMask.None;
             spectatorCamera.fieldOfView = Preferences.SpectatorFOV.Value;
             specTransform.localPosition = Vector3.zero;
@@ -110,7 +125,7 @@ namespace DawnVR.Modules.VR
             }
         }
 
-        public void UpdateBrightness() => brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
+        public void UpdateBrightness() => brightnessIntensity = BrightnessSettingsManager.GetBrightness();
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
 

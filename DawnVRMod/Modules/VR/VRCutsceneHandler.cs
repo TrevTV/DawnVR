@@ -1,4 +1,9 @@
 ﻿using UnityEngine;
+#if !REMASTER
+using DawnMainCamera = T_34182F31;
+using GameMaster = T_A6E913D1;
+using OverlayCookie = T_A7F99C25;
+#endif
 
 namespace DawnVR.Modules.VR
 {
@@ -35,22 +40,22 @@ namespace DawnVR.Modules.VR
             {
                 if (Preferences.Use2DCutsceneViewer.Value || IsIn2D)
                 {
-                    cutsceneCameraTransform.position = T_34182F31.main.transform.position;
-                    cutsceneCameraTransform.rotation = T_34182F31.main.transform.rotation;
-                    cutsceneCamera.fieldOfView = T_34182F31.main.fieldOfView;
+                    cutsceneCameraTransform.position = DawnMainCamera.main.transform.position;
+                    cutsceneCameraTransform.rotation = DawnMainCamera.main.transform.rotation;
+                    cutsceneCamera.fieldOfView = DawnMainCamera.main.fieldOfView;
                 }
                 else
                 {
-                    cutsceneCameraTransform.position = T_34182F31.main.transform.position - new Vector3(0f, cutsceneCamera.transform.localPosition.y, 0f);
-                    cutsceneCameraTransform.rotation = T_34182F31.main.transform.rotation;
+                    cutsceneCameraTransform.position = DawnMainCamera.main.transform.position - new Vector3(0f, cutsceneCamera.transform.localPosition.y, 0f);
+                    cutsceneCameraTransform.rotation = DawnMainCamera.main.transform.rotation;
                 }
 
-                cutsceneCamera.nearClipPlane = T_34182F31.main.nearClipPlane;
-                cutsceneCamera.farClipPlane = T_34182F31.main.farClipPlane;
+                cutsceneCamera.nearClipPlane = DawnMainCamera.main.nearClipPlane;
+                cutsceneCamera.farClipPlane = DawnMainCamera.main.farClipPlane;
 
                 if (VRMain.CurrentSceneName == "E4_S03_Backyard")
                 {
-                    if (T_A6E913D1.Instance.m_dawnUI.currentViewCookie == T_A7F99C25.eCookieChoices.kE4Binoculars)
+                    if (GameMaster.Instance.m_dawnUI.currentViewCookie == OverlayCookie.eCookieChoices.kE4Binoculars)
                         amuletCookieView.SetActive(true);
                     else
                         amuletCookieView.SetActive(false);
@@ -132,7 +137,11 @@ namespace DawnVR.Modules.VR
                 vrCamObj.transform.parent = cutsceneCameraTransform;
                 cutsceneCamera = vrCamObj.AddComponent<Camera>();
                 cutsceneCamera.depth = 100;
+#if REMASTER
+                cutsceneCamera.allowHDR = true;
+#else
                 cutsceneCamera.hdr = true;
+#endif
                 if (Preferences.Use2DCutsceneViewer.Value)
                     cutsceneCamera.targetTexture = cutsceneRenderTexture;
                 else
@@ -146,8 +155,8 @@ namespace DawnVR.Modules.VR
 
             if (!Preferences.Use2DCutsceneViewer.Value)
             {
-                if (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization
-                    || T_A6E913D1.Instance.m_dawnUI.currentViewCookie != T_A7F99C25.eCookieChoices.kNone
+                if (GameMaster.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization
+                    || GameMaster.Instance.m_dawnUI.currentViewCookie != OverlayCookie.eCookieChoices.kNone
                     || video)
                 {
                     cutsceneCamera.targetTexture = cutsceneRenderTexture;
