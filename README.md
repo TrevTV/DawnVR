@@ -7,6 +7,7 @@ VR mod for Life Is Strange: Before The Storm
 ## Installation
 1. Follow the [Automated Installation guide](https://melonwiki.xyz/#/?id=automated-installation) on the MelonLoader wiki page, installing to the Life is Strange: Before the Storm exe.
    - If you do not know where your install's exe is, open Steam, find the game, right click it, and select Manage -> Browse Local Files, this will lead you to your game's installation.
+   - Make sure to choose MelonLoader version 0.5.1 instead of latest, 0.5.3 has compatibility issues with some part of the game.
 2. Download the latest release from [here](https://github.com/TrevTV/DawnVR/releases/latest) and open it.
 3. In your game's installation directory, drag all the files from the zip into that directory, Windows should merge the folders.
 4. In your Steam launch parameters (Right click -> Properties -> Launch Options) add `-vrmode OpenVR` (case-sensitive)
