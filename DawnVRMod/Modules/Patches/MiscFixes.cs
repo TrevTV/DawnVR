@@ -7,6 +7,10 @@ using UnityEngine.PostProcessing;
 using UnityEngine._1F1547F66;
 using GameMaster = T_A6E913D1;
 using ST_ParallelHighlight = T_FD3AF1C2;
+using MirrorReflection = T_55EA835B;
+using DawnMainCamera = T_34182F31;
+using CriAtomListener = T_165E4FE4;
+using PostProcessingBehaviour = T_190FC323;
 #endif
 
 
@@ -38,7 +42,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool MirrorReflectionAwake(T_55EA835B __instance)
+        public static bool MirrorReflectionAwake(MirrorReflection __instance)
         {
             __instance.enabled = false;
             __instance.GetComponent<MeshRenderer>().sharedMaterial.shader = Resources.MirrorShader;
@@ -52,26 +56,27 @@ namespace DawnVR.Modules
 
         public static bool GetMainUICamera(ref Camera __result)
         {
+            Camera lastMainCam = ObfuscationTools.GetPropertyValue<Camera>(null, "m_lastMainCamera", typeof(DawnMainCamera));
             Camera camera = Camera.main;
             if (camera == null)
-            {
-                if (T_34182F31._1444D8BF3 != null)
-                    camera = T_34182F31._1444D8BF3.gameObject.GetComponentInChildren<Camera>(true);
+            {     
+                if (lastMainCam != null)
+                    camera = lastMainCam.gameObject.GetComponentInChildren<Camera>(true);
             }
-            else if (T_34182F31._1444D8BF3 != camera)
-                T_34182F31._1444D8BF3 = camera;
+            else if (lastMainCam != camera)
+                lastMainCam = camera;
 
             __result = camera;
             return false;
         }
 
-        public static void DestroyAtomListener(T_165E4FE4 __instance)
+        public static void DestroyAtomListener(CriAtomListener __instance)
         {
             if (__instance.name == "Main Camera")
                 GameObject.Destroy(__instance);
         }
 
-        public static void OnPPEnable(T_190FC323 __instance)
+        public static void OnPPEnable(PostProcessingBehaviour __instance)
         {
             if (VRRig.Instance.Camera.GetComponent<VRPostProcessing>())
                 return;
