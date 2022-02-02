@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using System.Reflection;
 using System.Collections.Generic;
 using HarmonyLib;
+using UnityEngine;
 
 namespace DawnVR
 {
@@ -28,7 +28,25 @@ namespace DawnVR
             }
         }
 
-        public static void SetFieldValue(object objInstance, string unobfuscatedFieldName, object value)
+        public static T GetFieldValue<T>(this object objInstance, string unobfuscatedFieldName)
+        {
+            string fieldName;
+#if REMASTER
+            fieldName = unobfuscatedFieldName;
+#else
+            fieldName = GetRealGenericName(unobfuscatedFieldName);
+#endif
+            if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
+                return (T)fi.GetValue(objInstance);
+            else
+            {
+                FieldInfo field = objInstance.GetType().GetField(fieldName, AccessTools.all);
+                cachedFieldInfos.Add(unobfuscatedFieldName, field);
+                return (T)field.GetValue(objInstance);
+            }
+        }
+
+        public static void SetFieldValue(this object objInstance, string unobfuscatedFieldName, object value)
         {
             string fieldName;
 #if REMASTER
@@ -85,6 +103,9 @@ namespace DawnVR
         public static Type GetRealType(string className) => assemblyCSharp.GetType(GetRealClassName(className));
 
         public static uint MakeTag(string szString) => HashFNV1a(kFnv1aOffsetBasis, szString);
+
+        public static string ToMethodName(this string name) => GetRealMethodName(name);
+        public static string ToGenericName(this string name) => GetRealGenericName(name);
 
         public static string GetRealMethodName(string name)
         {

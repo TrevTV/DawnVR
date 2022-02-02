@@ -65,7 +65,7 @@ namespace DawnVR.Modules
             //PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
-            PatchPre(typeof(InputManager).GetMethod("_1B350D183", AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+            PatchPre(typeof(InputManager).GetMethod("Init".ToMethodName(), AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
             PatchPre(typeof(InputManager).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
             PatchPre(typeof(JoystickInputManager).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
@@ -103,20 +103,20 @@ namespace DawnVR.Modules
             PatchPre(typeof(UI3DCamera).GetMethod("Reset"), nameof(DontRunMe)); // fix random nullrefs part 2
             PatchPre(typeof(DawnUI).GetMethod("UpdateFade"), nameof(UpdateUIFade)); // makes fades use SteamVR_Fade instead of a transition window
             PatchPre(typeof(TutorialWindow).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
-            PatchPost(typeof(UIDrawCall).GetMethod("_158268DAA", AccessTools.all), nameof(CreateDrawCallMat)); // overrides the interaction ui's shader to force it to always stay over everything
+            PatchPost(typeof(UIDrawCall).GetMethod("CreateMaterial".ToMethodName(), AccessTools.all), nameof(CreateDrawCallMat)); // overrides the interaction ui's shader to force it to always stay over everything
             PatchPost(typeof(IMScene).GetMethod("Start", AccessTools.all), nameof(FixFakeFogQueue)); // hooks scene root's start, there is probably a better way i dont know of
 
             // InteractionFixes
             PatchPre(typeof(Boundary).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries
             PatchPre(typeof(Boundary).GetMethod("OnTriggerEnter", AccessTools.all), nameof(DontRunMe)); // part 2 of the boundary issue fix
-            PatchPre(typeof(FollowCamera).GetMethod("_15EB64374", AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
+            PatchPre(typeof(FollowCamera).GetMethod("CalculateInputVariables".ToMethodName(), AccessTools.all), nameof(FollowCamUpdateInputVars)); // makes camera drives use the left thumbstick
             PatchPost(typeof(ChoiceSelectionUI).GetMethod("ButtonPressed"), nameof(ChoiceButtonSelection)); // fixes some weird interaction bugs
 
             // CutsceneFixes
             PatchPost(typeof(DawnUI).GetProperty("currentViewCookie").GetSetMethod(), nameof(DisableSettingCurrentViewCookie)); // disables overlays in some scenes
             PatchPre(typeof(TelescopePuzzle).GetMethod("Update", AccessTools.all), nameof(TelescopePuzzleUpdate)); // fixes the amulet thing in e4
             PatchPre(typeof(Telescope).GetMethod("Update", AccessTools.all), nameof(TelescopeRotate)); // fixes the amulet thing in e4
-            PatchPre(typeof(FollowCamera).GetMethod("_1430D6986", AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
+            PatchPre(typeof(FollowCamera).GetMethod("SetupCameraMatrix".ToMethodName(), AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
             PatchPost(typeof(Player).GetMethod("OnWillRenderObject"), nameof(OnMovieWillRenderObject)); // displays pre-rendered videos in the cutscene box
 
             // Misc Fixes
@@ -124,7 +124,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(DawnMainCamera).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
             PatchPre(typeof(PostProcessingDofPass).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
             PatchPre(typeof(CriAtomListener).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
-            PatchPre(typeof(CharController).GetMethod("_1974743FB", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
+            PatchPre(typeof(CharController).GetMethod("SetAttachObjActive".ToMethodName(), AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
             PatchPre(typeof(ST_ParallelHighlight).GetMethod("Trigger"), nameof(ParallelHighlightTrigger)); // fixes a random null ref
 
             // Misc
