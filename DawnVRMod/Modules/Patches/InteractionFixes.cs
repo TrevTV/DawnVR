@@ -1,20 +1,27 @@
 ﻿using UnityEngine;
+#if !REMASTER
+using Boundary = T_3BE79CFB;
+using FollowCamera = T_884A92DB;
+using GameMaster = T_A6E913D1;
+using FreeRoamWindow = T_F8FE3E1C;
+using ChoiceSelectionUI = T_6876113C;
+#endif
 
 namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        public static bool BoundaryStart(T_3BE79CFB __instance)
+        public static bool BoundaryStart(Boundary __instance)
         {
             __instance.GetComponent<Collider>().isTrigger = false;
             return false;
         }
 
-        public static bool FollowCamUpdateInputVars(T_884A92DB __instance)
+        public static bool FollowCamUpdateInputVars(FollowCamera __instance)
         {
             float num = __instance.m_camMomentumStep * Time.deltaTime;
             Vector3 axisVector = Vector3.zero;
-            Vector3 axisVector2 = T_A6E913D1.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
+            Vector3 axisVector2 = GameMaster.Instance.m_inputManager.GetAxisVector3(eGameInput.kMovementXPositive, eGameInput.kNone, eGameInput.kMovementYPositive);
             if (__instance.m_invertX)
             {
                 axisVector2.x *= -1f;
@@ -136,7 +143,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void ChoiceButtonSelection(T_6876113C __instance, bool __result)
+        public static void ChoiceButtonSelection(ChoiceSelectionUI __instance, bool __result)
         {
             if (__result)
                 MelonLoader.MelonCoroutines.Start(EnableInteraction());
@@ -147,9 +154,9 @@ namespace DawnVR.Modules
             yield return new WaitForSeconds(1);
             if (!VR.VRRig.Instance.CutsceneHandler.IsActive)
             {
-                T_A6E913D1.Instance.m_followCamera.m_isInteractionBlocked = false;
-                T_A6E913D1.Instance.m_gameModeManager.isDebug = false;
-                T_F8FE3E1C.s_hideUI = false;
+                GameMaster.Instance.m_followCamera.m_isInteractionBlocked = false;
+                GameMaster.Instance.m_gameModeManager.isDebug = false;
+                FreeRoamWindow.s_hideUI = false;
             }
         }
     }

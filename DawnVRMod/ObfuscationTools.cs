@@ -100,6 +100,12 @@ namespace DawnVR
             }
         }
 
+        public static void CallMethod(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)
+        {
+            string methodName = unobfuscatedMethodName.ToMethodName();
+            mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
+        }
+
         public static Type GetRealType(string className) => assemblyCSharp.GetType(GetRealClassName(className));
 
         public static uint MakeTag(string szString) => HashFNV1a(kFnv1aOffsetBasis, szString);

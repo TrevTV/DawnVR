@@ -1,9 +1,21 @@
 ﻿using UnityEngine;
 using DawnVR.Modules.VR;
-using System.Collections.Generic;
-using _15C6DD6D9._14FDF87F1;
-using _169E4A3E._165972D5F;
 using System;
+
+#if REMASTER
+using DataEditor.Graph;
+using PrototyperData.GraphObjects;
+#else
+using OverlayCookie = T_A7F99C25;
+using UITexture = T_D186D1CC;
+using Telescope = T_ADD17E7F;
+using TelescopePuzzle = T_24E8F007;
+using GameMaster = T_A6E913D1;
+using EditableDataObjectGraphedConnection = T_7808CA07;
+using SequenceGraphObject = T_F45060BF;
+using FreeroamGraphObject = T_BBB6DDD9;
+using FollowCamera = T_884A92DB;
+#endif
 
 namespace DawnVR.Modules
 {
@@ -11,46 +23,46 @@ namespace DawnVR.Modules
     {
         private static bool hasDisabledMovieWindow;
 
-        public static void DisableSettingCurrentViewCookie(T_A7F99C25.eCookieChoices value)
+        public static void DisableSettingCurrentViewCookie(OverlayCookie.eCookieChoices value)
         {
-            foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<T_D186D1CC>())
+            foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<UITexture>())
                 rend.enabled = false;
 
             SetCurrentViewCookie(value);
         }
 
-        public static void SetCurrentViewCookie(T_A7F99C25.eCookieChoices cookie)
+        public static void SetCurrentViewCookie(OverlayCookie.eCookieChoices cookie)
         {
             switch (cookie)
             {
-                case T_A7F99C25.eCookieChoices.kNone:
+                case OverlayCookie.eCookieChoices.kNone:
                     VRRig.Instance.CutsceneHandler.EndCutscene();
                     if (VRRig.Instance?.ChloeComponent?.Camera != null)
                         VRRig.Instance.ChloeComponent.Camera.enabled = false;
                     break;
-                case T_A7F99C25.eCookieChoices.kBinoculars:
+                case OverlayCookie.eCookieChoices.kBinoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene();
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
-                case T_A7F99C25.eCookieChoices.kE3Binoculars:
+                case OverlayCookie.eCookieChoices.kE3Binoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene();
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
-                case T_A7F99C25.eCookieChoices.kE4Binoculars:
+                case OverlayCookie.eCookieChoices.kE4Binoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene(true);
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
             }
         }
 
-        public static void TelescopeRotate(T_ADD17E7F __instance)
+        public static void TelescopeRotate(Telescope __instance)
             => __instance.m_bottle = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject;
 
-        public static bool TelescopePuzzleUpdate(T_24E8F007 __instance)
+        public static bool TelescopePuzzleUpdate(TelescopePuzzle __instance)
         {
-            if (__instance._1A0F64CF1)
+            if (ObfuscationTools.GetFieldValue<bool>(__instance, "initialized"))
             {
-                if (__instance._1372031B.activeInHierarchy)
+                if (ObfuscationTools.GetFieldValue<GameObject>(__instance, "m_Scope").activeInHierarchy)
                 {
                     Vector3 localEulerAngles = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.localEulerAngles;
                     float num = __instance.m_targetZRotation + __instance.m_errorRange + 1f;
@@ -59,7 +71,7 @@ namespace DawnVR.Modules
                     else
                         num = Mathf.Abs(localEulerAngles.z - __instance.m_targetZRotation);
 
-                    GameStateModel currentModel = T_A6E913D1.Instance.m_gameStateManager.GetCurrentModel();
+                    GameStateModel currentModel = GameMaster.Instance.m_gameStateManager.GetCurrentModel();
                     if (currentModel != null)
                         currentModel.SetValue(__instance.m_lensAngleVariable, (int)Mathf.Floor(num), false);
 
@@ -67,12 +79,13 @@ namespace DawnVR.Modules
                     if (num <= 0f)
                     {
                         Transform camTrans = VRRig.Instance.CutsceneHandler.CurrentCamera.transform;
-                        __instance._13E72D93B = new Ray(camTrans.position, camTrans.forward);
-                        RaycastHit[] array = Physics.RaycastAll(__instance._13E72D93B, __instance.m_maxRaycastDistance);
+                        Ray ray = new Ray(camTrans.position, camTrans.forward);
+                        ObfuscationTools.SetFieldValue(__instance, "ray", ray);
+                        RaycastHit[] array = Physics.RaycastAll(ray, __instance.m_maxRaycastDistance);
                         bool flag = false;
                         for (int i = 0; i < array.Length; i++)
                         {
-                            if (array[i].transform.gameObject.GetComponent<T_24E8F007>() != null)
+                            if (array[i].transform.gameObject.GetComponent<TelescopePuzzle>() != null)
                             {
                                 flag = true;
                                 break;
@@ -80,19 +93,19 @@ namespace DawnVR.Modules
                         }
                         if (!flag)
                         {
-                            __instance._1DB0E3B9C = 0f;
+                            ObfuscationTools.SetFieldValue(__instance, "m_timeHovering", 0f);
                             return false;
                         }
-                        __instance._1DB0E3B9C += Time.deltaTime;
-                        if (__instance._1DB0E3B9C >= __instance.m_hoverTime)
+                        ObfuscationTools.SetFieldValue(__instance, "m_timeHovering", ObfuscationTools.GetFieldValue<float>(__instance, "m_timeHovering") + Time.deltaTime);
+                        if (ObfuscationTools.GetFieldValue<float>(__instance, "m_timeHovering") >= __instance.m_hoverTime)
                         {
-                            List<T_7808CA07> outputConnections = T_A6E913D1.Instance.m_graphManager.CurrentGraphNode.outputConnections;
+                            var outputConnections = GameMaster.Instance.m_graphManager.CurrentGraphNode.outputConnections;
                             if (outputConnections != null && outputConnections.Count != 0)
                             {
-                                T_F45060BF t_F45060BF = null;
+                                SequenceGraphObject t_F45060BF = null;
                                 for (int j = 0; j < outputConnections.Count; j++)
                                 {
-                                    T_F45060BF t_F45060BF2 = outputConnections[j].to as T_F45060BF;
+                                    SequenceGraphObject t_F45060BF2 = outputConnections[j].to as SequenceGraphObject;
                                     if (t_F45060BF2 != null)
                                     {
                                         string text = (t_F45060BF2.sequence == null) ? string.Empty : t_F45060BF2.sequence.nodeName;
@@ -110,11 +123,11 @@ namespace DawnVR.Modules
                                 if (t_F45060BF == null)
                                     return false;
 
-                                T_BBB6DDD9 t_BBB6DDD = T_A6E913D1.Instance.m_graphManager.CurrentGraphNode as T_BBB6DDD9;
-                                if (t_BBB6DDD != null)
+                                FreeroamGraphObject frGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode as FreeroamGraphObject;
+                                if (frGraphObj != null)
                                 {
-                                    t_BBB6DDD.m_exitGraphObject = t_F45060BF;
-                                    T_A6E913D1.Instance.m_graphManager.ExitCurrentNode();
+                                    frGraphObj.m_exitGraphObject = t_F45060BF;
+                                    GameMaster.Instance.m_graphManager.ExitCurrentNode();
                                 }
                             }
                         }
@@ -122,12 +135,13 @@ namespace DawnVR.Modules
                 }
             }
             else
-                __instance._1B350D183();
+                //__instance._1B350D183();
+                typeof(TelescopePuzzle).GetMethod(ObfuscationTools.GetRealMethodName("Init")).Invoke(__instance, null);
 
             return false;
         }
 
-        public static bool SetupFollowCameraMatrix(T_884A92DB __instance, Vector4 _1DD947C88, Vector4 _15E19D274)
+        public static bool SetupFollowCameraMatrix(FollowCamera __instance, Vector4 _1DD947C88, Vector4 _15E19D274)
         {
             if (__instance.m_isLineLocked)
             {
