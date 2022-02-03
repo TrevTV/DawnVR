@@ -65,8 +65,7 @@ namespace DawnVR.Modules.VR
 
 			if (Preferences.EnablePlayerCollisionVisualization.Value)
             {
-				// todo: implement cause funny physics module reference
-                /*chloeReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                chloeReference = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 chloeReference.GetComponent<Collider>().enabled = false;
                 chloeReference.transform.localScale = new Vector3(0.5f, 0.15f, 0.5f);
                 chloeReference.GetComponent<MeshRenderer>().material.color = Color.red;
@@ -76,7 +75,7 @@ namespace DawnVR.Modules.VR
                 vrRigReference.GetComponent<Collider>().enabled = false;
                 vrRigReference.transform.localScale *= 0.15f;
                 vrRigReference.GetComponent<MeshRenderer>().material.color = Color.blue;
-                GameObject.DontDestroyOnLoad(vrRigReference);*/
+                GameObject.DontDestroyOnLoad(vrRigReference);
             }
         }
 
