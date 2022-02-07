@@ -19,12 +19,12 @@ namespace DawnVR.Modules
         private const float speedModifier = 0.05f;
         private const float sprintModifier = 0.08f;
 
-        public static bool CharControllerMove(CharController __instance, Vector3 _17EEFAD12, bool _1AF4345B4)
+        public static bool CharControllerMove(CharController __instance, Vector3 __0, bool __1)
         {
 			if (VRRig.Instance.Input.IsUsingViveWand && VRRig.Instance.Input.GetGrip(VRInput.Hand.Left).state)
 				return false;
 
-			if (_1AF4345B4)
+			if (__1)
                 __instance.Rotate();
 
             Vector3 vector;
@@ -32,7 +32,7 @@ namespace DawnVR.Modules
                 vector = __instance.GetFieldValue<CharController.CurrentAnimSetInfo>("m_CurrentAnimSetInfo").animSet.m_motionData[__instance.m_baseAnim].GetPositionAtTime(__instance.m_animStates[__instance.m_baseAnim].time);
             else
                 vector = Vector3.zero;
-            _17EEFAD12 += vector - __instance.GetFieldValue<Vector3>("m_prevPos");
+            __0 += vector - __instance.GetFieldValue<Vector3>("m_prevPos");
 			__instance.SetFieldValue("m_prevPos", vector);
 
             if (__instance.m_moveDirection != Vector3.zero)
@@ -41,7 +41,7 @@ namespace DawnVR.Modules
 				Vector3 axis = new Vector3(steamVRAxis.x, 0f, steamVRAxis.y);
                 float modifier = GameMaster.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
 				__instance.SetFieldValue("m_previousValidPosition", __instance.m_rotateTrans.position);
-				__instance.SetFieldValue("m_priorDesiredPosition", __instance.transform.position + __instance.GetFieldValue<Quaternion>("m_targetRot") * _17EEFAD12);
+				__instance.SetFieldValue("m_priorDesiredPosition", __instance.transform.position + __instance.GetFieldValue<Quaternion>("m_targetRot") * __0);
 				__instance.m_navAgent.Move(__instance.GetFieldValue<Quaternion>("m_targetRot") * axis * modifier);
             }
             return false;

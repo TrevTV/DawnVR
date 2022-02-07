@@ -5,6 +5,7 @@ using System;
 #if REMASTER
 using DataEditor.Graph;
 using PrototyperData.GraphObjects;
+using CriMana;
 #else
 using OverlayCookie = T_A7F99C25;
 using UITexture = T_D186D1CC;
@@ -15,6 +16,8 @@ using EditableDataObjectGraphedConnection = T_7808CA07;
 using SequenceGraphObject = T_F45060BF;
 using FreeroamGraphObject = T_BBB6DDD9;
 using FollowCamera = T_884A92DB;
+using Player = _1F28E2E62.T_E579AD8A;
+using CriManaMovieMaterial = _1F28E2E62.T_DD163FE9;
 #endif
 
 namespace DawnVR.Modules
@@ -141,7 +144,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool SetupFollowCameraMatrix(FollowCamera __instance, Vector4 _1DD947C88, Vector4 _15E19D274)
+        public static bool SetupFollowCameraMatrix(FollowCamera __instance, Vector4 __0, Vector4 __1)
         {
             if (__instance.m_isLineLocked)
             {
@@ -162,7 +165,7 @@ namespace DawnVR.Modules
                     __instance._1C0908541 -= Mathf.Min(__instance._15479B337, __instance._15479B329);
                 }
                 __instance._1C0908541 = Mathf.Clamp01(__instance._1C0908541);
-                _1DD947C88 = Vector3.Lerp(__instance._18166372C, __instance._1854BFA4C, __instance._1C0908541);
+                __0 = Vector3.Lerp(__instance._18166372C, __instance._1854BFA4C, __instance._1C0908541);
                 //_1DD947C88 += __instance._111890643;
                 __instance._111890643 -= __instance._111890643 * ((Mathf.Abs(__instance._15479B337) + Mathf.Abs(__instance._15479B329)) * Time.deltaTime / 2f);
             }
@@ -229,7 +232,7 @@ namespace DawnVR.Modules
                 __instance.transform.forward = transform.forward;
                 return false;
             }
-            Vector4 vector = _1DD947C88 - _15E19D274;
+            Vector4 vector = __0 - __1;
             vector.Normalize();
             Vector4 vector2 = new Vector4(-vector.z, 0f, vector.x);
             vector2.Normalize();
@@ -237,7 +240,7 @@ namespace DawnVR.Modules
             vector3.Normalize();
             vector2 = Vector3.Cross(vector3, vector);
             vector2.Normalize();
-            __instance._146F8D839(_15E19D274, vector2, vector3, vector);
+            __instance._146F8D839(__1, vector2, vector3, vector);
             if (!__instance.IsLocked)
             {
                 __instance._1DD2696DE = 0f;
@@ -270,9 +273,10 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void OnMovieWillRenderObject(_1F28E2E62.T_E579AD8A __instance, T_DD163FE9 _17BBCD6A6)
+        public static void OnMovieWillRenderObject(Player __instance, CriManaMovieMaterial __0)
         {
-            if (__instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Ready || __instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Playing)
+            var status = __instance.GetFieldValue<Player.Status>("status");
+            if (status == Player.Status.Ready || status == Player.Status.Playing)
             {
                 if (!hasDisabledMovieWindow)
                 {
@@ -280,7 +284,7 @@ namespace DawnVR.Modules
                     hasDisabledMovieWindow = true;
                 }
 
-                VRRig.Instance.CutsceneHandler.SetupCutscene(_17BBCD6A6.material);
+                VRRig.Instance.CutsceneHandler.SetupCutscene(__0.material);
             }
         }
     }

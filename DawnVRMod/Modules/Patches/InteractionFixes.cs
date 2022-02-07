@@ -140,7 +140,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void ChoiceButtonSelection(ChoiceSelectionUI __instance, bool __result)
+        public static void ChoiceButtonSelection(bool __result)
         {
             if (__result)
                 MelonLoader.MelonCoroutines.Start(EnableInteraction());

@@ -40,21 +40,21 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool UpdateUIFade(float _13C05413A, Color _1A2D6C82C)
+        public static bool UpdateUIFade(float __0, Color __1)
         {
             if (GameMaster.Instance != null && GameMaster.Instance.m_overrideBlackScreen)
                 SteamVR_Fade.Start(Color.black, 0);
             else
             {
-                _1A2D6C82C.a = _13C05413A;
-                SteamVR_Fade.Start(_1A2D6C82C, 0);
+                __1.a = __0;
+                SteamVR_Fade.Start(__1, 0);
             }
             return false;
         }
 
-        public static bool SetTutorialInfo(TutorialWindow __instance, TutorialWindow.eCurrentLesson _1B1E89CA4)
+        public static bool SetTutorialInfo(TutorialWindow __instance, TutorialWindow.eCurrentLesson __0)
         {
-            if (_1B1E89CA4 == TutorialWindow.eCurrentLesson.kObjective)
+            if (__0 == TutorialWindow.eCurrentLesson.kObjective)
             {
                 // reflection is kinda ehh in this case but its the best way to get the method depending on game
                 typeof(TutorialWindow).GetMethod(ObfuscationTools.GetRealMethodName("NextLesson")).Invoke(__instance, new object[] { TutorialWindow.eCurrentLesson.kCloseWindow });
