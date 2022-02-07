@@ -91,12 +91,12 @@ namespace DawnVR
             propName = GetRealGenericName(unobfuscatedFieldName);
 #endif
             if (cachedPropInfos.TryGetValue(unobfuscatedFieldName, out PropertyInfo fi))
-                fi.SetValue(objInstance, value);
+                fi.SetValue(objInstance, value, null);
             else
             {
                 PropertyInfo field = objInstance.GetType().GetProperty(propName, AccessTools.all);
                 cachedPropInfos.Add(unobfuscatedFieldName, field);
-                field.SetValue(objInstance, value);
+                field.SetValue(objInstance, value, null);
             }
         }
 
@@ -104,6 +104,12 @@ namespace DawnVR
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
             mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
+        }
+
+        public static T CallMethod<T>(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)
+        {
+            string methodName = unobfuscatedMethodName.ToMethodName();
+            return (T)mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
         }
 
         public static Type GetRealType(string className) => assemblyCSharp.GetType(GetRealClassName(className));
@@ -158,9 +164,29 @@ namespace DawnVR
 
         public static string MakeTagString(string szString, string prefix = "__")
         {
-            if (string.IsNullOrEmpty(szString))
-                return prefix + "00000000";
-            return prefix + HashFNV1a(kFnv1aOffsetBasis, szString).ToString("X");
+            // uh yeah
+            if (prefix == "_1")
+            {
+                if (cachedGenericObfuscatedNames.TryGetValue(szString, out string val))
+                    return val;
+
+                if (string.IsNullOrEmpty(szString))
+                    return prefix + "00000000";
+                string final = prefix + HashFNV1a(kFnv1aOffsetBasis, szString).ToString("X");
+                cachedGenericObfuscatedNames.Add(szString, final);
+                return final;
+            }
+            else
+            {
+                if (cachedClassObfuscatedNames.TryGetValue(szString, out string val))
+                    return val;
+
+                if (string.IsNullOrEmpty(szString))
+                    return prefix + "00000000";
+                string final = prefix + HashFNV1a(kFnv1aOffsetBasis, szString).ToString("X");
+                cachedClassObfuscatedNames.Add(szString, final);
+                return final;
+            }
         }
 
         private static uint HashFNV1a(uint hashInitialValue, string szString)
@@ -179,6 +205,8 @@ namespace DawnVR
         private static Assembly assemblyCSharp = typeof(eJoystickKey).Assembly;
         private static Dictionary<string, PropertyInfo> cachedPropInfos = new Dictionary<string, PropertyInfo>();
         private static Dictionary<string, FieldInfo> cachedFieldInfos = new Dictionary<string, FieldInfo>();
+        private static Dictionary<string, string> cachedGenericObfuscatedNames = new Dictionary<string, string>();
+        private static Dictionary<string, string> cachedClassObfuscatedNames = new Dictionary<string, string>();
         private static StringBuilder s_stringBuilder = new StringBuilder(512);
     }
 }
