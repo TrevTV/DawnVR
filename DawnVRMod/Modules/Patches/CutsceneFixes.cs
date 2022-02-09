@@ -180,7 +180,7 @@ namespace DawnVR.Modules
                 {
                     Vector3 cad = __instance.GetFieldValue<Vector3>("m_centeredAimDirection");
                     transform.forward = cad;
-                    __instance.SetFieldValue("m_lockedAimAngleOffset", Vector3.Angle(new Vector3(cad.x, 0f, __instance.cad.z), __instance.centeredAimDirection));
+                    __instance.SetFieldValue("m_lockedAimAngleOffset", Vector3.Angle(new Vector3(cad.x, 0f, cad.z), __instance.centeredAimDirection));
                     if (cad.y < 0f)
                     {
                         __instance.MultiplyFloatField("m_lockedAimAngleOffset", -1f);
@@ -191,33 +191,38 @@ namespace DawnVR.Modules
                     transform.forward = new Vector3(0f, 0f, 1f);
                     __instance.SetFieldValue("m_lockedAimAngleOffset", 0f);
                 }
-                __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset"), 89.99f + __instance._13782B1A6));
-                if (__instance._15234BCAB)
+                __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset"), 89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset")));
+                if (__instance.GetFieldValue<bool>("m_isRotationLimiteds"))
                 {
-                    if (__instance._1DC1D4026.x >= 0f && __instance._1DC1D4026.y >= 0f)
+                    Vector4 rpl = __instance.GetFieldValue<Vector4>("m_rotationPivotLimit");
+                    if (rpl.x >= 0f && rpl.y >= 0f)
                     {
-                        __instance._1E9DAA452 = Mathf.Clamp(__instance._1E9DAA452, -__instance._1DC1D4026.x, __instance._1DC1D4026.y);
+                        __instance.SetFieldValue("m_currentLockedHorizontal", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedHorizontals"), -rpl.x, rpl.y));
                     }
-                    if (__instance._1DC1D4026.z >= 0f && __instance._1DC1D4026.w >= 0f)
+                    if (rpl.z >= 0f && rpl.w >= 0f)
                     {
-                        __instance._1CFFF5F80 = Mathf.Clamp(__instance._1CFFF5F80, -__instance._1DC1D4026.z, __instance._1DC1D4026.w);
+                        __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -rpl.z, rpl.w));
                     }
                 }
-                if (__instance._122F739CA)
+                if (__instance.GetFieldValue<bool>("m_isPCInput"))
                 {
-                    __instance._1CDC44FE7 = __instance._1CFFF5F80;
-                    __instance._1DC9DF77C = __instance._1E9DAA452;
-                    transform.forward = Quaternion.AngleAxis(__instance._1E9DAA452, Vector3.up) * transform.forward;
+                    __instance.SetFieldValue("m_sAltitudeAngle", __instance.GetFieldValue<float>("m_currentLockedVerticals"));
+                    __instance.SetFieldValue("m_sOrientAngle", __instance.GetFieldValue<float>("m_currentLockedHorizontal"));
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_currentLockedHorizontal"), Vector3.up) * transform.forward;
                     Vector3 axis = Vector3.Cross(Vector3.up, transform.forward);
-                    transform.forward = Quaternion.AngleAxis(__instance._1CFFF5F80, axis) * transform.forward;
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_currentLockedVertical"), axis) * transform.forward;
                 }
                 else
                 {
-                    __instance._1CDC44FE7 = Mathf.SmoothDamp(__instance._1CDC44FE7, __instance._1CFFF5F80, ref __instance._18346372D, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, __instance.m_maxViewChangeSpeed, __instance._19FA60FD3());
-                    __instance._1DC9DF77C = Mathf.SmoothDamp(__instance._1DC9DF77C, __instance._1E9DAA452, ref __instance._1293578B2, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, float.PositiveInfinity, __instance._19FA60FD3());
-                    transform.forward = Quaternion.AngleAxis(__instance._1DC9DF77C, Vector3.up) * transform.forward;
+                    float aav = 0;
+                    float oav = 0;
+                    __instance.SetFieldValue("m_sAltitudeAngle", Mathf.SmoothDamp(__instance.GetFieldValue<float>("m_sAltitudeAngle"), __instance.GetFieldValue<float>("m_currentLockedVertical"), ref aav, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, __instance.m_maxViewChangeSpeed, __instance.CallMethod<float>("InternalDeltaTime")));
+                    __instance.SetFieldValue("AltitudeAngleVelocity", aav);
+                    __instance.SetFieldValue("m_sOrientAngle", Mathf.SmoothDamp(__instance.GetFieldValue<float>("m_sOrientAngle"), __instance.GetFieldValue<float>("m_currentLockedHorizontal"), ref oav, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, float.PositiveInfinity, __instance.CallMethod<float>("InternalDeltaTime")));
+                    __instance.SetFieldValue("OrientAngleVelocity", oav);
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_sOrientAngle"), Vector3.up) * transform.forward;
                     Vector3 axis2 = Vector3.Cross(Vector3.up, transform.forward);
-                    transform.forward = Quaternion.AngleAxis(__instance._1CDC44FE7, axis2) * transform.forward;
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_sAltitudeAngle"), axis2) * transform.forward;
                 }
                 __instance.transform.forward = transform.forward;
                 return false;
