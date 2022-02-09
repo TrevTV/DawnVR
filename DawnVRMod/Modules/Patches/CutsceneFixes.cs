@@ -148,60 +148,50 @@ namespace DawnVR.Modules
         {
             if (__instance.m_isLineLocked)
             {
-                if (__instance._19186BCE3)
+                if (__instance.GetFieldValue<bool>("m_reverseControls"))
                 {
-                    __instance._15479B337 *= -1f;
+                    __instance.SetFieldValue("m_rightH", __instance.GetFieldValue<float>("m_rightH") * -1f);
                 }
-                if (__instance._12E8B1EAF)
+                if (__instance.GetFieldValue<bool>("m_flattenControls"))
                 {
-                    __instance._15479B329 *= 0f;
+                    __instance.MultiplyFloatField("m_rightV", 0f);
                 }
-                if (__instance._15479B337 >= 0f && __instance._15479B329 >= 0f)
+                if (__instance.GetFieldValue<float>("m_rightH") >= 0f && __instance.GetFieldValue<float>("m_rightV") >= 0f)
                 {
-                    __instance._1C0908541 -= Mathf.Max(__instance._15479B337, __instance._15479B329);
+                    __instance.SubtractFromFloatField("m_lineLockLerp", Mathf.Max(__instance.GetFieldValue<float>("m_rightH"), __instance.GetFieldValue<float>("m_rightV")));
                 }
-                else if (__instance._15479B337 <= 0f && __instance._15479B329 <= 0f)
+                else if (__instance.GetFieldValue<float>("m_rightH") <= 0f && __instance.GetFieldValue<float>("m_rightV") <= 0f)
                 {
-                    __instance._1C0908541 -= Mathf.Min(__instance._15479B337, __instance._15479B329);
+                    __instance.SubtractFromFloatField("m_lineLockLerp", Mathf.Min(__instance.GetFieldValue<float>("m_rightH"), __instance.GetFieldValue<float>("m_rightV")));
                 }
-                __instance._1C0908541 = Mathf.Clamp01(__instance._1C0908541);
-                __0 = Vector3.Lerp(__instance._18166372C, __instance._1854BFA4C, __instance._1C0908541);
+                __instance.SetFieldValue("m_lineLockLerp", Mathf.Clamp01(__instance.GetFieldValue<float>("m_lineLockLerp")));
+                __0 = Vector3.Lerp(__instance.GetFieldValue<Vector3>("m_lineFirstLockPoint"), __instance.GetFieldValue<Vector3>("m_lineLastLockPoint"), __instance.GetFieldValue<float>("m_lineLockLerp"));
                 //_1DD947C88 += __instance._111890643;
-                __instance._111890643 -= __instance._111890643 * ((Mathf.Abs(__instance._15479B337) + Mathf.Abs(__instance._15479B329)) * Time.deltaTime / 2f);
+                __instance.SubtractFromV3Field("m_lineLockOffset", __instance.GetFieldValue<Vector3>("m_lineLockOffset") * ((Mathf.Abs(__instance.GetFieldValue<float>("m_rightH")) + Mathf.Abs(__instance.GetFieldValue<float>("m_rightV"))) * Time.deltaTime / 2f));
             }
             else if (__instance.IsLocked)
             {
-                float num = -__instance._15479B337 * 57.29578f;
-                float num2 = __instance._15479B329 * 57.29578f;
-                __instance._1E9DAA452 += num;
-                __instance._1CFFF5F80 += num2;
-                ExtendedViewBase.GrabExtendedView(T_34182F31.main, ref __instance._1D9C76B26, ref __instance._1C89EAB96);
-                if (__instance._1C89EAB96 != null && T_1005C221.T_A9DD5E3E.IsExtendedViewAvailable())
+                float num = -__instance.GetFieldValue<float>("m_rightH") * 57.29578f;
+                float num2 = __instance.GetFieldValue<float>("m_rightV") * 57.29578f;
+                __instance.AddToFloatField("m_currentLockedHorizontal", num);
+                __instance.AddToFloatField("m_currentLockedVertical", num2);
+                Transform transform = __instance.GetFieldValue<GameObject>("templateObject").transform;
+                if (__instance.GetFieldValue<Vector3>("m_centeredAimDirection") != Vector3.zero)
                 {
-                    float num3 = T_34182F31.main.fieldOfView / 40f;
-                    float num4 = __instance._1C89EAB96.Yaw * num3;
-                    float num5 = __instance._1C89EAB96.Pitch * num3;
-                    __instance._1E9DAA452 += num4 - __instance._1DD2696DE;
-                    __instance._1CFFF5F80 += num5 - __instance._1CE82F9BB;
-                    __instance._1DD2696DE = num4;
-                    __instance._1CE82F9BB = num5;
-                }
-                Transform transform = __instance._11A7A7D26.transform;
-                if (__instance._1552E3BEF != Vector3.zero)
-                {
-                    transform.forward = __instance._1552E3BEF;
-                    __instance._13782B1A6 = Vector3.Angle(new Vector3(__instance._1552E3BEF.x, 0f, __instance._1552E3BEF.z), __instance.centeredAimDirection);
-                    if (__instance._1552E3BEF.y < 0f)
+                    Vector3 cad = __instance.GetFieldValue<Vector3>("m_centeredAimDirection");
+                    transform.forward = cad;
+                    __instance.SetFieldValue("m_lockedAimAngleOffset", Vector3.Angle(new Vector3(cad.x, 0f, __instance.cad.z), __instance.centeredAimDirection));
+                    if (cad.y < 0f)
                     {
-                        __instance._13782B1A6 *= -1f;
+                        __instance.MultiplyFloatField("m_lockedAimAngleOffset", -1f);
                     }
                 }
                 else
                 {
                     transform.forward = new Vector3(0f, 0f, 1f);
-                    __instance._13782B1A6 = 0f;
+                    __instance.SetFieldValue("m_lockedAimAngleOffset", 0f);
                 }
-                __instance._1CFFF5F80 = Mathf.Clamp(__instance._1CFFF5F80, -89.99f + __instance._13782B1A6, 89.99f + __instance._13782B1A6);
+                __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset"), 89.99f + __instance._13782B1A6));
                 if (__instance._15234BCAB)
                 {
                     if (__instance._1DC1D4026.x >= 0f && __instance._1DC1D4026.y >= 0f)
@@ -240,36 +230,16 @@ namespace DawnVR.Modules
             vector3.Normalize();
             vector2 = Vector3.Cross(vector3, vector);
             vector2.Normalize();
-            __instance._146F8D839(__1, vector2, vector3, vector);
+            __instance.CallMethod("SetCameraMatrix", __1, vector2, vector3, vector);
+
+            // todo: i honestly dont remember what this does so this may need to be looked into
+#if !REMASTER
             if (!__instance.IsLocked)
             {
                 __instance._1DD2696DE = 0f;
                 __instance._1CE82F9BB = 0f;
             }
-            if (T_1005C221.T_A9DD5E3E.IsExtendedViewAvailable() && __instance.m_isCameraDriver && !T_A6E913D1.Instance.Paused && !__instance.m_isInteractionBlocked && __instance.IsLocked && (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kFreeRoam || T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization) && (!__instance.isFreeroamStart || __instance.m_isFreelook) && T_34182F31.main != null)
-            {
-                ExtendedViewBase.GrabExtendedView<ExtendedViewThirdPerson>(T_34182F31.main, ref __instance._1D9C76B26, ref __instance._1C89EAB96);
-                if (__instance._1C89EAB96 != null)
-                {
-                    float num6 = T_34182F31.main.fieldOfView / 40f;
-                    float num7 = __instance._1CFFF5F80 + __instance._1C89EAB96.Pitch * num6;
-                    float num8 = __instance._1E9DAA452 + __instance._1C89EAB96.Yaw * num6;
-                    if (__instance._15234BCAB)
-                    {
-                        if ((double)__instance._1DC1D4026.x >= 0.0 && (double)__instance._1DC1D4026.y >= 0.0)
-                        {
-                            num8 = Mathf.Clamp(num8, -__instance._1DC1D4026.x, __instance._1DC1D4026.y);
-                        }
-                        if ((double)__instance._1DC1D4026.z >= 0.0 && (double)__instance._1DC1D4026.w >= 0.0)
-                        {
-                            num7 = Mathf.Clamp(num7, -__instance._1DC1D4026.z, __instance._1DC1D4026.w);
-                        }
-                    }
-                    __instance.transform.forward = Quaternion.AngleAxis(num8, Vector3.up) * __instance.transform.forward;
-                    Vector3 axis3 = Vector3.Cross(Vector3.up, __instance.transform.forward);
-                    __instance.transform.forward = Quaternion.AngleAxis(num7, axis3) * __instance.transform.forward;
-                }
-            }
+#endif
             return false;
         }
 

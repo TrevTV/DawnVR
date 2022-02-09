@@ -7,9 +7,11 @@ using UnityEngine;
 
 namespace DawnVR
 {
-    // Taken from the unobfuscated Linux port, original class name "StringHash"
+    // Modified from the unobfuscated Linux port, original class name "StringHash"
     internal static class ObfuscationTools
     {
+        #region Value Getters Setters
+
         public static T GetFieldValue<T>(object objInstance, string unobfuscatedFieldName, Type type = null)
         {
             string fieldName;
@@ -100,6 +102,10 @@ namespace DawnVR
             }
         }
 
+        #endregion
+
+        #region Method Callers
+
         public static void CallMethod(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
@@ -111,6 +117,32 @@ namespace DawnVR
             string methodName = unobfuscatedMethodName.ToMethodName();
             return (T)mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
         }
+
+        #endregion
+
+        #region Math
+
+        public static void AddToFloatField(this object objInstance, string field, float val)
+            => SetFieldValue(objInstance, field, GetFieldValue<float>(objInstance, field) + val);
+
+        public static void SubtractFromFloatField(this object objInstance, string field, float val)
+            => SetFieldValue(objInstance, field, GetFieldValue<float>(objInstance, field) - val);
+
+        public static void MultiplyFloatField(this object objInstance, string field, float val)
+            => SetFieldValue(objInstance, field, GetFieldValue<float>(objInstance, field) * val);
+
+        public static void DividendFloatField(this object objInstance, string field, float val)
+            => SetFieldValue(objInstance, field, GetFieldValue<float>(objInstance, field) / val);
+
+        public static void DivisorFloatField(this object objInstance, string field, float val)
+            => SetFieldValue(objInstance, field, val / GetFieldValue<float>(objInstance, field));
+
+        public static void SubtractFromV3Field(this object objInstance, string field, Vector3 val)
+            => SetFieldValue(objInstance, field, GetFieldValue<Vector3>(objInstance, field) - val);
+
+        #endregion
+
+        #region StringHash
 
         public static Type GetRealType(string className) => assemblyCSharp.GetType(GetRealClassName(className));
 
@@ -199,6 +231,8 @@ namespace DawnVR
                 num = (num * kFnv1aPrime ^ b);
             return num;
         }
+
+        #endregion
 
         private const uint kFnv1aPrime = 16777619U;
         private const uint kFnv1aOffsetBasis = 2166136261U;
