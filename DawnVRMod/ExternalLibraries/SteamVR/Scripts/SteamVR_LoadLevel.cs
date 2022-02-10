@@ -99,7 +99,7 @@ namespace Valve.VR
         public void Trigger()
         {
             if (!loading && !string.IsNullOrEmpty(levelName))
-                StartCoroutine(LoadLevel());
+                this.RunCoroutine(LoadLevel());
         }
 
         // Helper function to quickly and simply load a level from script.
@@ -113,102 +113,6 @@ namespace Valve.VR
             loader.fadeOutTime = fadeOutTime;
             loader.backgroundColor = new Color(r, g, b, a);
             loader.Trigger();
-        }
-
-        // Updates progress bar.
-        void OnGUI()
-        {
-            if (_active != this)
-                return;
-
-            // Optionally create an overlay for our progress bar to use, separate from the loading screen.
-            if (progressBarEmpty != null && progressBarFull != null)
-            {
-                if (progressBarOverlayHandle == OpenVR.k_ulOverlayHandleInvalid)
-                    progressBarOverlayHandle = GetOverlayHandle("progressBar", progressBarTransform != null ? progressBarTransform : transform, progressBarWidthInMeters);
-
-                if (progressBarOverlayHandle != OpenVR.k_ulOverlayHandleInvalid)
-                {
-                    var progress = (async != null) ? async.progress : 0.0f;
-
-                    // Use the full bar size for everything.
-                    var w = progressBarFull.width;
-                    var h = progressBarFull.height;
-
-                    // Create a separate render texture so we can composite the full image on top of the empty one.
-                    if (renderTexture == null)
-                    {
-                        renderTexture = new RenderTexture(w, h, 0);
-                        renderTexture.Create();
-                    }
-
-                    var prevActive = RenderTexture.active;
-                    RenderTexture.active = renderTexture;
-
-                    if (Event.current.type == EventType.Repaint)
-                        GL.Clear(false, true, Color.clear);
-
-                    GUILayout.BeginArea(new Rect(0, 0, w, h));
-
-                    GUI.DrawTexture(new Rect(0, 0, w, h), progressBarEmpty);
-
-                    // Reveal the full bar texture based on progress.
-                    GUI.DrawTextureWithTexCoords(new Rect(0, 0, progress * w, h), progressBarFull, new Rect(0.0f, 0.0f, progress, 1.0f));
-
-                    GUILayout.EndArea();
-
-                    RenderTexture.active = prevActive;
-
-                    // Texture needs to be set every frame after it is updated since SteamVR makes a copy internally to a shared texture.
-                    var overlay = OpenVR.Overlay;
-                    if (overlay != null)
-                    {
-                        var texture = new Texture_t();
-                        texture.handle = renderTexture.GetNativeTexturePtr();
-                        texture.eType = SteamVR.instance.textureType;
-                        texture.eColorSpace = EColorSpace.Auto;
-                        overlay.SetOverlayTexture(progressBarOverlayHandle, ref texture);
-                    }
-                }
-            }
-
-#if false
-		// Draw loading screen and progress bar to 2d companion window as well.
-		if (loadingScreen != null)
-		{
-			var screenAspect = (float)Screen.width / Screen.height;
-			var textureAspect = (float)loadingScreen.width / loadingScreen.height;
-
-			float w, h;
-			if (screenAspect < textureAspect)
-			{
-				// Clamp horizontally
-				w = Screen.width * 0.9f;
-				h = w / textureAspect;
-			}
-			else
-			{
-				// Clamp vertically
-				h = Screen.height * 0.9f;
-				w = h * textureAspect;
-			}
-
-			GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
-
-			var x = Screen.width / 2 - w / 2;
-			var y = Screen.height / 2 - h / 2;
-			GUI.DrawTexture(new Rect(x, y, w, h), loadingScreen);
-
-			GUILayout.EndArea();
-		}
-
-		if (renderTexture != null)
-		{
-			var x = Screen.width / 2 - renderTexture.width / 2;
-			var y = Screen.height * 0.9f - renderTexture.height;
-			GUI.DrawTexture(new Rect(x, y, renderTexture.width, renderTexture.height), renderTexture);
-		}
-#endif
         }
 
         // Fade our overlays in/out over time.

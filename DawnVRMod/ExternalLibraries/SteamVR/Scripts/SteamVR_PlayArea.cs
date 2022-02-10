@@ -255,7 +255,7 @@ namespace Valve.VR
                 // If we want the configured bounds of the user,
                 // we need to wait for tracking.
                 if (drawInGame && size == Size.Calibrated)
-                    StartCoroutine(UpdateBounds());
+                    this.RunCoroutine(UpdateBounds());
             }
         }
 

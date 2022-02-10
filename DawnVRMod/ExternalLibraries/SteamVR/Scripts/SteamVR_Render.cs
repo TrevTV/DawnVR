@@ -308,7 +308,21 @@ namespace Valve.VR
 
         private void OnEnable()
         {
-            StartCoroutine(RenderLoop());
+            this.RunCoroutine(RenderLoop());
+#if REMASTER
+            SteamVR_Events.InputFocus.Listen(new System.Action<bool>(OnInputFocus));
+            SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Listen(new System.Action<VREvent_t>(OnRequestScreenshot));
+
+            if (SteamVR_Settings.instance.legacyMixedRealityCamera)
+                SteamVR_ExternalCamera_LegacyManager.SubscribeToNewPoses();
+
+            Camera.onPreCull.CombineImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
+
+            if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess)
+                OpenVR.Screenshots.HookScreenshot(screenshotTypes);
+            else
+                SteamVR_Events.Initialized.AddListener(new System.Action<bool>(OnSteamVRInitialized));
+#else
             SteamVR_Events.InputFocus.Listen(OnInputFocus);
             SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Listen(OnRequestScreenshot);
 
@@ -325,6 +339,7 @@ namespace Valve.VR
                 OpenVR.Screenshots.HookScreenshot(screenshotTypes);
             else
                 SteamVR_Events.Initialized.AddListener(OnSteamVRInitialized);
+#endif
         }
 
         private void OnSteamVRInitialized(bool success)
@@ -336,6 +351,15 @@ namespace Valve.VR
         private void OnDisable()
         {
             StopAllCoroutines();
+#if REMASTER
+            SteamVR_Events.InputFocus.Remove(new System.Action<bool>(OnInputFocus));
+            SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Remove(new System.Action<VREvent_t>(OnRequestScreenshot));
+
+            Camera.onPreCull.RemoveImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
+
+            if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess)
+                SteamVR_Events.Initialized.RemoveListener(new System.Action<bool>(OnSteamVRInitialized));
+#else
             SteamVR_Events.InputFocus.Remove(OnInputFocus);
             SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Remove(OnRequestScreenshot);
 
@@ -347,6 +371,7 @@ namespace Valve.VR
 
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess)
                 SteamVR_Events.Initialized.RemoveListener(OnSteamVRInitialized);
+#endif
         }
 
         public void UpdatePoses()

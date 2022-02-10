@@ -161,7 +161,7 @@ namespace Valve.VR
             var s = buffer.ToString();
             if (renderModelName != s)
             {
-                StartCoroutine(SetModelAsync(s));
+                this.RunCoroutine(SetModelAsync(s));
             }
         }
 
@@ -472,7 +472,7 @@ namespace Valve.VR
                 renderModels.FreeRenderModel(pRenderModel);
             else
 #endif
-                StartCoroutine(FreeRenderModel(pRenderModel));
+                this.RunCoroutine(FreeRenderModel(pRenderModel));
 
             return new RenderModel(mesh, material);
         }
@@ -627,9 +627,15 @@ namespace Valve.VR
 
         SteamVR_RenderModel()
         {
+#if REMASTER
+            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(new System.Action<int, bool>(OnDeviceConnected));
+            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(new System.Action<bool>(OnHideRenderModels));
+            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, new System.Action<VREvent_t>(OnModelSkinSettingsHaveChanged));
+#else
             deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
             hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
             modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
+#endif
         }
 
         void OnEnable()

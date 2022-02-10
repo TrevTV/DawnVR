@@ -77,7 +77,11 @@ namespace Valve.VR
 
         SteamVR_TrackedObject()
         {
+#if REMASTER
+            newPosesAction = SteamVR_Events.NewPosesAction(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
+#else
             newPosesAction = SteamVR_Events.NewPosesAction(OnNewPoses);
+#endif
         }
 
         private void Awake()

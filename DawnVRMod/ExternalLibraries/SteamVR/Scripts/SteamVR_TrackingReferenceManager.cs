@@ -10,12 +10,20 @@ namespace Valve.VR
 
         private void OnEnable()
         {
+#if REMASTER
+            SteamVR_Events.NewPoses.AddListener(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
+#else       
             SteamVR_Events.NewPoses.AddListener(OnNewPoses);
+#endif
         }
 
         private void OnDisable()
         {
+#if REMASTER
+            SteamVR_Events.NewPoses.RemoveListener(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
+#else       
             SteamVR_Events.NewPoses.RemoveListener(OnNewPoses);
+#endif
         }
 
         private void OnNewPoses(TrackedDevicePose_t[] poses)
