@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyLoadingTools.cs" />
+    <Compile Include="Modules\RemasterSupport\IL2CPPFixes.cs" />
     <Compile Include="Modules\RemasterSupport\ISerializationCallbackReceiver.cs" />
     <Compile Include="Modules\RemasterSupport\MathfUnstrips.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
