@@ -17,10 +17,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_Boolean : MonoBehaviour
     {
-        [Tooltip("The SteamVR boolean action that this component should use")]
+        //[Tooltip("The SteamVR boolean action that this component should use")]
         public SteamVR_Action_Boolean booleanAction;
 
-        [Tooltip("The device this action should apply to. Any if the action is not device specific.")]
+        //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]
         public SteamVR_Input_Sources inputSource;
 
         /// <summary>This UnityEvent fires whenever a change happens in the action</summary>
@@ -103,7 +103,7 @@ namespace Valve.VR
         {
             if (onPressUp != null)
             {
-                onPressUp.Invoke(this, fromSource, false);
+                onPressUp.DoInvoke(this, fromSource, false);
             }
 
             if (onPressUpEvent != null)
@@ -116,7 +116,7 @@ namespace Valve.VR
         {
             if (onPressDown != null)
             {
-                onPressDown.Invoke(this, fromSource, true);
+                onPressDown.DoInvoke(this, fromSource, true);
             }
 
             if (onPressDownEvent != null)
@@ -129,7 +129,7 @@ namespace Valve.VR
         {
             if (onPress != null)
             {
-                onPress.Invoke(this, fromSource, true);
+                onPress.DoInvoke(this, fromSource, true);
             }
 
             if (onPressEvent != null)
@@ -142,7 +142,7 @@ namespace Valve.VR
         {
             if (onUpdate != null)
             {
-                onUpdate.Invoke(this, fromSource, newState);
+                onUpdate.DoInvoke(this, fromSource, newState);
             }
 
             if (onUpdateEvent != null)
@@ -155,7 +155,7 @@ namespace Valve.VR
         {
             if (onChange != null)
             {
-                onChange.Invoke(this, fromSource, newState);
+                onChange.DoInvoke(this, fromSource, newState);
             }
 
             if (onChangeEvent != null)

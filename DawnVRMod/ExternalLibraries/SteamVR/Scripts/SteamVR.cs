@@ -672,8 +672,8 @@ namespace Valve.VR
             hmd.GetProjectionRaw(EVREye.Eye_Right, ref r_left, ref r_right, ref r_top, ref r_bottom);
 
             tanHalfFov = new Vector2(
-                Mathf.Max(-l_left, l_right, -r_left, r_right),
-                Mathf.Max(-l_top, l_bottom, -r_top, r_bottom));
+                MathfUnstrips.Max(-l_left, l_right, -r_left, r_right),
+                MathfUnstrips.Max(-l_top, l_bottom, -r_top, r_bottom));
 
             textureBounds = new VRTextureBounds_t[2];
 
@@ -692,7 +692,7 @@ namespace Valve.VR
             sceneHeight = sceneHeight / Mathf.Max(textureBounds[0].vMax - textureBounds[0].vMin, textureBounds[1].vMax - textureBounds[1].vMin);
 
             aspect = tanHalfFov.x / tanHalfFov.y;
-            fieldOfView = 2.0f * Mathf.Atan(tanHalfFov.y) * Mathf.Rad2Deg;
+            fieldOfView = 2.0f * Mathf.Atan(tanHalfFov.y) * MathfUnstrips.Rad2Deg;
 
             eyes = new SteamVR_Utils.RigidTransform[] {
             new SteamVR_Utils.RigidTransform(hmd.GetEyeToHeadTransform(EVREye.Eye_Left)),
@@ -718,11 +718,19 @@ namespace Valve.VR
                     break;
             }
 
+#if REMASTER
+            SteamVR_Events.Initializing.Listen(new System.Action<bool>(OnInitializing));
+            SteamVR_Events.Calibrating.Listen(new System.Action<bool>(OnCalibrating));
+            SteamVR_Events.OutOfRange.Listen(new System.Action<bool>(OnOutOfRange));
+            SteamVR_Events.DeviceConnected.Listen(new System.Action<int, bool>(OnDeviceConnected));
+            SteamVR_Events.NewPoses.Listen(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
+#else
             SteamVR_Events.Initializing.Listen(OnInitializing);
             SteamVR_Events.Calibrating.Listen(OnCalibrating);
             SteamVR_Events.OutOfRange.Listen(OnOutOfRange);
             SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
             SteamVR_Events.NewPoses.Listen(OnNewPoses);
+#endif
         }
 
         ~SteamVR()
@@ -738,11 +746,19 @@ namespace Valve.VR
 
         private void Dispose(bool disposing)
         {
+#if REMASTER
+            SteamVR_Events.Initializing.Remove(new System.Action<bool>(OnInitializing));
+            SteamVR_Events.Calibrating.Remove(new System.Action<bool>(OnCalibrating));
+            SteamVR_Events.OutOfRange.Remove(new System.Action<bool>(OnOutOfRange));
+            SteamVR_Events.DeviceConnected.Remove(new System.Action<int, bool>(OnDeviceConnected));
+            SteamVR_Events.NewPoses.Remove(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
+#else
             SteamVR_Events.Initializing.Remove(OnInitializing);
             SteamVR_Events.Calibrating.Remove(OnCalibrating);
             SteamVR_Events.OutOfRange.Remove(OnOutOfRange);
             SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
             SteamVR_Events.NewPoses.Remove(OnNewPoses);
+#endif
 
             _instance = null;
         }

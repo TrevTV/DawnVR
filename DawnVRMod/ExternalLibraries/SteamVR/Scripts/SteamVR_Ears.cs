@@ -9,7 +9,7 @@ using Valve.VR;
 
 namespace Valve.VR
 {
-    [RequireComponent(typeof(AudioListener))]
+    //[RequireComponent(typeof(AudioListener))]
     public class SteamVR_Ears : MonoBehaviour
     {
         public SteamVR_Camera vrcam;

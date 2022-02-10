@@ -88,7 +88,7 @@ namespace Valve.VR
                     return;
 
                 var nativeTex = System.IntPtr.Zero;
-                var deviceTexture = (_texture != null) ? _texture : new Texture2D(2, 2);
+                var deviceTexture = (_texture != null) ? _texture : new Texture2D(2, 2, TextureFormat.RGBA32, false);
                 var headerSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(header.GetType());
 
                 if (vr.textureType == ETextureType.OpenGL)

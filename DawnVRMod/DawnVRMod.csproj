@@ -102,9 +102,14 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>$(UnityEngineUI)</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyLoadingTools.cs" />
+    <Compile Include="Modules\RemasterSupport\ISerializationCallbackReceiver.cs" />
+    <Compile Include="Modules\RemasterSupport\MathfUnstrips.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\OutputRedirect.cs" />
     <Compile Include="Modules\Patches\CutsceneFixes.cs" />
@@ -187,8 +192,6 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_ExternalCamera.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_ExternalCamera_LegacyManager.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Fade.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Frustum.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_IK.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_LoadLevel.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Menu.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Overlay.cs" />
@@ -203,7 +206,7 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackingReferenceManager.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Utils.cs" />
-    <Compile Include="ObfuscationTools.cs" />
+    <Compile Include="Modules\RemasterSupport\ObfuscationTools.cs" />
     <Compile Include="VRMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\VR\VRCamera.cs" />

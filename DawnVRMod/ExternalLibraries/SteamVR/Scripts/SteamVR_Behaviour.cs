@@ -37,7 +37,6 @@ namespace Valve.VR
 
         public bool doNotDestroy = true;
 
-        [HideInInspector]
         public SteamVR_Render steamvr_render;
 
         internal static bool isPlaying = false;
@@ -112,7 +111,7 @@ namespace Valve.VR
                 if (XRSettings.loadedDeviceName == openVRDeviceName)
                     EnableOpenVR();
                 else
-                    initializeCoroutine = StartCoroutine(DoInitializeSteamVR(forceUnityVRToOpenVR));
+                    initializeCoroutine = this.RunCoroutine(DoInitializeSteamVR(forceUnityVRToOpenVR));
             }
             else
             {
@@ -191,13 +190,25 @@ namespace Valve.VR
 #else
         protected void OnEnable()
         {
+#if REMASTER
+            // todo: does this work??
+            Camera.onPreCull.CombineImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
+            SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(new Action<VREvent_t>(OnQuit));
+#else
             Camera.onPreCull += OnCameraPreCull;
             SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(OnQuit);
+#endif
         }
+
         protected void OnDisable()
         {
+#if REMASTER
+            Camera.onPreCull.RemoveImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
+            SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(new Action<VREvent_t>(OnQuit));
+#else
             Camera.onPreCull -= OnCameraPreCull;
             SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(OnQuit);
+#endif
         }
         protected void OnCameraPreCull(Camera cam)
         {

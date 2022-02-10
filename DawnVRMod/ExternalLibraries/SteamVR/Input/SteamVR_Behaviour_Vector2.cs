@@ -19,19 +19,19 @@ namespace Valve.VR
         public SteamVR_Action_Vector2 vector2Action;
 
         /// <summary>The device this action applies to. Any if the action is not device specific.</summary>
-        [Tooltip("The device this action should apply to. Any if the action is not device specific.")]
+        //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]
         public SteamVR_Input_Sources inputSource;
 
         /// <summary>Unity event that fires whenever the action's value has changed since the last update.</summary>
-        [Tooltip("Fires whenever the action's value has changed since the last update.")]
+        //[Tooltip("Fires whenever the action's value has changed since the last update.")]
         public SteamVR_Behaviour_Vector2Event onChange;
 
         /// <summary>Unity event that fires whenever the action's value has been updated</summary>
-        [Tooltip("Fires whenever the action's value has been updated.")]
+        //[Tooltip("Fires whenever the action's value has been updated.")]
         public SteamVR_Behaviour_Vector2Event onUpdate;
 
         /// <summary>Unity event that fires whenever the action's value has been updated and is non-zero</summary>
-        [Tooltip("Fires whenever the action's value has been updated and is non-zero.")]
+        //[Tooltip("Fires whenever the action's value has been updated and is non-zero.")]
         public SteamVR_Behaviour_Vector2Event onAxis;
 
         /// <summary>C# event that fires whenever the action's value has changed since the last update.</summary>
@@ -83,7 +83,7 @@ namespace Valve.VR
         {
             if (onUpdate != null)
             {
-                onUpdate.Invoke(this, fromSource, newAxis, newDelta);
+                onUpdate.DoInvoke(this, fromSource, newAxis, newDelta);
             }
             if (onUpdateEvent != null)
             {
@@ -95,7 +95,7 @@ namespace Valve.VR
         {
             if (onChange != null)
             {
-                onChange.Invoke(this, fromSource, newAxis, newDelta);
+                onChange.DoInvoke(this, fromSource, newAxis, newDelta);
             }
             if (onChangeEvent != null)
             {
@@ -107,7 +107,7 @@ namespace Valve.VR
         {
             if (onAxis != null)
             {
-                onAxis.Invoke(this, fromSource, newAxis, newDelta);
+                onAxis.DoInvoke(this, fromSource, newAxis, newDelta);
             }
             if (onAxisEvent != null)
             {

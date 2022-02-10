@@ -10,32 +10,32 @@ namespace Valve.VR
 {
     public class SteamVR_Behaviour_Skeleton : MonoBehaviour
     {
-        [Tooltip("If not set, will try to auto assign this based on 'Skeleton' + inputSource")]
+        //[Tooltip("If not set, will try to auto assign this based on 'Skeleton' + inputSource")]
         /// <summary>The action this component will use to update the model. Must be a Skeleton type action.</summary>
         public SteamVR_Action_Skeleton skeletonAction;
 
         /// <summary>The device this action should apply to. Any if the action is not device specific.</summary>
-        [Tooltip("The device this action should apply to. Any if the action is not device specific.")]
+        //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]
         public SteamVR_Input_Sources inputSource;
 
         /// <summary>The range of motion you'd like the hand to move in. With controller is the best estimate of the fingers wrapped around a controller. Without is from a flat hand to a fist.</summary>
-        [Tooltip("The range of motion you'd like the hand to move in. With controller is the best estimate of the fingers wrapped around a controller. Without is from a flat hand to a fist.")]
+        //[Tooltip("The range of motion you'd like the hand to move in. With controller is the best estimate of the fingers wrapped around a controller. Without is from a flat hand to a fist.")]
         public EVRSkeletalMotionRange rangeOfMotion = EVRSkeletalMotionRange.WithoutController;
 
         /// <summary>The root Transform of the skeleton. Needs to have a child (wrist) then wrist should have children in the order thumb, index, middle, ring, pinky</summary>
-        [Tooltip("This needs to be in the order of: root -> wrist -> thumb, index, middle, ring, pinky")]
+        //[Tooltip("This needs to be in the order of: root -> wrist -> thumb, index, middle, ring, pinky")]
         public Transform skeletonRoot;
 
         /// <summary>The transform this transform should be relative to</summary>
-        [Tooltip("If not set, relative to parent")]
+        //[Tooltip("If not set, relative to parent")]
         public Transform origin;
 
         /// <summary>Whether or not to update this transform's position and rotation inline with the skeleton transforms or if this is handled in another script</summary>
-        [Tooltip("Set to true if you want this script to update its position and rotation. False if this will be handled elsewhere")]
+        //[Tooltip("Set to true if you want this script to update its position and rotation. False if this will be handled elsewhere")]
         public bool updatePose = true;
 
         /// <summary>Check this to not set the positions of the bones. This is helpful for differently scaled skeletons.</summary>
-        [Tooltip("Check this to not set the positions of the bones. This is helpful for differently scaled skeletons.")]
+        //[Tooltip("Check this to not set the positions of the bones. This is helpful for differently scaled skeletons.")]
         public bool onlySetRotations = false;
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Valve.VR
         /// Set to 0 for the transform orientation to be set by an animation.
         /// Set to 1 for the transform orientation to be set by the skeleton action.
         /// </summary>
-        [Range(0, 1)]
-        [Tooltip("Modify this to blend between animations setup on the hand")]
+        //[Range(0, 1)]
+        //[Tooltip("Modify this to blend between animations setup on the hand")]
         public float skeletonBlend = 1f;
 
         /// <summary>This Unity event will fire whenever the position or rotation of the bones are updated.</summary>
@@ -79,19 +79,14 @@ namespace Valve.VR
         public TrackingChangeHandler onTrackingChangedEvent;
 
         /// <summary>Can be set to mirror the bone data across the x axis</summary>
-        [Tooltip("Is this rendermodel a mirror of another one?")]
+        //[Tooltip("Is this rendermodel a mirror of another one?")]
         public MirrorType mirroring;
 
-
-
-        [Header("No Skeleton - Fallback")]
-
-
-        [Tooltip("The fallback SkeletonPoser to drive hand animation when no skeleton data is available")]
+        //[Tooltip("The fallback SkeletonPoser to drive hand animation when no skeleton data is available")]
         /// <summary>The fallback SkeletonPoser to drive hand animation when no skeleton data is available</summary>
         public SteamVR_Skeleton_Poser fallbackPoser;
 
-        [Tooltip("The fallback action to drive finger curl values when no skeleton data is available")]
+        //[Tooltip("The fallback action to drive finger curl values when no skeleton data is available")]
         /// <summary>The fallback SkeletonPoser to drive hand animation when no skeleton data is available</summary>
         public SteamVR_Action_Single fallbackCurlAction;
 
@@ -369,7 +364,7 @@ namespace Valve.VR
         private void OnDeviceConnectedChanged(SteamVR_Action_Skeleton fromAction, bool deviceConnected)
         {
             if (onConnectedChanged != null)
-                onConnectedChanged.Invoke(this, inputSource, deviceConnected);
+                onConnectedChanged.DoInvoke(this, inputSource, deviceConnected);
             if (onConnectedChangedEvent != null)
                 onConnectedChangedEvent.Invoke(this, inputSource, deviceConnected);
         }
@@ -377,7 +372,7 @@ namespace Valve.VR
         private void OnTrackingChanged(SteamVR_Action_Skeleton fromAction, ETrackingResult trackingState)
         {
             if (onTrackingChanged != null)
-                onTrackingChanged.Invoke(this, inputSource, trackingState);
+                onTrackingChanged.DoInvoke(this, inputSource, trackingState);
             if (onTrackingChangedEvent != null)
                 onTrackingChangedEvent.Invoke(this, inputSource, trackingState);
         }
@@ -499,7 +494,7 @@ namespace Valve.VR
                 StopCoroutine(blendRoutine);
 
             if (this.gameObject.activeInHierarchy)
-                blendRoutine = StartCoroutine(DoBlendRoutine(blendToAmount, overTime));
+                blendRoutine = this.RunCoroutine(DoBlendRoutine(blendToAmount, overTime));
         }
 
 
@@ -530,7 +525,7 @@ namespace Valve.VR
 
             if (this.gameObject.activeInHierarchy)
             {
-                rangeOfMotionBlendRoutine = StartCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
+                rangeOfMotionBlendRoutine = this.RunCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
             }
         }
 
@@ -547,7 +542,7 @@ namespace Valve.VR
 
             if (this.gameObject.activeInHierarchy)
             {
-                rangeOfMotionBlendRoutine = StartCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
+                rangeOfMotionBlendRoutine = this.RunCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
             }
         }
 
@@ -566,7 +561,7 @@ namespace Valve.VR
 
                 if (this.gameObject.activeInHierarchy)
                 {
-                    rangeOfMotionBlendRoutine = StartCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
+                    rangeOfMotionBlendRoutine = this.RunCoroutine(DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, blendOverSeconds));
                 }
             }
         }
@@ -635,7 +630,7 @@ namespace Valve.VR
                 }
 
                 if (onBoneTransformsUpdated != null)
-                    onBoneTransformsUpdated.Invoke(this, inputSource);
+                    onBoneTransformsUpdated.DoInvoke(this, inputSource);
                 if (onBoneTransformsUpdatedEvent != null)
                     onBoneTransformsUpdatedEvent.Invoke(this, inputSource);
 
@@ -749,7 +744,7 @@ namespace Valve.VR
 
 
             if (onBoneTransformsUpdated != null)
-                onBoneTransformsUpdated.Invoke(this, inputSource);
+                onBoneTransformsUpdated.DoInvoke(this, inputSource);
             if (onBoneTransformsUpdatedEvent != null)
                 onBoneTransformsUpdatedEvent.Invoke(this, inputSource);
         }
@@ -920,7 +915,7 @@ namespace Valve.VR
             if (skeletonAction.poseChanged)
             {
                 if (onTransformChanged != null)
-                    onTransformChanged.Invoke(this, inputSource);
+                    onTransformChanged.DoInvoke(this, inputSource);
                 if (onTransformChangedEvent != null)
                     onTransformChangedEvent.Invoke(this, inputSource);
             }
@@ -929,7 +924,7 @@ namespace Valve.VR
             this.transform.rotation = skeletonRotation;
 
             if (onTransformUpdated != null)
-                onTransformUpdated.Invoke(this, inputSource);
+                onTransformUpdated.DoInvoke(this, inputSource);
         }
 
         /// <summary>

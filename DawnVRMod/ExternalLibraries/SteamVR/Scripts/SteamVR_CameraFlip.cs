@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace Valve.VR
 {
-    [ExecuteInEditMode]
     public class SteamVR_CameraFlip : MonoBehaviour
     {
         void Awake()

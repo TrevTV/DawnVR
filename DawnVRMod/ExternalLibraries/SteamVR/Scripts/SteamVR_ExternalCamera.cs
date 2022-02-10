@@ -30,11 +30,11 @@ namespace Valve.VR
             public bool disableStandardAssets;
         }
 
-        [Space()]
+        //[Space()]
         public Config config;
         public string configPath;
 
-        [Tooltip("This will automatically activate the action set the specified pose belongs to. And deactivate it when this component is disabled.")]
+        //[Tooltip("This will automatically activate the action set the specified pose belongs to. And deactivate it when this component is disabled.")]
         public bool autoEnableDisableActionSet = true;
 
         public void ReadConfig()

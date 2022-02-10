@@ -35,7 +35,7 @@ namespace Valve.VR
 
         public EIndex index;
 
-        [Tooltip("If not set, relative to parent")]
+        //[Tooltip("If not set, relative to parent")]
         public Transform origin;
 
         public bool isValid { get; private set; }

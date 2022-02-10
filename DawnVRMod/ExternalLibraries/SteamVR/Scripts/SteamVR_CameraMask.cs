@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace Valve.VR
 {
-    [ExecuteInEditMode]
     public class SteamVR_CameraMask : MonoBehaviour
     {
         void Awake()
