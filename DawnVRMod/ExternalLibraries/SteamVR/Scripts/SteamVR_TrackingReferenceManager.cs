@@ -54,8 +54,12 @@ namespace Valve.VR
 
                         trackingReferences.Add(deviceIndex, trackingReference);
 
-                        // todo: fix this pt 2. how? idk
+                        // thanks gompo
+#if REMASTER
+                        trackingReference.gameObject.SendMessage("SetDeviceIndex", new Il2CppSystem.Int32() { m_value = (int)deviceIndex }.BoxIl2CppObject(), SendMessageOptions.DontRequireReceiver);
+#else
                         trackingReference.gameObject.SendMessage("SetDeviceIndex", (int)deviceIndex, SendMessageOptions.DontRequireReceiver);
+#endif
                     }
                     else
                     {
