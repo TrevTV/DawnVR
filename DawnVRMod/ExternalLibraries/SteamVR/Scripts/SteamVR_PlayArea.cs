@@ -13,6 +13,10 @@ namespace Valve.VR
 {
     public class SteamVR_PlayArea : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_PlayArea(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public float borderThickness = 0.15f;
         public float wireframeHeight = 2.0f;
         public bool drawWireframeWhenSelectedOnly = false;

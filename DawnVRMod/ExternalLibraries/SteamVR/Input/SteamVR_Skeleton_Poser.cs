@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_Skeleton_Poser : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Skeleton_Poser(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         #region Editor Storage
         public bool poseEditorExpanded = true;
         public bool blendEditorExpanded = true;

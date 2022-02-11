@@ -12,6 +12,10 @@ namespace Valve.VR
     //[RequireComponent(typeof(AudioListener))]
     public class SteamVR_Ears : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Ears(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_Camera vrcam;
 
         bool usingSpeakers;

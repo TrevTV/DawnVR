@@ -12,6 +12,10 @@ namespace Valve.VR
 {
     public class SteamVR_Behaviour_Vector3 : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Vector3(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         /// <summary>The vector3 action to get data from</summary>
         public SteamVR_Action_Vector3 vector3Action;
 

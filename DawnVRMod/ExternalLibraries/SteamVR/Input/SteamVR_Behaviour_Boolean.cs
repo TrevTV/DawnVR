@@ -17,6 +17,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_Boolean : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Boolean(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         //[Tooltip("The SteamVR boolean action that this component should use")]
         public SteamVR_Action_Boolean booleanAction;
 

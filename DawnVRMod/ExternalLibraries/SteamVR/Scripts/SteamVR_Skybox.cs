@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_Skybox : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Skybox(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         // Note: Unity's Left and Right Skybox shader variables are switched.
         public Texture front, back, left, right, top, bottom;
 

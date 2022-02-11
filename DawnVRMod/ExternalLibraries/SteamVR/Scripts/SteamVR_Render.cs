@@ -13,6 +13,10 @@ namespace Valve.VR
 {
     public class SteamVR_Render : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Render(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_ExternalCamera externalCamera;
         public string externalCameraConfigPath = "externalcamera.cfg";
 

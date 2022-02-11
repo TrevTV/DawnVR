@@ -10,6 +10,10 @@ namespace DawnVR.Modules.VR
 {
     public class VRMirrorReflection : MonoBehaviour
     {
+#if REMASTER
+        public VRMirrorReflection(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private static bool CurrentlyRendering;
 
         public Camera camera;

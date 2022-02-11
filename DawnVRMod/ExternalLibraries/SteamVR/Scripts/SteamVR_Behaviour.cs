@@ -16,6 +16,10 @@ namespace Valve.VR
 {
     public class SteamVR_Behaviour : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private const string openVRDeviceName = "OpenVR";
         public static bool forcingInitialization = false;
 

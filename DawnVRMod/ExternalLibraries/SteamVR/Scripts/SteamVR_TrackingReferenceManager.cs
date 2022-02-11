@@ -6,6 +6,10 @@ namespace Valve.VR
 {
     public class SteamVR_TrackingReferenceManager : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_TrackingReferenceManager(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private Dictionary<uint, TrackingReferenceObject> trackingReferences = new Dictionary<uint, TrackingReferenceObject>();
 
         private void OnEnable()
@@ -50,6 +54,7 @@ namespace Valve.VR
 
                         trackingReferences.Add(deviceIndex, trackingReference);
 
+                        // todo: fix this pt 2. how? idk
                         trackingReference.gameObject.SendMessage("SetDeviceIndex", (int)deviceIndex, SendMessageOptions.DontRequireReceiver);
                     }
                     else

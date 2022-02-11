@@ -16,6 +16,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_Single : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Single(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         /// <summary>The single action to get data from.</summary>
         public SteamVR_Action_Single singleAction;
 

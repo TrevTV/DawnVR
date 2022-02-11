@@ -415,7 +415,7 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static void HotspotObjectInteract(ST_Hotspot _1BAF664A9) => _1BAF664A9.m_lookAt = null;
+        public static void HotspotObjectInteract(ST_Hotspot __1) => __1.m_lookAt = null;
 
         private static bool ShouldShowUI()
         {

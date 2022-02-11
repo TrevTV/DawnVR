@@ -12,6 +12,10 @@ namespace Valve.VR
 {
     public class SteamVR_ExternalCamera : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_ExternalCamera(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private SteamVR_Action_Pose cameraPose = null;
         private SteamVR_Input_Sources cameraInputSource = SteamVR_Input_Sources.Camera;
 

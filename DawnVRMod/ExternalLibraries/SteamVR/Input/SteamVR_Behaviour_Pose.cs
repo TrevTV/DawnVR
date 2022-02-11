@@ -14,6 +14,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_Pose : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Pose(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_Action_Pose poseAction = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose");
 
         //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]

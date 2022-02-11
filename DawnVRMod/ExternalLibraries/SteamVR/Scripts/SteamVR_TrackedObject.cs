@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_TrackedObject : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_TrackedObject(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public enum EIndex
         {
             None = -1,

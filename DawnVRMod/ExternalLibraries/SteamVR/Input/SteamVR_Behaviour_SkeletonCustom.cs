@@ -11,6 +11,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_SkeletonCustom : SteamVR_Behaviour_Skeleton
     {
+#if REMASTER
+        public SteamVR_Behaviour_SkeletonCustom(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         //[SerializeField]
         protected Transform _wrist;
 

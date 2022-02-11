@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_Menu : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Menu(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public Texture cursor, background, logo;
         public float logoHeight, menuOffset;
 

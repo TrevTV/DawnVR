@@ -9,6 +9,10 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCutsceneHandler : MonoBehaviour
     {
+#if REMASTER
+        public VRCutsceneHandler(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public bool IsActive { get; private set; }
         public bool IsIn2D { get; private set; }
 

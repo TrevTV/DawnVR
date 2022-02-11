@@ -13,6 +13,10 @@ namespace Valve.VR
 {
     public class SteamVR_LoadLevel : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_LoadLevel(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private static SteamVR_LoadLevel _active = null;
         public static bool loading { get { return _active != null; } }
         public static float progress

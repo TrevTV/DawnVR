@@ -185,8 +185,6 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Behaviour.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Camera.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_CameraFlip.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_CameraMask.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Ears.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_EnumEqualityComparer.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Events.cs" />
@@ -228,6 +226,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Mods"</PostBuildEvent>
+    <PostBuildEvent>COPY "$(TargetPath)" "D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\Mods"</PostBuildEvent>
   </PropertyGroup>
 </Project>

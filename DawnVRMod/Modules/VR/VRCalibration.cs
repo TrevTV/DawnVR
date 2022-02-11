@@ -9,6 +9,10 @@ namespace DawnVR.Modules.VR
 {
 	internal class VRCalibration : MonoBehaviour
 	{
+#if REMASTER
+		public VRCalibration(System.IntPtr ptr) : base(ptr) { }
+#endif
+
 		private GameObject uiRoot;
 		private GameObject irlHeightObj;
 		private GameObject calibrateObj;

@@ -12,7 +12,11 @@ namespace DawnVR.Modules.VR
 {
     internal class VRRig : MonoBehaviour
     {
-        public static VRRig Instance;
+#if REMASTER
+		public VRRig(System.IntPtr ptr) : base(ptr) { }
+#endif
+
+		public static VRRig Instance;
 
 		public Renderer[] ActiveHandRenderers;
 		public CharController ChloeComponent;

@@ -10,6 +10,10 @@ namespace Valve.VR
 {
     public class SteamVR_SphericalProjection : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_SphericalProjection(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         static Material material;
 
         public void Set(Vector3 N,

@@ -10,6 +10,10 @@ namespace Valve.VR
 {
     public class SteamVR_Behaviour_Skeleton : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Skeleton(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         //[Tooltip("If not set, will try to auto assign this based on 'Skeleton' + inputSource")]
         /// <summary>The action this component will use to update the model. Must be a Skeleton type action.</summary>
         public SteamVR_Action_Skeleton skeletonAction;

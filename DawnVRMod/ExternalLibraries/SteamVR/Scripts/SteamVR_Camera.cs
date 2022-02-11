@@ -21,6 +21,10 @@ namespace Valve.VR
     //[RequireComponent(typeof(Camera))]
     public class SteamVR_Camera : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Camera(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         //[SerializeField]
         private Transform _head;
         public Transform head { get { return _head; } }

@@ -11,6 +11,10 @@ namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
+#if REMASTER
+        public VRCamera(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public Camera Component;
         public Shader OverlayShader;
         public RenderTexture RenderToVRTexture;

@@ -14,6 +14,10 @@ namespace Valve.VR
 {
     public class SteamVR_RenderModel : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_RenderModel(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_TrackedObject.EIndex index = SteamVR_TrackedObject.EIndex.None;
         protected SteamVR_Input_Sources inputSource;
 

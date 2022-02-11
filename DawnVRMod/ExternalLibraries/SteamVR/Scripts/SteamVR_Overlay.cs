@@ -12,6 +12,10 @@ namespace Valve.VR
 {
     public class SteamVR_Overlay : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Overlay(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public Texture texture;
 
         //[Tooltip("Size of overlay view.")]

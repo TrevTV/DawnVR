@@ -10,6 +10,10 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_ActivateActionSetOnLoad : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_ActivateActionSetOnLoad(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_ActionSet actionSet = SteamVR_Input.GetActionSet("default");
 
         public SteamVR_Input_Sources forSources = SteamVR_Input_Sources.Any;
