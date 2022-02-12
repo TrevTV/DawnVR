@@ -82,21 +82,13 @@ namespace Valve.VR
                 fadeMaterialColorID = Shader.PropertyToID("fadeColor");
             }
 
-#if REMASTER
-            SteamVR_Events.Fade.Listen(new System.Action<Color, float, bool>(OnStartFade));
-#else
             SteamVR_Events.Fade.Listen(OnStartFade);
-#endif
             SteamVR_Events.FadeReady.Send();
         }
 
         void OnDisable()
         {
-#if REMASTER
-            SteamVR_Events.Fade.Remove(new System.Action<Color, float, bool>(OnStartFade));
-#else
             SteamVR_Events.Fade.Remove(OnStartFade);
-#endif
         }
 
         void OnPostRender()

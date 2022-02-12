@@ -2,7 +2,7 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 
 namespace Valve.VR
 {

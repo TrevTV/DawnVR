@@ -21,7 +21,6 @@ namespace Valve.VR
             Vector3 uAxis, Vector3 uOrigin, float uScale,
             Vector3 vAxis, Vector3 vOrigin, float vScale)
         {
-            // todo: SPEED UP YOUR GAME WITH THIS ONE EASY TRICK!!!
            /* if (material == null)
                 material = new Material(Shader.Find("Custom/SteamVR_SphericalProjection"));
 

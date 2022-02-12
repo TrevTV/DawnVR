@@ -9,8 +9,8 @@ using Valve.VR;
 using System.IO;
 using System.Linq;
 
-#if UNITY_2017_2_OR_NEWER
-    using UnityEngine.XR;
+#if REMASTER
+using UnityEngine.XR;
 #else
 using XRSettings = UnityEngine.VR.VRSettings;
 using XRDevice = UnityEngine.VR.VRDevice;
@@ -718,19 +718,11 @@ namespace Valve.VR
                     break;
             }
 
-#if REMASTER
-            SteamVR_Events.Initializing.Listen(new System.Action<bool>(OnInitializing));
-            SteamVR_Events.Calibrating.Listen(new System.Action<bool>(OnCalibrating));
-            SteamVR_Events.OutOfRange.Listen(new System.Action<bool>(OnOutOfRange));
-            SteamVR_Events.DeviceConnected.Listen(new System.Action<int, bool>(OnDeviceConnected));
-            SteamVR_Events.NewPoses.Listen(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
-#else
             SteamVR_Events.Initializing.Listen(OnInitializing);
             SteamVR_Events.Calibrating.Listen(OnCalibrating);
             SteamVR_Events.OutOfRange.Listen(OnOutOfRange);
             SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
             SteamVR_Events.NewPoses.Listen(OnNewPoses);
-#endif
         }
 
         ~SteamVR()
@@ -746,19 +738,11 @@ namespace Valve.VR
 
         private void Dispose(bool disposing)
         {
-#if REMASTER
-            SteamVR_Events.Initializing.Remove(new System.Action<bool>(OnInitializing));
-            SteamVR_Events.Calibrating.Remove(new System.Action<bool>(OnCalibrating));
-            SteamVR_Events.OutOfRange.Remove(new System.Action<bool>(OnOutOfRange));
-            SteamVR_Events.DeviceConnected.Remove(new System.Action<int, bool>(OnDeviceConnected));
-            SteamVR_Events.NewPoses.Remove(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
-#else
             SteamVR_Events.Initializing.Remove(OnInitializing);
             SteamVR_Events.Calibrating.Remove(OnCalibrating);
             SteamVR_Events.OutOfRange.Remove(OnOutOfRange);
             SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
             SteamVR_Events.NewPoses.Remove(OnNewPoses);
-#endif
 
             _instance = null;
         }

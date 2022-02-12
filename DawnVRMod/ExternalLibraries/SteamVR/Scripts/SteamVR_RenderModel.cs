@@ -15,7 +15,19 @@ namespace Valve.VR
     public class SteamVR_RenderModel : MonoBehaviour
     {
 #if REMASTER
-        public SteamVR_RenderModel(System.IntPtr ptr) : base(ptr) { }
+        public SteamVR_RenderModel(System.IntPtr ptr) : base(ptr)
+        {
+            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
+            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
+            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
+        }
+#else
+        public SteamVR_RenderModel()
+        {
+            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
+            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
+            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
+        }
 #endif
 
         public SteamVR_TrackedObject.EIndex index = SteamVR_TrackedObject.EIndex.None;
@@ -628,19 +640,6 @@ namespace Valve.VR
         }
 
         SteamVR_Events.Action deviceConnectedAction, hideRenderModelsAction, modelSkinSettingsHaveChangedAction;
-
-        SteamVR_RenderModel()
-        {
-#if REMASTER
-            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(new System.Action<int, bool>(OnDeviceConnected));
-            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(new System.Action<bool>(OnHideRenderModels));
-            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, new System.Action<VREvent_t>(OnModelSkinSettingsHaveChanged));
-#else
-            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
-            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
-            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
-#endif
-        }
 
         void OnEnable()
         {

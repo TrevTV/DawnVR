@@ -32,7 +32,7 @@ namespace DawnVR
 
 #if REMASTER
             foreach (var mb in Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
-                UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, true); // todo: change to false once testing is done
+                UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, false);
 #endif
 
             if (Preferences.CheckForUpdatesOnStart.Value)

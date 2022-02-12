@@ -195,24 +195,31 @@ namespace Valve.VR
         protected void OnEnable()
         {
 #if REMASTER
-            // todo: does this work??
-            Camera.onPreCull.CombineImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
-            SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(new Action<VREvent_t>(OnQuit));
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? new Action<Camera>(OnCameraPreCull)
+                    : Il2CppSystem.Delegate.Combine(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
 #else
             Camera.onPreCull += OnCameraPreCull;
-            SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(OnQuit);
 #endif
+            SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(OnQuit);
+
         }
 
         protected void OnDisable()
         {
 #if REMASTER
-            Camera.onPreCull.RemoveImpl((Il2CppSystem.Action<Camera>)OnCameraPreCull);
-            SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(new Action<VREvent_t>(OnQuit));
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? null
+                    : Il2CppSystem.Delegate.Remove(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
 #else
             Camera.onPreCull -= OnCameraPreCull;
-            SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(OnQuit);
 #endif
+
+            SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(OnQuit);
         }
         protected void OnCameraPreCull(Camera cam)
         {

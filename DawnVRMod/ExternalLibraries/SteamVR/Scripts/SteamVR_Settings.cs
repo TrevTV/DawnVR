@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace Valve.VR
 {
-    public class SteamVR_Settings : ScriptableObject
+    public class SteamVR_Settings
     {
         private static SteamVR_Settings _instance;
         public static SteamVR_Settings instance
@@ -98,20 +98,7 @@ namespace Valve.VR
         {
             if (_instance == null)
             {
-                _instance = Resources.Load<SteamVR_Settings>("SteamVR_Settings");
-
-                if (_instance == null)
-                {
-                    _instance = SteamVR_Settings.CreateInstance<SteamVR_Settings>();
-
-#if UNITY_EDITOR
-                    string localFolderPath = SteamVR.GetSteamVRResourcesFolderPath(true);
-                    string assetPath = System.IO.Path.Combine(localFolderPath, "SteamVR_Settings.asset");
-
-                    UnityEditor.AssetDatabase.CreateAsset(_instance, assetPath);
-                    UnityEditor.AssetDatabase.SaveAssets();
-#endif
-                }
+                _instance = new SteamVR_Settings();
 
                 SetDefaultsIfNeeded();
             }

@@ -3,7 +3,7 @@
 using System;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 using Valve.VR;
 
 namespace Valve.VR
@@ -120,7 +120,7 @@ namespace Valve.VR
             UpdateTransform();
 
             if (onTransformUpdated != null)
-                onTransformUpdated.DoInvoke(this, inputSource);
+                onTransformUpdated.Invoke(this, inputSource);
             if (onTransformUpdatedEvent != null)
                 onTransformUpdatedEvent.Invoke(this, inputSource);
         }
@@ -143,7 +143,7 @@ namespace Valve.VR
         private void SteamVR_Behaviour_Pose_OnChange(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource)
         {
             if (onTransformChanged != null)
-                onTransformChanged.DoInvoke(this, fromSource);
+                onTransformChanged.Invoke(this, fromSource);
             if (onTransformChangedEvent != null)
                 onTransformChangedEvent.Invoke(this, fromSource);
         }
@@ -153,7 +153,7 @@ namespace Valve.VR
             CheckDeviceIndex();
 
             if (onConnectedChanged != null)
-                onConnectedChanged.DoInvoke(this, inputSource, connected);
+                onConnectedChanged.Invoke(this, inputSource, connected);
             if (onConnectedChangedEvent != null)
                 onConnectedChangedEvent.Invoke(this, inputSource, connected);
         }
@@ -161,7 +161,7 @@ namespace Valve.VR
         protected virtual void OnTrackingChanged(SteamVR_Action_Pose changedAction, SteamVR_Input_Sources changedSource, ETrackingResult trackingChanged)
         {
             if (onTrackingChanged != null)
-                onTrackingChanged.DoInvoke(this, inputSource, trackingChanged);
+                onTrackingChanged.Invoke(this, inputSource, trackingChanged);
             if (onTrackingChangedEvent != null)
                 onTrackingChangedEvent.Invoke(this, inputSource, trackingChanged);
         }
@@ -178,13 +178,12 @@ namespace Valve.VR
 
                     if (broadcastDeviceChanges)
                     {
-                        // todo: is this required?
                         //this.gameObject.BroadcastMessage("SetInputSource", inputSource, SendMessageOptions.DontRequireReceiver);
                         //this.gameObject.BroadcastMessage("SetDeviceIndex", deviceIndex, SendMessageOptions.DontRequireReceiver);
                     }
 
                     if (onDeviceIndexChanged != null)
-                        onDeviceIndexChanged.DoInvoke(this, inputSource, deviceIndex);
+                        onDeviceIndexChanged.Invoke(this, inputSource, deviceIndex);
                     if (onDeviceIndexChangedEvent != null)
                         onDeviceIndexChangedEvent.Invoke(this, inputSource, deviceIndex);
                 }

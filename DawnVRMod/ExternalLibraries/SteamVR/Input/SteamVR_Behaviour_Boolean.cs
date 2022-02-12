@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 
 namespace Valve.VR
 {
@@ -107,7 +107,7 @@ namespace Valve.VR
         {
             if (onPressUp != null)
             {
-                onPressUp.DoInvoke(this, fromSource, false);
+                onPressUp.Invoke(this, fromSource, false);
             }
 
             if (onPressUpEvent != null)
@@ -120,7 +120,7 @@ namespace Valve.VR
         {
             if (onPressDown != null)
             {
-                onPressDown.DoInvoke(this, fromSource, true);
+                onPressDown.Invoke(this, fromSource, true);
             }
 
             if (onPressDownEvent != null)
@@ -133,7 +133,7 @@ namespace Valve.VR
         {
             if (onPress != null)
             {
-                onPress.DoInvoke(this, fromSource, true);
+                onPress.Invoke(this, fromSource, true);
             }
 
             if (onPressEvent != null)
@@ -146,7 +146,7 @@ namespace Valve.VR
         {
             if (onUpdate != null)
             {
-                onUpdate.DoInvoke(this, fromSource, newState);
+                onUpdate.Invoke(this, fromSource, newState);
             }
 
             if (onUpdateEvent != null)
@@ -159,7 +159,7 @@ namespace Valve.VR
         {
             if (onChange != null)
             {
-                onChange.DoInvoke(this, fromSource, newState);
+                onChange.Invoke(this, fromSource, newState);
             }
 
             if (onChangeEvent != null)

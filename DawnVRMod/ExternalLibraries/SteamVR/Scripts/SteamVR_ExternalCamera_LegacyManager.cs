@@ -19,13 +19,8 @@ namespace Valve.VR
 
         public static void SubscribeToNewPoses()
         {
-#if REMASTER
-            if (newPosesAction == null)
-                newPosesAction = SteamVR_Events.NewPosesAction(new System.Action<TrackedDevicePose_t[]>(OnNewPoses));
-#else
             if (newPosesAction == null)
                 newPosesAction = SteamVR_Events.NewPosesAction(OnNewPoses);
-#endif
 
             newPosesAction.enabled = true;
         }

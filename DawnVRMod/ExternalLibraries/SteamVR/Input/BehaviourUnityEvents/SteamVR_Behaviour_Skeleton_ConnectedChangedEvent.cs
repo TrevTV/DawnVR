@@ -1,7 +1,7 @@
 ﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 
 using System;
-using UnityEngine.Events;
+using DawnVR.Events;
 
 namespace Valve.VR
 {

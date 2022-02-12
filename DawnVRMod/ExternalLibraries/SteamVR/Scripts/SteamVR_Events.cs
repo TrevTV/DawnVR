@@ -18,7 +18,7 @@
 //=============================================================================
 
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 using Valve.VR;
 
 namespace Valve.VR
@@ -131,26 +131,18 @@ namespace Valve.VR
 
         public class Event<T0, T1> : UnityEvent<T0, T1>
         {
-#if REMASTER
-            public void Listen(UnityAction<T0, T1> action) { this.AddListener(action.m_target, action.Method); }
-            public void Remove(UnityAction<T0, T1> action) { this.RemoveListener(action.m_target, action.Method); }
-#else
-`           public void Listen(UnityAction<T0, T1> action) { this.AddListener(action); }
+            public void Listen(UnityAction<T0, T1> action) { this.AddListener(action); }
             public void Remove(UnityAction<T0, T1> action) { this.RemoveListener(action); }
-#endif
-            public void Send(T0 arg0, T1 arg1) { this.DoInvoke(arg0, arg1); }
+
+            public void Send(T0 arg0, T1 arg1) { this.Invoke(arg0, arg1); }
         }
 
         public class Event<T0, T1, T2> : UnityEvent<T0, T1, T2>
         {
-#if REMASTER
-            public void Listen(UnityAction<T0, T1, T2> action) { this.AddListener(action.m_target, action.Method); }
-            public void Remove(UnityAction<T0, T1, T2> action) { this.RemoveListener(action.m_target, action.Method); }
-#else
-`           public void Listen(UnityAction<T0, T1, T2> action) { this.AddListener(action); }
+            public void Listen(UnityAction<T0, T1, T2> action) { this.AddListener(action); }
             public void Remove(UnityAction<T0, T1, T2> action) { this.RemoveListener(action); }
-#endif
-            public void Send(T0 arg0, T1 arg1, T2 arg2) { this.DoInvoke(arg0, arg1, arg2); }
+
+            public void Send(T0 arg0, T1 arg1, T2 arg2) { this.Invoke(arg0, arg1, arg2); }
         }
 
         public static Event<bool> Calibrating = new Event<bool>();

@@ -3,7 +3,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 using Valve.VR;
 
 namespace Valve.VR
@@ -368,7 +368,7 @@ namespace Valve.VR
         private void OnDeviceConnectedChanged(SteamVR_Action_Skeleton fromAction, bool deviceConnected)
         {
             if (onConnectedChanged != null)
-                onConnectedChanged.DoInvoke(this, inputSource, deviceConnected);
+                onConnectedChanged.Invoke(this, inputSource, deviceConnected);
             if (onConnectedChangedEvent != null)
                 onConnectedChangedEvent.Invoke(this, inputSource, deviceConnected);
         }
@@ -376,7 +376,7 @@ namespace Valve.VR
         private void OnTrackingChanged(SteamVR_Action_Skeleton fromAction, ETrackingResult trackingState)
         {
             if (onTrackingChanged != null)
-                onTrackingChanged.DoInvoke(this, inputSource, trackingState);
+                onTrackingChanged.Invoke(this, inputSource, trackingState);
             if (onTrackingChangedEvent != null)
                 onTrackingChangedEvent.Invoke(this, inputSource, trackingState);
         }
@@ -634,7 +634,7 @@ namespace Valve.VR
                 }
 
                 if (onBoneTransformsUpdated != null)
-                    onBoneTransformsUpdated.DoInvoke(this, inputSource);
+                    onBoneTransformsUpdated.Invoke(this, inputSource);
                 if (onBoneTransformsUpdatedEvent != null)
                     onBoneTransformsUpdatedEvent.Invoke(this, inputSource);
 
@@ -748,7 +748,7 @@ namespace Valve.VR
 
 
             if (onBoneTransformsUpdated != null)
-                onBoneTransformsUpdated.DoInvoke(this, inputSource);
+                onBoneTransformsUpdated.Invoke(this, inputSource);
             if (onBoneTransformsUpdatedEvent != null)
                 onBoneTransformsUpdatedEvent.Invoke(this, inputSource);
         }
@@ -919,7 +919,7 @@ namespace Valve.VR
             if (skeletonAction.poseChanged)
             {
                 if (onTransformChanged != null)
-                    onTransformChanged.DoInvoke(this, inputSource);
+                    onTransformChanged.Invoke(this, inputSource);
                 if (onTransformChangedEvent != null)
                     onTransformChangedEvent.Invoke(this, inputSource);
             }
@@ -928,7 +928,7 @@ namespace Valve.VR
             this.transform.rotation = skeletonRotation;
 
             if (onTransformUpdated != null)
-                onTransformUpdated.DoInvoke(this, inputSource);
+                onTransformUpdated.Invoke(this, inputSource);
         }
 
         /// <summary>
