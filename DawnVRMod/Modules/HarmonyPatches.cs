@@ -132,9 +132,6 @@ namespace DawnVR.Modules
             PatchPost(typeof(BrightnessUI).GetMethod("OnSliderChange"), nameof(OnChangeBrightnessSetting)); // allows gamma adjustments in-headset
             PatchPost(typeof(BrightnessUI).GetMethod("Update", AccessTools.all), nameof(OnBrightnessUIUpdate)); // fix gamma slider
             PatchPre(typeof(MainMenuUI).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
-#if REMASTER
-            PatchPre(typeof(UnhollowerBaseLib.LogSupport).GetMethod("Warning", AccessTools.all), nameof(UnhollowerWarningPrefix));
-#endif
 
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
@@ -175,7 +172,7 @@ namespace DawnVR.Modules
         }
 
 #if REMASTER
-        private static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter");
+        public static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter");
 #endif
 
         #endregion

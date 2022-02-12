@@ -30,7 +30,12 @@ namespace DawnVR
         {
             Preferences.Init();
 
+
 #if REMASTER
+            HarmonyInstance.Patch(
+                typeof(UnhollowerBaseLib.LogSupport).GetMethod("Warning", HarmonyLib.AccessTools.all),
+                typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.UnhollowerWarningPrefix)).ToNewHarmonyMethod());
+
             foreach (var mb in Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
                 UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, false);
 #endif
