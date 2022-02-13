@@ -235,7 +235,7 @@ namespace DawnVR.Modules
             vector3.Normalize();
             vector2 = Vector3.Cross(vector3, vector);
             vector2.Normalize();
-            __instance.CallMethod("SetCameraMatrix", __1, vector2, vector3, vector);
+            __instance.CallMethod("SetCameraMatrix", setCamMatrixTypes, __1, vector2, vector3, vector);
 
             // todo: i honestly dont remember what this does so this may need to be looked into
 #if !REMASTER
@@ -247,6 +247,8 @@ namespace DawnVR.Modules
 #endif
             return false;
         }
+
+        private static readonly Type[] setCamMatrixTypes = new Type[] { typeof(Vector4), typeof(Vector4), typeof(Vector4), typeof(Vector4) };
 
         public static void OnMovieWillRenderObject(Player __instance, CriManaMovieMaterial __0)
         {

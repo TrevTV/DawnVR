@@ -17,9 +17,9 @@ namespace DawnVR
             string fieldName;
 #if REMASTER
             fieldName = unobfuscatedFieldName;
+            return GetPropertyValue<T>(objInstance, unobfuscatedFieldName);
 #else
             fieldName = GetRealGenericName(unobfuscatedFieldName);
-#endif
             if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
                 return (T)fi.GetValue(objInstance);
             else
@@ -28,6 +28,7 @@ namespace DawnVR
                 cachedFieldInfos.Add(unobfuscatedFieldName, field);
                 return (T)field.GetValue(objInstance);
             }
+#endif
         }
 
         public static T GetFieldValue<T>(this object objInstance, string unobfuscatedFieldName)
@@ -35,10 +36,9 @@ namespace DawnVR
             string fieldName;
 #if REMASTER
             fieldName = unobfuscatedFieldName;
+            return GetPropertyValue<T>(objInstance, unobfuscatedFieldName);
 #else
             fieldName = GetRealGenericName(unobfuscatedFieldName);
-#endif
-
             if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
                 return (T)fi.GetValue(objInstance);
             else
@@ -47,6 +47,7 @@ namespace DawnVR
                 cachedFieldInfos.Add(unobfuscatedFieldName, field);
                 return (T)field.GetValue(objInstance);
             }
+#endif
         }
 
         public static void SetFieldValue(Type staticType, string unobfuscatedFieldName, object value)
@@ -54,11 +55,13 @@ namespace DawnVR
             string fieldName;
 #if REMASTER
             fieldName = unobfuscatedFieldName;
+            PropertyInfo property = staticType.GetProperty(fieldName, AccessTools.all);
+            property.SetValue(null, value);
 #else
             fieldName = GetRealGenericName(unobfuscatedFieldName);
-#endif
             FieldInfo field = staticType.GetField(fieldName, AccessTools.all);
             field.SetValue(null, value);
+#endif
         }
 
         public static void SetFieldValue(this object objInstance, string unobfuscatedFieldName, object value)
@@ -66,9 +69,9 @@ namespace DawnVR
             string fieldName;
 #if REMASTER
             fieldName = unobfuscatedFieldName;
+            SetPropertyValue(objInstance, unobfuscatedFieldName, value);
 #else
             fieldName = GetRealGenericName(unobfuscatedFieldName);
-#endif
             if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
                 fi.SetValue(objInstance, value);
             else
@@ -77,6 +80,7 @@ namespace DawnVR
                 cachedFieldInfos.Add(unobfuscatedFieldName, field);
                 field.SetValue(objInstance, value);
             }
+#endif
         }
 
         public static T GetPropertyValue<T>(object objInstance, string unobfuscatedPropName, Type type = null)
@@ -123,6 +127,12 @@ namespace DawnVR
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
             mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
+        }
+
+        public static void CallMethod(this MonoBehaviour mb, string unobfuscatedMethodName, Type[] methodParams, params object[] parameters)
+        {
+            string methodName = unobfuscatedMethodName.ToMethodName();
+            mb.GetType().GetMethod(methodName, methodParams).Invoke(mb, parameters);
         }
 
         public static T CallMethod<T>(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)

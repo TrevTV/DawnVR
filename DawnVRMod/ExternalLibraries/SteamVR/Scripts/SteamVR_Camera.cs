@@ -9,8 +9,8 @@ using System.Collections;
 using System.Reflection;
 using Valve.VR;
 
-#if UNITY_2017_2_OR_NEWER
-    using UnityEngine.XR;
+#if REMASTER
+using UnityEngine.XR;
 #else
 using XRSettings = UnityEngine.VR.VRSettings;
 using XRDevice = UnityEngine.VR.VRDevice;
@@ -44,8 +44,8 @@ namespace Valve.VR
 
         public bool wireframe = false;
 
-#if UNITY_2017_2_OR_NEWER
-    static public float sceneResolutionScale
+#if REMASTER
+        static public float sceneResolutionScale
     {
         get { return XRSettings.eyeTextureResolutionScale; }
         set { XRSettings.eyeTextureResolutionScale = value; }
