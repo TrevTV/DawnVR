@@ -38,6 +38,7 @@ namespace DawnVR
 #else
             fieldName = GetRealGenericName(unobfuscatedFieldName);
 #endif
+
             if (cachedFieldInfos.TryGetValue(unobfuscatedFieldName, out FieldInfo fi))
                 return (T)fi.GetValue(objInstance);
             else
@@ -46,6 +47,18 @@ namespace DawnVR
                 cachedFieldInfos.Add(unobfuscatedFieldName, field);
                 return (T)field.GetValue(objInstance);
             }
+        }
+
+        public static void SetFieldValue(Type staticType, string unobfuscatedFieldName, object value)
+        {
+            string fieldName;
+#if REMASTER
+            fieldName = unobfuscatedFieldName;
+#else
+            fieldName = GetRealGenericName(unobfuscatedFieldName);
+#endif
+            FieldInfo field = staticType.GetField(fieldName, AccessTools.all);
+            field.SetValue(null, value);
         }
 
         public static void SetFieldValue(this object objInstance, string unobfuscatedFieldName, object value)

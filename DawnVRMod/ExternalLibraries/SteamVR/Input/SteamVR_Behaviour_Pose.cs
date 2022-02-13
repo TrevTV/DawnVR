@@ -89,6 +89,8 @@ namespace Valve.VR
 
         protected virtual void OnEnable()
         {
+            inputSource = name.Contains("(left)") ? SteamVR_Input_Sources.LeftHand : SteamVR_Input_Sources.RightHand;
+
             SteamVR.Initialize();
 
             if (poseAction != null)

@@ -1,0 +1,122 @@
+{
+  "actions": [
+    {
+      "name": "/actions/default/in/Pose",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/default/in/SkeletonLeftHand",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/left"
+    },
+    {
+      "name": "/actions/default/in/SkeletonRightHand",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/right"
+    },
+    {
+      "name": "/actions/default/in/HeadsetOnHead",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/default/in/V2_Thumbstick",
+      "type": "vector2",
+      "requirement": "suggested"
+    },
+    {
+      "name": "/actions/default/in/Bool_ButtonA",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ButtonB",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ButtonX",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ButtonY",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ThumbstickUp",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ThumbstickDown",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ThumbstickLeft",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_ThumbstickRight",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_Trigger",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Bool_Grip",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/V1_Trigger",
+      "type": "vector1"
+    },
+    {
+      "name": "/actions/default/in/V1_Grip",
+      "type": "vector1"
+    },
+    {
+      "name": "/actions/default/in/Bool_ButtonThumbstick",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/out/Haptic",
+      "type": "vibration"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/default",
+      "usage": "leftright"
+    }
+  ],
+  "default_bindings": [
+    {
+      "controller_type": "vive_controller",
+      "binding_url": "bindings_vive_controller.json"
+    },
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "bindings_oculus_touch.json"
+    },
+    {
+      "controller_type": "knuckles",
+      "binding_url": "bindings_knuckles.json"
+    },
+    {
+      "controller_type": "holographic_controller",
+      "binding_url": "bindings_holographic_controller.json"
+    },
+    {
+      "controller_type": "vive_cosmos_controller",
+      "binding_url": "bindings_vive_cosmos_controller.json"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_US",
+      "/actions/default/in/HeadsetOnHead": "Headset on head (proximity sensor)",
+      "/actions/default/in/Pose": "Pose",
+      "/actions/default/in/SkeletonLeftHand": "Skeleton (Left)",
+      "/actions/default/in/SkeletonRightHand": "Skeleton (Right)",
+      "/actions/default/out/Haptic": "Haptic"
+    }
+  ]
+}

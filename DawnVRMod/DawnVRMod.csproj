@@ -248,6 +248,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\CheckForUpdate.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\data_rm" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>COPY "$(TargetPath)" "D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\Mods"</PostBuildEvent>
