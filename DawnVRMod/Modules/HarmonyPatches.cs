@@ -65,7 +65,7 @@ namespace DawnVR.Modules
             //PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
-            PatchPre(typeof(InputManager).GetMethod("Init".ToMethodName(), AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+            PatchPre(typeof(InputManager).GetMethod(MelonUtils.IsGameIl2Cpp() ? "SaveKeyBindings" : "Init".ToMethodName()), nameof(ManagerInit)); // makes the game think we're using an xbox controller
             PatchPre(typeof(InputManager).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
             PatchPre(typeof(JoystickInputManager).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
@@ -118,6 +118,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(Telescope).GetMethod("Update", AccessTools.all), nameof(TelescopeRotate)); // fixes the amulet thing in e4
             PatchPre(typeof(FollowCamera).GetMethod("SetupCameraMatrix".ToMethodName(), AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
             PatchPost(typeof(Player).GetMethod("OnWillRenderObject"), nameof(OnMovieWillRenderObject)); // displays pre-rendered videos in the cutscene box
+            PatchPre(typeof(CameraUtils).GetMethod("SetMainCameraFOV".ToMethodName()), nameof(SetMainCamFOV)); // fixes weird fov stuff
 
             // Misc Fixes
             PatchPre(typeof(MirrorReflection).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr

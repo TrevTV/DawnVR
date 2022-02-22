@@ -17,7 +17,7 @@ namespace DawnVR.Modules
         private static bool pressedFirstTime = false;
         private static float lastPressedTime;
 
-        public static void ManagerInit(InputManager __instance) => ObfuscationTools.SetFieldValue(__instance, "m_overrideType", eControlType.kXboxOne);
+        public static void ManagerInit(InputManager __instance) => __instance.SetFieldValue("m_overrideType", eControlType.kXboxOne);
 
         public static eInputState GetInputState_Binding(InputManager inputManInstance, KeyBinding binding)
         {

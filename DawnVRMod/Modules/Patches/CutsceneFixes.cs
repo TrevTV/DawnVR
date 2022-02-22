@@ -264,5 +264,16 @@ namespace DawnVR.Modules
                 VRRig.Instance.CutsceneHandler.SetupCutscene(__0.material);
             }
         }
+
+        public static bool SetMainCamFOV(float __0)
+        {
+            if (VRRig.Instance.CutsceneHandler.IsActive)
+            {
+                VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = __0;
+                return false;
+            }
+            else
+                return true;
+        }
     }
 }
