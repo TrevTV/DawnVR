@@ -65,7 +65,11 @@ namespace DawnVR.Modules
             //PatchPre(typeof(T_BF5A5EEC).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
-            PatchPre(typeof(InputManager).GetMethod(MelonUtils.IsGameIl2Cpp() ? "SaveKeyBindings" : "Init".ToMethodName()), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+#if REMASTER
+            PatchPre(typeof(InputManager).GetMethod("RestoreDefaults"), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+#else
+            PatchPre(typeof(InputManager).GetMethod("Init".ToMethodName()), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+#endif
             PatchPre(typeof(InputManager).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
             PatchPre(typeof(JoystickInputManager).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
@@ -173,7 +177,7 @@ namespace DawnVR.Modules
         }
 
 #if REMASTER
-        public static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter");
+        public static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter") && !__0.Contains("called directly from anywhere");
 #endif
 
         #endregion
