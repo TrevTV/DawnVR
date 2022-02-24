@@ -72,7 +72,6 @@ namespace DawnVR.Modules
 #endif
             PatchPre(typeof(InputManager).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
-            PatchPre(typeof(JoystickInputManager).GetMethod("GetButtonState"), nameof(GetButtonState)); // redirect input to vr controllers
             PatchPre(typeof(JoystickInputManager).GetMethod("GetAxis"), nameof(GetAxis)); // redirect input to vr controllers
 
             // RigMovement

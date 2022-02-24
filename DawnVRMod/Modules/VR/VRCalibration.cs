@@ -23,7 +23,11 @@ namespace DawnVR.Modules.VR
 		public void SetupCalibrator()
         {
 			CWindowManager.Singleton.CloseWindow("MainMenuWindow");
+#if REMASTER
+			uiRoot = GameObject.Instantiate(Resources.CalibrationUI, new Vector3(-24.1f, -26.5f, -68.9f), Quaternion.Euler(0, 90, 0)).Cast<GameObject>();
+#else
 			uiRoot = (GameObject)GameObject.Instantiate(Resources.CalibrationUI, new Vector3(-24.1f, -26.5f, -68.9f), Quaternion.Euler(0, 90, 0));
+#endif
 			irlHeightObj = uiRoot.transform.Find("FindRealHeight").gameObject;
 			calibrateObj = uiRoot.transform.Find("FinalizeOffset").gameObject;
 			currentStep = CalibrationStep.FindIRLHeight;
