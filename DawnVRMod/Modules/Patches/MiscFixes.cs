@@ -4,13 +4,12 @@ using System.Collections.Generic;
 #if REMASTER
 using UnityEngine.PostProcessing;
 #else
-using UnityEngine._1F1547F66;
 using GameMaster = T_A6E913D1;
 using ST_ParallelHighlight = T_FD3AF1C2;
 using MirrorReflection = T_55EA835B;
 using DawnMainCamera = T_34182F31;
 using CriAtomListener = T_165E4FE4;
-using PostProcessingBehaviour = T_190FC323;
+using PostProcessingBehaviour = UnityEngine._1F1547F66.T_190FC323;
 #endif
 
 

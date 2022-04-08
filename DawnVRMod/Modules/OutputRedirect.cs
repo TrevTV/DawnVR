@@ -5,7 +5,7 @@ using System.Reflection;
 using CommonTools;
 #else
 using _1A25B0A83;
-using Output = T_EF48DC26;
+using Output = _1A25B0A83.T_EF48DC26;
 #endif
 
 namespace DawnVR.Modules

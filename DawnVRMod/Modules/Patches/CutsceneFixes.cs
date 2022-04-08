@@ -12,12 +12,12 @@ using UITexture = T_D186D1CC;
 using Telescope = T_ADD17E7F;
 using TelescopePuzzle = T_24E8F007;
 using GameMaster = T_A6E913D1;
-using EditableDataObjectGraphedConnection = T_7808CA07;
-using SequenceGraphObject = T_F45060BF;
-using FreeroamGraphObject = T_BBB6DDD9;
+using EditableDataObjectGraphedConnection = _169E4A3E._165972D5F.T_7808CA07;
+using SequenceGraphObject = _15C6DD6D9._14FDF87F1.T_F45060BF;
+using FreeroamGraphObject = _15C6DD6D9._14FDF87F1.T_BBB6DDD9;
 using FollowCamera = T_884A92DB;
 using Player = _1F28E2E62.T_E579AD8A;
-using CriManaMovieMaterial = _1F28E2E62.T_DD163FE9;
+using CriManaMovieMaterial = T_DD163FE9;
 #endif
 
 namespace DawnVR.Modules

@@ -3,11 +3,11 @@ using PrototyperData;
 using DataEditor;
 #else
 using GraphManager = T_BF5A5EEC;
-using Sequence = T_58A5E6E2;
+using Sequence = _15C6DD6D9.T_58A5E6E2;
 using Timeline = T_156BDACC;
 using TimelineManager = T_14474339;
 using CriAudioManager = T_E8819104;
-using SceneObject = T_4B84CB26;
+using SceneObject = _169E4A3E.T_4B84CB26;
 using GameMaster = T_A6E913D1;
 using SplashScreenWindow = T_EDB11480;
 #endif

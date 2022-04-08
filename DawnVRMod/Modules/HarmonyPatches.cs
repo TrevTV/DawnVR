@@ -41,11 +41,12 @@ using Telescope = T_ADD17E7F;
 using Player = _1F28E2E62.T_E579AD8A;
 using MirrorReflection = T_55EA835B;
 using DawnMainCamera = T_34182F31;
-using PostProcessingDofPass = T_C0F7FD02;
+using PostProcessingDofPass = UnityEngine._1F1547F66.T_C0F7FD02;
 using CriAtomListener = T_165E4FE4;
 using ST_ParallelHighlight = T_FD3AF1C2;
 using BrightnessUI = T_32770A6A;
 using MainMenuUI = T_96E81635;
+using GraphManager = T_BF5A5EEC;
 #endif
 
 namespace DawnVR.Modules
@@ -176,7 +177,7 @@ namespace DawnVR.Modules
         }
 
 #if REMASTER
-        public static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter") && !__0.Contains("called directly from anywhere");
+        public static bool UnhollowerWarningPrefix(string __0) => !__0.Contains("unsupported return type") && !__0.Contains("unsupported parameter");
 #endif
 
         #endregion
