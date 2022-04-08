@@ -237,7 +237,7 @@ namespace DawnVR.Modules
             vector2.Normalize();
             __instance.CallMethod("SetCameraMatrix", setCamMatrixTypes, __1, vector2, vector3, vector);
 
-            // todo: i honestly dont remember what this does so this may need to be looked into
+            // don't ask me what this does because i have no idea. it only exists in the linux port
 #if !REMASTER
             if (!__instance.IsLocked)
             {
