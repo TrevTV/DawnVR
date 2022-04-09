@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using DawnVR.Events;
+﻿using System;
+using System.Collections;
+using System.Reflection;
 
 namespace UnityEngine
 {
@@ -13,5 +14,15 @@ namespace UnityEngine
             return mb.StartCoroutine(enumerator);
 #endif
         }
+
+        // this is techinically a mono fix but it was caused by a il2cpp fix
+#if !REMASTER
+        public static MethodInfo GetMethodInfo(this Delegate del)
+        {
+            if (del == null) throw new ArgumentNullException("del");
+
+            return del.Method;
+        }   
+#endif
     }
 }

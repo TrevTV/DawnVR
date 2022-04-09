@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MonoMod.Utils;
+using System;
 using System.Reflection;
 using System.Threading;
+using UnityEngine;
 using UnityEngineInternal;
 
 namespace DawnVR.Events
