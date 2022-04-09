@@ -27,7 +27,6 @@ namespace DawnVREnabler
 
         public override void OnPreInitialization()
         {
-            return;
             string ggmLocation = Path.Combine(MelonUtils.GetGameDataDirectory(), "globalgamemanagers");
             bool backupExists = CreateGameManagersBackup(ggmLocation);
             if (!backupExists)
@@ -93,7 +92,7 @@ namespace DawnVREnabler
             AssetFileInfoEx buildSettings = afi.table.GetAssetInfo(11);
             AssetTypeValueField buildBaseField = am.GetTypeInstance(afi.file, buildSettings).GetBaseField();
             AssetTypeValueField enabledVRDevices = buildBaseField.Get("enabledVRDevices").Get("Array");
-            AssetTypeTemplateField stringTemplate = enabledVRDevices.templateField.children[0];
+            AssetTypeTemplateField stringTemplate = enabledVRDevices.templateField.children[1];
             AssetTypeValueField[] vrDevicesList = new AssetTypeValueField[] { StringField("None", stringTemplate), StringField("OpenVR", stringTemplate) };
             enabledVRDevices.SetChildrenList(vrDevicesList);
 
