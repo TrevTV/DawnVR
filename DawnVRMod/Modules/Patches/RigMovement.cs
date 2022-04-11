@@ -125,8 +125,8 @@ namespace DawnVR.Modules
 						if (i == 5)
 						{
 							__instance.SetFieldValue("m_isStillFadingIdle", false);
-							for (int j = 1; j <= 5; j++)
-								__instance.GetFieldValue<float[]>("m_previousTimes")[j] = 0f;
+							/*for (int j = 1; j <= 5; j++)
+								__instance.GetFieldValue<float[]>("m_previousTimes")[j] = 0f;*/
 						}
 					}
 				}
@@ -245,13 +245,13 @@ namespace DawnVR.Modules
 				__instance.CallMethod("UpdateExtrasTimer", false);
 			}
 			__instance.m_trigger = num;
-			for (int k = 0; k < __instance.GetFieldValue<float[]>("m_previousTimes").Length; k++)
+			/*for (int k = 0; k < __instance.GetFieldValue<float[]>("m_previousTimes").Length; k++)
 			{
 				if (k < __instance.m_animStates.Length && __instance.m_animStates[k] != null)
 					__instance.GetFieldValue<float[]>("m_previousTimes")[k] = __instance.m_animStates[k].time;
 				else
 					__instance.GetFieldValue<float[]>("m_previousTimes")[k] = 0f;
-			}
+			}*/
 			if (__instance.m_updateDebug)
 			{
 				for (int l = 0; l < __instance.m_animStates.Length; l++)
