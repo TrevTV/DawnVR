@@ -48,9 +48,10 @@ namespace DawnVR.Modules.VR
 
             Component.backgroundColor = Color.black;
             overlayEffectMaterial = new Material(Resources.StandardAssetsOverlayShader);
+            overlayEffectMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
             brightnessIntensity = BrightnessSettingsManager.GetBrightness();
 
-#region UI Renderer
+            #region UI Renderer
 
             uiRenderer = transform.Find("UIRenderer").gameObject;
             uiRenderer.transform.localScale = new Vector3(0.25f, 0.15f, 0.15f);
@@ -71,12 +72,10 @@ namespace DawnVR.Modules.VR
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            // todo: fix gamma
-            Graphics.Blit(source, destination);
-            return;
+            // todo: test gamma on mono, does brightnessIntensity need to be modified?
             Vector4 UV_Transform = new Vector4(1, 0, 0, 1);
             overlayEffectMaterial.SetVector("_UV_Transform", UV_Transform);
-            overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity - 1);
+            overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity);
             overlayEffectMaterial.SetTexture("_Overlay", Resources.WhitePixelTexture);
             Graphics.Blit(source, destination, overlayEffectMaterial, 3);
         }
