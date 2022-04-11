@@ -15,6 +15,18 @@ namespace UnityEngine
 #endif
         }
 
+        public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
+        {
+            if (gameObject == null)
+                throw new ArgumentNullException("GetOrAddComponent: gameObject is null!");
+
+            T comp = gameObject.GetComponent<T>();
+            if (comp == null)
+                comp = gameObject.AddComponent<T>();
+
+            return comp;
+        }
+
         // this is techinically a mono fix but it was caused by a il2cpp fix
 #if !REMASTER
         public static MethodInfo GetMethodInfo(this Delegate del)
