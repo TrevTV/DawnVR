@@ -30,7 +30,6 @@ namespace DawnVR
         {
             Preferences.Init();
 
-
 #if REMASTER
             HarmonyInstance.Patch(
                 typeof(UnhollowerBaseLib.LogSupport).GetMethod("Warning", HarmonyLib.AccessTools.all),

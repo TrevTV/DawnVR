@@ -57,14 +57,20 @@ namespace DawnVR.Modules
         {
             Camera lastMainCam = ObfuscationTools.GetPropertyValue<Camera>(null, "m_lastMainCamera", typeof(DawnMainCamera));
             Camera camera = null;
-            try { camera = Camera.main; } catch { }
-            if (camera == null)
+
+            // why does this method cause so many issues
+            try
             {
-                if (lastMainCam != null)
-                    camera = lastMainCam.gameObject.GetComponentInChildren<Camera>(true);
+                try { camera = Camera.main; } catch { }
+                if (camera == null)
+                {
+                    if (lastMainCam != null)
+                        camera = lastMainCam.gameObject.GetComponentInChildren<Camera>(true);
+                }
+                else if (lastMainCam != camera && camera != null)
+                    ObfuscationTools.SetFieldValue(typeof(DawnMainCamera), "m_lastMainCamera", camera);
             }
-            else if (lastMainCam != camera && camera != null)
-                ObfuscationTools.SetFieldValue(typeof(DawnMainCamera), "m_lastMainCamera", camera);
+            catch { }
 
             __result = camera;
             return false;
