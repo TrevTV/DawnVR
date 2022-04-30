@@ -39,7 +39,7 @@ namespace DawnVR.Modules
             {
 				var steamVRAxis = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis;
 				Vector3 axis = new Vector3(steamVRAxis.x, 0f, steamVRAxis.y);
-                float modifier = GameMaster.Instance.m_inputManager.GetAxisAndKeyValue(eGameInput.kJog) == 1 ? sprintModifier : speedModifier;
+                float modifier = GameMaster.Instance.m_inputManager.GetInputState(eGameInput.kJog) == eInputState.kHeld ? sprintModifier : speedModifier;
 				__instance.SetFieldValue("m_previousValidPosition", __instance.m_rotateTrans.position);
 				__instance.SetFieldValue("m_priorDesiredPosition", __instance.transform.position + __instance.GetFieldValue<Quaternion>("m_targetRot") * __0);
 				__instance.m_navAgent.Move(__instance.GetFieldValue<Quaternion>("m_targetRot") * axis * modifier);
