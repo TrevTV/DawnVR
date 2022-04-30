@@ -23,7 +23,8 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 
 ## Configurable Options
 
-### Turning
+### Movement/Turning
+- `MovementThumbstick` allows you to change the dominant hand for movement and UI interactions `(default: Left)`
 - `UseSmoothTurning` allows you to toggle smooth turning `(default: true)`
 - `SmoothTurnSpeed` allows you to change the speed of smooth turning, if enabled `(default: 120)`
 - `UseSnapTurning` allows you to toggle snap turning `(default: false)`

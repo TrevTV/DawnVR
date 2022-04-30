@@ -140,16 +140,16 @@ namespace DawnVR.Modules
                 case eJoystickKey.kNone:
                     break;
                 case eJoystickKey.kLeftStickX:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Left).axis.x;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.x;
                     break;
                 case eJoystickKey.kLeftStickY:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Left).axis.y;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.y;
                     break;
                 case eJoystickKey.kRightStickX:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Right).axis.x;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.x;
                     break;
                 case eJoystickKey.kRightStickY:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Right).axis.y;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.y;
                     break;
                 // are these used here?
                 case eJoystickKey.kR1:
