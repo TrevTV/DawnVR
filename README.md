@@ -62,6 +62,7 @@ By default, Mono doesn't trust any websites, including GitHub. The script is a j
 ## Licensing
 - [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause license. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
 - [AssetsTools.NET](https://github.com/nesrak1/AssetsTools.NET/) (modified AssetWriters line 64 from commit 3537943, included in binary format) licensed under the MIT license. See [LICENSE](https://github.com/nesrak1/AssetsTools.NET/blob/master/LICENSE) for the full license.
+- [UnityCsReference](https://github.com/Unity-Technologies/UnityCsReference/) (only the UnityEngine.Events namespace, in decompiled form) licensed under the Unity Reference-Only License. See [Unity3D.com](https://unity3d.com/legal/licenses/Unity_Reference_Only_License) for the full license.
 
 ## Credits
 - [MrPurple](https://github.com/MrPurple6411) and [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)
