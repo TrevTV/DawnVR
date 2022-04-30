@@ -53,34 +53,33 @@ namespace DawnVR.Modules
             return false;
         }
 
+        public static void DestroyAtomListener(CriAtomListener __instance)
+        {
+            if (__instance.name == "Main Camera")
+                GameObject.Destroy(__instance);
+        }
+
         private static Camera lastCachedCamera;
 
         public static bool GetMainUICamera(ref Camera __result)
         {
             if (lastCachedCamera == null)
             {
-                GameObject root = GameObject.Find("Scene_Root");
-                if (root != null)
+#if REMASTER
+                foreach (Object camObj in UnityEngine.Resources.FindObjectsOfTypeAll(UnhollowerRuntimeLib.Il2CppType.Of<Camera>()))
                 {
-                    foreach (Transform t in root.transform)
-                    {
-                        Camera camera = t.GetComponent<Camera>();
-                        if (camera)
-                            lastCachedCamera = camera;
-                    }
+                    Camera cam = camObj.Cast<Camera>();
+#else
+                foreach (Camera cam in UnityEngine.Resources.FindObjectsOfTypeAll<Camera>())
+                {
+#endif
+                    if (cam != null && cam.name.ToLower().StartsWith("liscamera"))
+                        lastCachedCamera = cam;
                 }
-                else
-                    lastCachedCamera = Camera.main;
             }
 
-             __result = lastCachedCamera;
+            __result = lastCachedCamera ?? Camera.main;
             return false;
-        }
-
-        public static void DestroyAtomListener(CriAtomListener __instance)
-        {
-            if (__instance.name == "Main Camera")
-                GameObject.Destroy(__instance);
         }
 
         public static void OnPPEnable(PostProcessingBehaviour __instance)

@@ -18,6 +18,7 @@ using FreeroamGraphObject = _15C6DD6D9._14FDF87F1.T_BBB6DDD9;
 using FollowCamera = T_884A92DB;
 using Player = _1F28E2E62.T_E579AD8A;
 using CriManaMovieMaterial = T_DD163FE9;
+using DawnMainCamera = T_34182F31;
 #endif
 
 namespace DawnVR.Modules
@@ -274,6 +275,12 @@ namespace DawnVR.Modules
             }
             else
                 return true;
+        }
+
+        public static void OnSetFOV(Camera __instance, float value)
+        {
+            if (__instance == DawnMainCamera.main && VRRig.Instance.CutsceneHandler.IsActive)
+                VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = value;
         }
     }
 }

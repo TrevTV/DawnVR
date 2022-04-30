@@ -46,7 +46,7 @@ namespace DawnVR.Modules.VR
                 {
                     cutsceneCameraTransform.position = DawnMainCamera.main.transform.position;
                     cutsceneCameraTransform.rotation = DawnMainCamera.main.transform.rotation;
-                    cutsceneCamera.fieldOfView = DawnMainCamera.main.fieldOfView;
+                    //cutsceneCamera.fieldOfView = DawnMainCamera.main.fieldOfView;
                 }
                 else
                 {

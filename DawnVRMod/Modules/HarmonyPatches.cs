@@ -122,7 +122,14 @@ namespace DawnVR.Modules
             PatchPre(typeof(Telescope).GetMethod("Update", AccessTools.all), nameof(TelescopeRotate)); // fixes the amulet thing in e4
             PatchPre(typeof(FollowCamera).GetMethod("SetupCameraMatrix".ToMethodName(), AccessTools.all), nameof(SetupFollowCameraMatrix)); // fixes a null ref
             PatchPost(typeof(Player).GetMethod("OnWillRenderObject"), nameof(OnMovieWillRenderObject)); // displays pre-rendered videos in the cutscene box
+
+            // todo: test if this is needed
+#if REMASTER
+            // todo: i really shouldn't be doing this but it always reverts to 100
+            PatchPre(typeof(UnityEngine.Camera).GetProperty("fieldOfView").GetSetMethod(), nameof(OnSetFOV)); // fixes weird fov stuff
+#else
             PatchPre(typeof(CameraUtils).GetMethod("SetMainCameraFOV".ToMethodName()), nameof(SetMainCamFOV)); // fixes weird fov stuff
+#endif
 
             // Misc Fixes
             PatchPre(typeof(MirrorReflection).GetMethod("Awake", AccessTools.all), nameof(MirrorReflectionAwake)); // overrides the mirror component with a modified one made for vr
