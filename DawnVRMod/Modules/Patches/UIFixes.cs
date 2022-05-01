@@ -62,5 +62,11 @@ namespace DawnVR.Modules
             }
             return true;
         }
+
+        public static void ToggleUIParentToHolder()
+            => VR.VRRig.Instance.Camera.ToggleUIRendererParent(true);
+
+        public static void ToggleUIParentToCamera()
+            => VR.VRRig.Instance.Camera.ToggleUIRendererParent(false);
     }
 }

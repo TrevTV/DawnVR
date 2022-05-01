@@ -12,21 +12,6 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        // used for unlocking UIRenderer from the headset
-        private const float delayBetweenPresses = 0.1f;
-        private static bool pressedFirstTime = false;
-        private static float lastPressedTime;
-        private static eInputState currentState;
-
-        public static void UpdateJournalInput()
-        {
-            if (pressedFirstTime && Time.time - lastPressedTime > delayBetweenPresses)
-            {
-                currentState = eInputState.kDown;
-                pressedFirstTime = false;
-            }
-        }
-
         public static void ManagerInit(InputManager __instance) => __instance.SetFieldValue("m_overrideType", eControlType.kXboxOne);
 
         public static bool GetInputState_Enum(InputManager __instance, ref eInputState __result, eGameInput __0)
@@ -77,29 +62,7 @@ namespace DawnVR.Modules
                 case eJoystickKey.kStart:
                     return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                 case eJoystickKey.kSelect:
-                    var inputState = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
-                    if (inputState == eInputState.kDown)
-                    {
-                        currentState = eInputState.kNone;
-                        if (pressedFirstTime)
-                        {
-                            bool isDoublePress = Time.time - lastPressedTime <= delayBetweenPresses;
-                            if (isDoublePress)
-                            {
-                                VRRig.Instance.Camera.ToggleUIRendererParent();
-                                pressedFirstTime = false;
-                            }
-                        }
-                        else
-                            pressedFirstTime = true;
-
-                        lastPressedTime = Time.time;
-                    }
-
-                    eInputState tempState = currentState;
-                    if (currentState == eInputState.kDown)
-                        currentState = eInputState.kNone;
-                    return tempState;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                 case eJoystickKey.kR1:
                     return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
                 case eJoystickKey.kR2:

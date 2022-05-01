@@ -114,10 +114,10 @@ namespace DawnVR.Modules.VR
             }
         }
 
-        public void ToggleUIRendererParent()
+        public void ToggleUIRendererParent(bool parentToHolder)
         {
             Transform uiRendTrans = uiRenderer.transform;
-            if (uiRendTrans.parent == transform)
+            if (parentToHolder)
             {
                 uiRendTrans.parent = VRRig.Instance.Camera.Holder;
                 uiRendTrans.localPosition = new Vector3(0f, 1.5f, 1.5f);

@@ -163,12 +163,6 @@ namespace DawnVR
 #endif
         }
 
-        public override void OnUpdate()
-        {
-            // handles double-press stuff
-            HarmonyPatches.UpdateJournalInput();
-        }
-
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {
             if (!vrEnabled) return;

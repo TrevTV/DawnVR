@@ -47,6 +47,7 @@ using ST_ParallelHighlight = T_FD3AF1C2;
 using BrightnessUI = T_32770A6A;
 using MainMenuUI = T_96E81635;
 using GraphManager = T_BF5A5EEC;
+using JournalWindow = T_7F8868E;
 #endif
 
 namespace DawnVR.Modules
@@ -109,6 +110,11 @@ namespace DawnVR.Modules
             PatchPre(typeof(TutorialWindow).GetMethod("SetTutorial"), nameof(SetTutorialInfo)); // fixes the issue after disabling the objective reminder button
             PatchPost(typeof(UIDrawCall).GetMethod("CreateMaterial".ToMethodName(), AccessTools.all), nameof(CreateDrawCallMat)); // overrides the interaction ui's shader to force it to always stay over everything
             PatchPost(typeof(IMScene).GetMethod("Start", AccessTools.all), nameof(FixFakeFogQueue)); // hooks scene root's start, there is probably a better way i dont know of
+            if (Preferences.DetachUIOnJournalOpen.Value)
+            {
+                PatchPre(typeof(JournalWindow).GetMethod("OnOpen"), nameof(ToggleUIParentToHolder)); // makes the journal easier to read by unhooking it from the camera
+                PatchPost(typeof(JournalWindow).GetMethod("_Close"), nameof(ToggleUIParentToCamera)); // opposite of the patch above
+            }
 
             // InteractionFixes
             PatchPre(typeof(Boundary).GetMethod("Start", AccessTools.all), nameof(BoundaryStart)); // prevents a bug with the boundaries

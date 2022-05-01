@@ -6,6 +6,7 @@ namespace DawnVR.Modules
     {
         public static MelonPreferences_Entry<bool> CheckForUpdatesOnStart { get; private set; }
         public static MelonPreferences_Entry<bool> Use2DCutsceneViewer { get; private set; }
+        public static MelonPreferences_Entry<bool> DetachUIOnJournalOpen { get; private set; }
         public static MelonPreferences_Entry<VR.VRInput.Hand> MovementThumbstick { get; private set; }
         public static MelonPreferences_Entry<bool> UseSmoothTurning { get; private set; }
         public static MelonPreferences_Entry<int> SmoothTurnSpeed { get; private set; }
@@ -23,6 +24,7 @@ namespace DawnVR.Modules
             MelonPreferences_Category category = MelonPreferences.CreateCategory(baseCategoryName);
             CheckForUpdatesOnStart = category.CreateEntry(nameof(CheckForUpdatesOnStart), true);
             Use2DCutsceneViewer = category.CreateEntry(nameof(Use2DCutsceneViewer), true);
+            DetachUIOnJournalOpen = category.CreateEntry(nameof(DetachUIOnJournalOpen), true);
             MovementThumbstick = category.CreateEntry(nameof(MovementThumbstick), VR.VRInput.Hand.Left);
             UseSmoothTurning = category.CreateEntry(nameof(UseSmoothTurning), true);
             SmoothTurnSpeed = category.CreateEntry(nameof(SmoothTurnSpeed), 120);
