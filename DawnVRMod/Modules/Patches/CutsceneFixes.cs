@@ -193,12 +193,12 @@ namespace DawnVR.Modules
                     __instance.SetFieldValue("m_lockedAimAngleOffset", 0f);
                 }
                 __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset"), 89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset")));
-                if (__instance.GetFieldValue<bool>("m_isRotationLimiteds"))
+                if (__instance.GetFieldValue<bool>("m_isRotationLimited"))
                 {
                     Vector4 rpl = __instance.GetFieldValue<Vector4>("m_rotationPivotLimit");
                     if (rpl.x >= 0f && rpl.y >= 0f)
                     {
-                        __instance.SetFieldValue("m_currentLockedHorizontal", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedHorizontals"), -rpl.x, rpl.y));
+                        __instance.SetFieldValue("m_currentLockedHorizontal", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedHorizontal"), -rpl.x, rpl.y));
                     }
                     if (rpl.z >= 0f && rpl.w >= 0f)
                     {
@@ -207,7 +207,7 @@ namespace DawnVR.Modules
                 }
                 if (__instance.GetFieldValue<bool>("m_isPCInput"))
                 {
-                    __instance.SetFieldValue("m_sAltitudeAngle", __instance.GetFieldValue<float>("m_currentLockedVerticals"));
+                    __instance.SetFieldValue("m_sAltitudeAngle", __instance.GetFieldValue<float>("m_currentLockedVertical"));
                     __instance.SetFieldValue("m_sOrientAngle", __instance.GetFieldValue<float>("m_currentLockedHorizontal"));
                     transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_currentLockedHorizontal"), Vector3.up) * transform.forward;
                     Vector3 axis = Vector3.Cross(Vector3.up, transform.forward);
