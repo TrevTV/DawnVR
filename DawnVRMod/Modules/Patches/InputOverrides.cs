@@ -13,9 +13,19 @@ namespace DawnVR.Modules
     internal static partial class HarmonyPatches
     {
         // used for unlocking UIRenderer from the headset
-        private const float delayBetweenPresses = 0.2f;
+        private const float delayBetweenPresses = 0.1f;
         private static bool pressedFirstTime = false;
         private static float lastPressedTime;
+        private static eInputState currentState;
+
+        public static void UpdateJournalInput()
+        {
+            if (pressedFirstTime && Time.time - lastPressedTime > delayBetweenPresses)
+            {
+                currentState = eInputState.kDown;
+                pressedFirstTime = false;
+            }
+        }
 
         public static void ManagerInit(InputManager __instance) => __instance.SetFieldValue("m_overrideType", eControlType.kXboxOne);
 
@@ -70,6 +80,7 @@ namespace DawnVR.Modules
                     var inputState = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                     if (inputState == eInputState.kDown)
                     {
+                        currentState = eInputState.kNone;
                         if (pressedFirstTime)
                         {
                             bool isDoublePress = Time.time - lastPressedTime <= delayBetweenPresses;
@@ -81,12 +92,14 @@ namespace DawnVR.Modules
                         }
                         else
                             pressedFirstTime = true;
+
                         lastPressedTime = Time.time;
                     }
 
-                    if (pressedFirstTime && Time.time - lastPressedTime > delayBetweenPresses)
-                        return inputState;
-                    break;
+                    eInputState tempState = currentState;
+                    if (currentState == eInputState.kDown)
+                        currentState = eInputState.kNone;
+                    return tempState;
                 case eJoystickKey.kR1:
                     return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
                 case eJoystickKey.kR2:
