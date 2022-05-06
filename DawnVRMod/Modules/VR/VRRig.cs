@@ -200,11 +200,17 @@ namespace DawnVR.Modules.VR
 					SetParent(ChloeComponent.transform);
 
 					// not that pretty but i don't care
-					Transform rachelBracelet = CharController.s_mainCharacterMesh?.transform?.parent?.Find("CH_M_Rachel_Bracelet_Mesh");
-					if (rachelBracelet != null && rachelBracelet.gameObject.activeInHierarchy)
-						chloeHandRenderers[1].gameObject.SetActive(true);
-					else
-						chloeHandRenderers[1].gameObject.SetActive(false);
+					Transform possiblyMeshParent = CharController.s_mainCharacterMesh?.transform?.parent;
+					if (possiblyMeshParent != null)
+                    {
+						foreach (Transform child in possiblyMeshParent)
+                        {
+							if (child.name.Contains("Bracelet") && child.gameObject.activeInHierarchy)
+								chloeHandRenderers[1].gameObject.SetActive(true);
+							else
+								chloeHandRenderers[1].gameObject.SetActive(false);
+						}
+					}
 
 					Camera.ResetHolderPosition();
 					SetMeshActive(false);
