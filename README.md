@@ -37,6 +37,7 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 ### Misc
 - `CheckForUpdatesOnStart` checks for any mod updates every time the game boots `(default: true)`
 - `Use2DCutsceneViewer` puts you in a bordered box for cutscenes, disabling this renders cutscenes in VR and allowing you to move your head around `(default: true)`
+- `AllowSkippingAnyCutscene` allows you to skip any cutscene regardless of you being in collector mode `(default: false)`
 - `DetachUIOnJournalOpen` disconnects the UI from the camera whenever the journal is opened, making it easier to read `(default: true)`
 
 ### Debugging

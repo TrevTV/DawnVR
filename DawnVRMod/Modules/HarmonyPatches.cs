@@ -63,8 +63,9 @@ namespace DawnVR.Modules
         {
             HarmonyInstance = hInstance;
             // Debug
-            PatchPost(typeof(SplashScreenWindow).GetMethod("StartSplash"), nameof(DisableSplashScreen)); // skips most of the splash screens
-            PatchPre(typeof(GraphManager).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
+            //PatchPost(typeof(SplashScreenWindow).GetMethod("StartSplash"), nameof(DisableSplashScreen)); // skips most of the splash screens
+            if (Preferences.AllowSkippingAnyCutscene.Value)
+                PatchPre(typeof(GraphManager).GetMethod("SkipPressed"), nameof(CutsceneSkipPressed)); // allows skipping any cutscene
 
             // InputOverrides
 #if REMASTER
