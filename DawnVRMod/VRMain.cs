@@ -50,7 +50,8 @@ namespace DawnVR
                 MelonLogger.Msg("Launch parameter \"-vrmode\" not set to OpenVR, not loading VR patches!");
                 if (Preferences.EnableInternalLogging.Value)
                     OutputRedirect.Init(HarmonyInstance);
-                //HarmonyPatches.InitNoVR(HarmonyInstance);
+                if (Preferences.RunNoVRHarmonyPatchesWhenDisabled.Value)
+                    HarmonyPatches.InitNoVR(HarmonyInstance);
                 vrEnabled = false;
                 return;
             }
