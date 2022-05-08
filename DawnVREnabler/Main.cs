@@ -18,7 +18,16 @@ namespace DawnVREnabler
 
     public class VREnabler : MelonPlugin
     {
-		internal string PluginsPath => Path.Combine(Path.Combine(MelonUtils.GetGameDataDirectory(), "Plugins"), "x86_64");
+        internal string PluginsPath
+        {
+            get
+            {
+                string path = Path.Combine(MelonUtils.GetGameDataDirectory(), "Plugins");
+                if (MelonUtils.IsGameIl2Cpp())
+                    path = Path.Combine(path, "x86_64");
+                return path;
+            }
+        }
 
         internal string[] VRAsms = new string[]
             {
