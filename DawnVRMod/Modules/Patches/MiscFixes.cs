@@ -59,6 +59,15 @@ namespace DawnVR.Modules
                 GameObject.Destroy(__instance);
         }
 
+        public static bool InteractToLeaveUpdate(InteractToLeaveUI __instance)
+        {
+            var inputMan = GameMaster.Instance.m_inputManager;
+            if (!inputMan.m_inputBlocked && inputMan.GetInputState(eGameInput.kInteractToLeave, true, true, true) == eInputState.kDown)
+                __instance.Leave();
+
+            return false;
+        }
+
         private static Camera lastCachedCamera;
 
         public static bool GetMainUICamera(ref Camera __result)

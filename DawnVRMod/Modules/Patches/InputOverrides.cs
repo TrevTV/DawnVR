@@ -15,7 +15,7 @@ namespace DawnVR.Modules
         public static void ManagerInit(InputManager __instance) => __instance.SetFieldValue("m_overrideType", eControlType.kXboxOne);
 
         public static bool GetInputState_Enum(InputManager __instance, ref eInputState __result, eGameInput __0)
-        {  
+        {
             if (__instance.InputBlocked)
             {
                 __result = eInputState.kNone;

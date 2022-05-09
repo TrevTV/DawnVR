@@ -48,6 +48,7 @@ using BrightnessUI = T_32770A6A;
 using MainMenuUI = T_96E81635;
 using GraphManager = T_BF5A5EEC;
 using JournalWindow = T_7F8868E;
+using InteractToLeaveUI = T_C68D7AA3;
 #endif
 
 namespace DawnVR.Modules
@@ -151,6 +152,9 @@ namespace DawnVR.Modules
             PatchPost(typeof(BrightnessUI).GetMethod("OnSliderChange"), nameof(OnChangeBrightnessSetting)); // allows gamma adjustments in-headset
             PatchPost(typeof(BrightnessUI).GetMethod("Update", AccessTools.all), nameof(OnBrightnessUIUpdate)); // fix gamma slider
             PatchPre(typeof(MainMenuUI).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
+#if REMASTER
+            PatchPre(typeof(InteractToLeaveUI).GetMethod("Update"), nameof(InteractToLeaveUpdate)); // fixes this method using a recreation of InputManager::GetInputState(eGameInput) for whatever reason
+#endif
 
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
