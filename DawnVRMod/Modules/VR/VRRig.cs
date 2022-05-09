@@ -174,6 +174,8 @@ namespace DawnVR.Modules.VR
 			}
 			// disable unused camera, improves performance
 			DawnMainCamera.main.enabled = false;
+			// backup if setting enabled fails for some reason
+			DawnMainCamera.main.depth = -100;
 
 			int currentEpisode = GameMaster.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
 			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
