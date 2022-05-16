@@ -52,7 +52,7 @@ namespace DawnVR.Modules
 
         public static bool FreeroamWindowUpdate(FreeRoamWindow __instance)
         {
-            bool isBinoc = CurrentCookie == OverlayCookie.eCookieChoices.kBinoculars|| CurrentCookie == OverlayCookie.eCookieChoices.kE3Binoculars;
+            bool isBinoc = CurrentCookie == OverlayCookie.eCookieChoices.kBinoculars || CurrentCookie == OverlayCookie.eCookieChoices.kE3Binoculars;
             return isBinoc ? FlatUpdate(__instance) : VRUpdate();
 
             bool VRUpdate()
@@ -185,13 +185,13 @@ namespace DawnVR.Modules
                 }
                 if (instance.GetFieldValue<bool>("m_acceptingInput"))
                 {
-                    if (CutsceneCamera.fieldOfView != DawnMainCamera.main.fieldOfView)
-                    {
-                        CutsceneCamera.fieldOfView = DawnMainCamera.main.fieldOfView;
-                    }
                     if (FreeRoamWindow.s_isFreeLook && GameMaster.Instance.m_inputManager.GetInputState(eGameInput.kActionRight, true, true, true) == eInputState.kDown)
                     {
+#if REMASTER
+                        FreeroamGraphObject freeroamGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode.Cast<FreeroamGraphObject>();
+#else
                         FreeroamGraphObject freeroamGraphObj = (FreeroamGraphObject)GameMaster.Instance.m_graphManager.CurrentGraphNode;
+#endif
                         if (freeroamGraphObj != null)
                         {
                             if (freeroamGraphObj.freeroamObject.canExitWithKey && freeroamGraphObj.freeroamObject.defaultExitTarget != null)
@@ -206,7 +206,7 @@ namespace DawnVR.Modules
                         float num = 180f;
                         if (FreeRoamWindow.s_isFreeLook)
                         {
-                            num = DawnMainCamera.main.fieldOfView / 3f;
+                            num = VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView / 3f;
                         }
                         int num2 = -1;
                         float num3 = 1f;
@@ -219,7 +219,7 @@ namespace DawnVR.Modules
                                 if (FreeRoamWindow.s_isFreeLook)
                                 {
                                     num4 = 1f;
-                                    num3 = (Mathf.Max(0f, num5 - 2f) + 1f) * instance.m_distanceScaleFactor * (DawnMainCamera.main.fieldOfView / 30f);
+                                    num3 = (Mathf.Max(0f, num5 - 2f) + 1f) * instance.m_distanceScaleFactor * (VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView / 30f);
                                     FreeRoamWindow.s_currentTriggers[i].m_nameUI.transform.localScale = new Vector3(num3, num3, 1f);
                                 }
                                 else
