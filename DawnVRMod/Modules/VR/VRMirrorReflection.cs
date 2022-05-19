@@ -227,6 +227,7 @@ namespace DawnVR.Modules.VR
             reflectionCamera = go.AddComponent<Camera>();
             reflectionCamera.enabled = false;
             reflectionCamera.cullingMask = (-17 & m_ReflectLayers.value & ~(1 << LayerMask.NameToLayer("EditorGizmo")) & ~(1 << LayerMask.NameToLayer("UI3D")) & ~(1 << LayerMask.NameToLayer("ObjectiveUI")));
+            reflectionCamera.stereoTargetEye = StereoTargetEyeMask.None;
             CopyCameraProperties(camera, reflectionCamera);
 
             void CopyCameraProperties(Camera src, Camera dest)

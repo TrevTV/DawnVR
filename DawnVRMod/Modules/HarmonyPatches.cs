@@ -146,15 +146,17 @@ namespace DawnVR.Modules
             PatchPre(typeof(CriAtomListener).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
             PatchPre(typeof(CharController).GetMethod("SetAttachObjActive".ToMethodName(), AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
             PatchPre(typeof(ST_ParallelHighlight).GetMethod("Trigger"), nameof(ParallelHighlightTrigger)); // fixes a random null ref
+#if REMASTER
+            PatchPre(typeof(InteractToLeaveUI).GetMethod("Update"), nameof(InteractToLeaveUpdate)); // fixes this method using a recreation of InputManager::GetInputState(eGameInput) for whatever reason
+            PatchPre(typeof(IdolFLaresManager).GetMethod("OnPostRender"), nameof(DontRunMe)); // shuts up some errors
+            PatchPre(typeof(RealisticEyeMovements.LookTargetController).GetMethod("StartLookatPoint"), nameof(DontRunMe)); // shuts up another error
+#endif
 
             // Misc
             PatchPost(typeof(CharController).GetMethod("Start"), nameof(PostCharControllerStart)); // updates the current VRRig::ChloeComponent
             PatchPost(typeof(BrightnessUI).GetMethod("OnSliderChange"), nameof(OnChangeBrightnessSetting)); // allows gamma adjustments in-headset
             PatchPost(typeof(BrightnessUI).GetMethod("Update", AccessTools.all), nameof(OnBrightnessUIUpdate)); // fix gamma slider
             PatchPre(typeof(MainMenuUI).GetProperty("ScrollingText").GetGetMethod(), nameof(ReplaceScrollingText)); // adds a personal touch lol
-#if REMASTER
-            PatchPre(typeof(InteractToLeaveUI).GetMethod("Update"), nameof(InteractToLeaveUpdate)); // fixes this method using a recreation of InputManager::GetInputState(eGameInput) for whatever reason
-#endif
 
             // post processing doesnt seem to render correctly in vr, so this is gonna stay disabled
             //PatchPre(typeof(T_190FC323).GetMethod("OnEnable", AccessTools.all), nameof(OnPPEnable));
