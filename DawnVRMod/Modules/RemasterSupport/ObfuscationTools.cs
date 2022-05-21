@@ -126,19 +126,19 @@ namespace DawnVR
         public static void CallMethod(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
-            mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
+            mb.GetType().GetMethod(methodName, AccessTools.all).Invoke(mb, parameters);
         }
 
         public static void CallMethod(this MonoBehaviour mb, string unobfuscatedMethodName, Type[] methodParams, params object[] parameters)
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
-            mb.GetType().GetMethod(methodName, methodParams).Invoke(mb, parameters);
+            mb.GetType().GetMethod(methodName, AccessTools.all, null, methodParams, null).Invoke(mb, parameters);
         }
 
         public static T CallMethod<T>(this MonoBehaviour mb, string unobfuscatedMethodName, params object[] parameters)
         {
             string methodName = unobfuscatedMethodName.ToMethodName();
-            return (T)mb.GetType().GetMethod(methodName).Invoke(mb, parameters);
+            return (T)mb.GetType().GetMethod(methodName, AccessTools.all).Invoke(mb, parameters);
         }
 
         #endregion
