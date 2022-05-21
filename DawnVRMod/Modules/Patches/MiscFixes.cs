@@ -68,6 +68,12 @@ namespace DawnVR.Modules
             return false;
         }
 
+        public static bool ForceReturnControllerScheme(ref UICamera.ControlScheme __result)
+        {
+            __result = UICamera.ControlScheme.Controller;
+            return false;
+        }
+
         private static Camera lastCachedCamera;
 
         public static bool GetMainUICamera(ref Camera __result)

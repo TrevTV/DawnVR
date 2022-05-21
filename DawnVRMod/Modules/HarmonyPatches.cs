@@ -148,6 +148,8 @@ namespace DawnVR.Modules
             PatchPre(typeof(ST_ParallelHighlight).GetMethod("Trigger"), nameof(ParallelHighlightTrigger)); // fixes a random null ref
 #if REMASTER
             PatchPre(typeof(InteractToLeaveUI).GetMethod("Update"), nameof(InteractToLeaveUpdate)); // fixes this method using a recreation of InputManager::GetInputState(eGameInput) for whatever reason
+            PatchPre(typeof(UICamera).GetProperty("currentScheme").GetGetMethod(), nameof(ForceReturnControllerScheme)); // i don't know if this is needed but i do it anyway
+            PatchPre(typeof(UICamera).GetProperty("currentScheme").GetSetMethod(), nameof(DontRunMe)); // prevents it from being changed
             PatchPre(typeof(IdolFLaresManager).GetMethod("OnPostRender"), nameof(DontRunMe)); // shuts up some errors
             PatchPre(typeof(RealisticEyeMovements.LookTargetController).GetMethod("StartLookatPoint"), nameof(DontRunMe)); // shuts up another error
 #endif
