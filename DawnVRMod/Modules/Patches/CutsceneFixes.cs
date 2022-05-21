@@ -262,7 +262,7 @@ namespace DawnVR.Modules
 
         public static void OnMovieWillRenderObject(Player __instance, CriManaMovieMaterial __0)
         {
-            var status = __instance.GetFieldValue<Player.Status>("status");
+            var status = __instance.status;
             if (status == Player.Status.Ready || status == Player.Status.Playing)
             {
                 if (!hasDisabledMovieWindow)
