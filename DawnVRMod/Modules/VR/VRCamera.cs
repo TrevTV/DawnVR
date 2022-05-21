@@ -72,7 +72,6 @@ namespace DawnVR.Modules.VR
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            // todo: test gamma on mono, does brightnessIntensity need to be modified?
             Vector4 UV_Transform = new Vector4(1, 0, 0, 1);
             overlayEffectMaterial.SetVector("_UV_Transform", UV_Transform);
             overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity);
