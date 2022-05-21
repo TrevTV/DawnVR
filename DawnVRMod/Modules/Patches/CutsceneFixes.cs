@@ -275,17 +275,6 @@ namespace DawnVR.Modules
             }
         }
 
-        public static bool SetMainCamFOV(float __0)
-        {
-            if (VRRig.Instance.CutsceneHandler.IsActive)
-            {
-                VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = __0;
-                return false;
-            }
-            else
-                return true;
-        }
-
         public static bool OnSetFOV(Camera __instance, float value)
         {
             if (__instance == DawnMainCamera.main)
