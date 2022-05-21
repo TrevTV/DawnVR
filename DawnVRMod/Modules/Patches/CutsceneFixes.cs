@@ -281,11 +281,11 @@ namespace DawnVR.Modules
         {
             if (__instance == DawnMainCamera.main)
             {
-                if (VRRig.Instance.CutsceneHandler.IsActive)
+                if (VRRig.Instance?.CutsceneHandler?.IsActive ?? false)
                     VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = value;
             }
 
-            if (__instance == VRRig.Instance.CutsceneHandler.CurrentCamera)
+            if (__instance == VRRig.Instance?.CutsceneHandler?.CurrentCamera)
                 return true;
 
             return false;
