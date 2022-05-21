@@ -59,6 +59,7 @@ namespace DawnVR.Modules
                 GameObject.Destroy(__instance);
         }
 
+#if REMASTER
         public static bool InteractToLeaveUpdate(InteractToLeaveUI __instance)
         {
             var inputMan = GameMaster.Instance.m_inputManager;
@@ -73,6 +74,7 @@ namespace DawnVR.Modules
             __result = UICamera.ControlScheme.Controller;
             return false;
         }
+#endif
 
         private static Camera lastCachedCamera;
 
