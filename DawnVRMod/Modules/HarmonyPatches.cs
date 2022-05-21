@@ -72,7 +72,7 @@ namespace DawnVR.Modules
 #if REMASTER
             PatchPre(typeof(InputManager).GetMethod("RestoreDefaults"), nameof(ManagerInit)); // makes the game think we're using an xbox controller
 #else
-            PatchPre(typeof(InputManager).GetMethod("Init".ToMethodName()), nameof(ManagerInit)); // makes the game think we're using an xbox controller
+            PatchPre(typeof(InputManager).GetMethod("Init".ToMethodName(), AccessTools.all), nameof(ManagerInit)); // makes the game think we're using an xbox controller
 #endif
             PatchPre(typeof(InputManager).GetMethod("GetInputState",
                 new Type[] { typeof(eGameInput), typeof(bool), typeof(bool), typeof(bool) }), nameof(GetInputState_Enum)); // redirect input to vr controllers
