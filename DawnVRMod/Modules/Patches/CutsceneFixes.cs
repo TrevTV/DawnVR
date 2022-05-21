@@ -64,9 +64,10 @@ namespace DawnVR.Modules
 
         public static bool TelescopePuzzleUpdate(TelescopePuzzle __instance)
         {
-            if (ObfuscationTools.GetFieldValue<bool>(__instance, "initialized"))
+            if (__instance.GetFieldValue<bool>("initialized"))
             {
-                if (ObfuscationTools.GetFieldValue<GameObject>(__instance, "m_Scope").activeInHierarchy)
+                __instance.SetFieldValue("m_Scope", VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject);
+                if (__instance.GetFieldValue<GameObject>("m_Scope").activeInHierarchy)
                 {
                     Vector3 localEulerAngles = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.localEulerAngles;
                     float num = __instance.m_targetZRotation + __instance.m_errorRange + 1f;
@@ -84,7 +85,7 @@ namespace DawnVR.Modules
                     {
                         Transform camTrans = VRRig.Instance.CutsceneHandler.CurrentCamera.transform;
                         Ray ray = new Ray(camTrans.position, camTrans.forward);
-                        ObfuscationTools.SetFieldValue(__instance, "ray", ray);
+                        __instance.SetFieldValue("ray", ray);
                         RaycastHit[] array = Physics.RaycastAll(ray, __instance.m_maxRaycastDistance);
                         bool flag = false;
                         for (int i = 0; i < array.Length; i++)
@@ -97,11 +98,11 @@ namespace DawnVR.Modules
                         }
                         if (!flag)
                         {
-                            ObfuscationTools.SetFieldValue(__instance, "m_timeHovering", 0f);
+                            __instance.SetFieldValue("m_timeHovering", 0f);
                             return false;
                         }
-                        ObfuscationTools.SetFieldValue(__instance, "m_timeHovering", ObfuscationTools.GetFieldValue<float>(__instance, "m_timeHovering") + Time.deltaTime);
-                        if (ObfuscationTools.GetFieldValue<float>(__instance, "m_timeHovering") >= __instance.m_hoverTime)
+                        __instance.SetFieldValue("m_timeHovering", __instance.GetFieldValue<float>("m_timeHovering") + Time.deltaTime);
+                        if (__instance.GetFieldValue<float>("m_timeHovering") >= __instance.m_hoverTime)
                         {
                             var outputConnections = GameMaster.Instance.m_graphManager.CurrentGraphNode.outputConnections;
                             if (outputConnections != null && outputConnections.Count != 0)
@@ -109,7 +110,11 @@ namespace DawnVR.Modules
                                 SequenceGraphObject t_F45060BF = null;
                                 for (int j = 0; j < outputConnections.Count; j++)
                                 {
+#if REMASTER
+                                    SequenceGraphObject t_F45060BF2 = outputConnections[j].to.Cast<SequenceGraphObject>();
+#else
                                     SequenceGraphObject t_F45060BF2 = outputConnections[j].to as SequenceGraphObject;
+#endif
                                     if (t_F45060BF2 != null)
                                     {
                                         string text = (t_F45060BF2.sequence == null) ? string.Empty : t_F45060BF2.sequence.nodeName;
@@ -127,7 +132,11 @@ namespace DawnVR.Modules
                                 if (t_F45060BF == null)
                                     return false;
 
+#if REMASTER
+                                FreeroamGraphObject frGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode.Cast<FreeroamGraphObject>();
+#else
                                 FreeroamGraphObject frGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode as FreeroamGraphObject;
+#endif
                                 if (frGraphObj != null)
                                 {
                                     frGraphObj.m_exitGraphObject = t_F45060BF;
@@ -140,7 +149,7 @@ namespace DawnVR.Modules
             }
             else
                 //__instance._1B350D183();
-                typeof(TelescopePuzzle).GetMethod(ObfuscationTools.GetRealMethodName("Init")).Invoke(__instance, null);
+                typeof(TelescopePuzzle).GetMethod("Init".ToMethodName()).Invoke(__instance, null);
 
             return false;
         }
