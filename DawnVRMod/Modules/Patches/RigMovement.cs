@@ -16,8 +16,8 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        private const float speedModifier = 0.05f;
-        private const float sprintModifier = 0.08f;
+        private const float WALK_SPEED_MULT = 4f;
+        private const float SPRINT_SPEED_MULT = 2.5f;
 
         public static bool CharControllerMove(CharController __instance, Vector3 __0, bool __1)
         {
@@ -36,16 +36,21 @@ namespace DawnVR.Modules
 			__instance.SetFieldValue("m_prevPos", vector);
 
             if (__instance.m_moveDirection != Vector3.zero)
-            {
-				var steamVRAxis = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis;
-				Vector3 axis = new Vector3(steamVRAxis.x, 0f, steamVRAxis.y);
-                float modifier = GameMaster.Instance.m_inputManager.GetInputState(eGameInput.kJog) == eInputState.kHeld ? sprintModifier : speedModifier;
+            {     
 				__instance.SetFieldValue("m_previousValidPosition", __instance.m_rotateTrans.position);
 				__instance.SetFieldValue("m_priorDesiredPosition", __instance.transform.position + __instance.GetFieldValue<Quaternion>("m_targetRot") * __0);
-				__instance.m_navAgent.Move(__instance.GetFieldValue<Quaternion>("m_targetRot") * axis * modifier);
+				__instance.m_navAgent.Move(CalculateMovement(__instance.GetFieldValue<Quaternion>("m_targetRot")));
             }
             return false;
         }
+
+		private static Vector3 CalculateMovement(Quaternion targetRot)
+        {
+			var steamVRAxis = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis;
+			Vector3 axis = new Vector3(steamVRAxis.x, 0f, steamVRAxis.y);
+			float modifier = GameMaster.Instance.m_inputManager.GetInputState(eGameInput.kJog) == eInputState.kHeld ? SPRINT_SPEED_MULT : WALK_SPEED_MULT;
+			return targetRot * axis * (modifier * Time.deltaTime);
+		}
 
 		public static bool CharControllerRotate(CharController __instance)
         {
