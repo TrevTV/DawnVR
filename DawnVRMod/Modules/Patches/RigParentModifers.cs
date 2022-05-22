@@ -29,6 +29,7 @@ namespace DawnVR.Modules
                 {
                     Vector3 pos = VRRig.Instance.ChloeComponent.transform.Find("Reference/Hips").position;
                     pos.y = -0.3f;
+                    pos.y += VRRig.Instance.Calibrator.HeightOffset;
                     VRRig.Instance.transform.position = pos;
                 }
             }

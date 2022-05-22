@@ -13,6 +13,8 @@ namespace DawnVR.Modules.VR
 		public VRCalibration(System.IntPtr ptr) : base(ptr) { }
 #endif
 
+		public float HeightOffset { get; private set; }
+
 		private GameObject uiRoot;
 		private GameObject irlHeightObj;
 		private GameObject calibrateObj;
@@ -56,7 +58,8 @@ namespace DawnVR.Modules.VR
                 case CalibrationStep.Calibrate:
 					if (SteamVR_Input.actionsBoolean.Any((a) => a != SteamVR_Actions.default_HeadsetOnHead && a.stateDown))
                     {
-						VRRig.Instance.SetHeightOffset(standingHeight - VRRig.Instance.Camera.transform.localPosition.y);
+						HeightOffset = standingHeight - VRRig.Instance.Camera.transform.localPosition.y;
+						VRRig.Instance.SetHeightOffset(HeightOffset);
 						CWindowManager.Singleton.OpenWindow("MainMenuWindow");
 						ResetUI();
 					}

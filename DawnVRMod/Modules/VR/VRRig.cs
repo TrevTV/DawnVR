@@ -27,7 +27,6 @@ namespace DawnVR.Modules.VR
 
 		private Renderer[] chloeHandRenderers;
 		private Renderer[] maxHandRenderers;
-		private float heightOffset;
 		private Vector3 lastPos;
 
 		private GameObject chloeReference;
@@ -251,7 +250,7 @@ namespace DawnVR.Modules.VR
                 if (newLocalPosition.HasValue)
                     transform.localPosition = newLocalPosition.Value;
                 else
-                    transform.localPosition = new Vector3(0f, heightOffset, 0f);
+                    transform.localPosition = new Vector3(0f, Calibrator.HeightOffset, 0f);
 
 				transform.eulerAngles = Vector3.zero;
             }
@@ -259,9 +258,8 @@ namespace DawnVR.Modules.VR
 
 		public void SetHeightOffset(float offset)
         {
-			heightOffset = offset;
 			Vector3 position = transform.position;
-			position.y += heightOffset;
+			position.y += offset;
 			transform.position = position;
 		}
 
