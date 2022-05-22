@@ -80,7 +80,7 @@ namespace DawnVR.Modules
 
         public static bool GetMainUICamera(ref Camera __result)
         {
-            if (lastCachedCamera == null)
+            if (lastCachedCamera == null || !lastCachedCamera.transform.parent.gameObject.activeSelf)
             {
 #if REMASTER
                 foreach (Object camObj in UnityEngine.Resources.FindObjectsOfTypeAll(UnhollowerRuntimeLib.Il2CppType.Of<Camera>()))
@@ -90,7 +90,7 @@ namespace DawnVR.Modules
                 foreach (Camera cam in UnityEngine.Resources.FindObjectsOfTypeAll<Camera>())
                 {
 #endif
-                    if (cam != null && cam.name.ToLower().StartsWith("liscamera"))
+                    if (cam != null && cam.name.ToLower().StartsWith("liscamera") && cam != lastCachedCamera)
                         lastCachedCamera = cam;
                 }
             }

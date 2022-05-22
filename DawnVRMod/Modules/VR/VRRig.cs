@@ -176,6 +176,7 @@ namespace DawnVR.Modules.VR
 			DawnMainCamera.main.enabled = false;
 			// backup if setting enabled fails for some reason
 			DawnMainCamera.main.depth = -100;
+			DawnMainCamera.main.stereoTargetEye = StereoTargetEyeMask.None;
 
 			int currentEpisode = GameMaster.Instance?.m_gameDataManager?.currentEpisodeNumber ?? -1;
 			if (currentEpisode == 4) ChangeHandModel(maxHandRenderers);
