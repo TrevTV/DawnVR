@@ -56,8 +56,7 @@ namespace DawnVR.Modules
         {
             if (__0 == TutorialWindow.eCurrentLesson.kObjective)
             {
-                // reflection is kinda ehh in this case but its the best way to get the method depending on game
-                typeof(TutorialWindow).GetMethod(ObfuscationTools.GetRealMethodName("NextLesson")).Invoke(__instance, new object[] { TutorialWindow.eCurrentLesson.kCloseWindow });
+                __instance.CallMethod("NextLesson", TutorialWindow.eCurrentLesson.kCloseWindow);
                 return false;
             }
             return true;
