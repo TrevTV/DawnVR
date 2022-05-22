@@ -27,10 +27,9 @@ namespace DawnVR.Modules
             {
                 if (GameMaster.Instance.m_followCamera.m_isFreelook && GameMaster.Instance.m_dawnUI.currentViewCookie == OverlayCookie.eCookieChoices.kNone)
                 {
-                    Vector3 pos = VRRig.Instance.ChloeComponent.transform.Find("Reference/Hips").position;
-                    pos.y = -0.3f;
+                    Vector3 pos = Vector3.zero;
                     pos.y += VRRig.Instance.Calibrator.HeightOffset;
-                    VRRig.Instance.transform.position = pos;
+                    VRRig.Instance.transform.localPosition = pos;
                 }
             }
         }
