@@ -64,7 +64,8 @@ namespace DawnVR.Modules
 
         public static bool TelescopePuzzleUpdate(TelescopePuzzle __instance)
         {
-            if (__instance.GetFieldValue<bool>("initialized"))
+            bool inited = ObfuscationTools.GetPropertyValue<bool>(__instance, "initialized");
+            if (inited)
             {
                 __instance.SetFieldValue("m_Scope", VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject);
                 if (__instance.GetFieldValue<GameObject>("m_Scope").activeInHierarchy)
@@ -149,7 +150,7 @@ namespace DawnVR.Modules
             }
             else
                 //__instance._1B350D183();
-                typeof(TelescopePuzzle).GetMethod("Init".ToMethodName()).Invoke(__instance, null);
+                __instance.CallMethod("Init");
 
             return false;
         }
