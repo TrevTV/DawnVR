@@ -8,9 +8,12 @@ using UnityEngine;
 
 namespace Valve.VR
 {
-    [ExecuteInEditMode]
     public class SteamVR_SphericalProjection : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_SphericalProjection(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         static Material material;
 
         public void Set(Vector3 N,
@@ -18,7 +21,7 @@ namespace Valve.VR
             Vector3 uAxis, Vector3 uOrigin, float uScale,
             Vector3 vAxis, Vector3 vOrigin, float vScale)
         {
-            if (material == null)
+           /* if (material == null)
                 material = new Material(Shader.Find("Custom/SteamVR_SphericalProjection"));
 
             material.SetVector("_N", new Vector4(N.x, N.y, N.z));
@@ -31,7 +34,7 @@ namespace Valve.VR
             material.SetVector("_UOrigin", uOrigin);
             material.SetVector("_VOrigin", vOrigin);
             material.SetFloat("_UScale", uScale);
-            material.SetFloat("_VScale", vScale);
+            material.SetFloat("_VScale", vScale);*/
         }
 
         void OnRenderImage(RenderTexture src, RenderTexture dest)

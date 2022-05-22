@@ -9,9 +9,13 @@ using Valve.VR;
 
 namespace Valve.VR
 {
-    [RequireComponent(typeof(AudioListener))]
+    //[RequireComponent(typeof(AudioListener))]
     public class SteamVR_Ears : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Ears(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_Camera vrcam;
 
         bool usingSpeakers;
@@ -41,14 +45,14 @@ namespace Valve.VR
                 }
             }
 
-            if (usingSpeakers)
-                SteamVR_Events.NewPosesApplied.Listen(OnNewPosesApplied);
+            /*if (usingSpeakers)
+                SteamVR_Events.NewPosesApplied.Listen(OnNewPosesApplied);*/
         }
 
         void OnDisable()
         {
-            if (usingSpeakers)
-                SteamVR_Events.NewPosesApplied.Remove(OnNewPosesApplied);
+            /*if (usingSpeakers)
+                SteamVR_Events.NewPosesApplied.Remove(OnNewPosesApplied);*/
         }
     }
 }

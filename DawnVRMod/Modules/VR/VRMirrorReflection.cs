@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
 using Valve.VR;
+#if !REMASTER
+using MirrorReflection = T_55EA835B;
+using GameMaster = T_A6E913D1;
+#endif
 
 // heavily cleaned up version from https://forum.unity.com/threads/mirror-reflections-in-vr.416728/
 namespace DawnVR.Modules.VR
 {
     public class VRMirrorReflection : MonoBehaviour
     {
+#if REMASTER
+        public VRMirrorReflection(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private static bool CurrentlyRendering;
 
         public Camera camera;
@@ -33,7 +41,7 @@ namespace DawnVR.Modules.VR
 
         private void OnWillRenderObject()
         {
-            if (T_55EA835B.s_blockMirrorRenders || (T_A6E913D1.Instance != null && T_A6E913D1.Instance.m_levelManager.LoadInProgress))
+            if (MirrorReflection.s_blockMirrorRenders || (GameMaster.Instance != null && GameMaster.Instance.m_levelManager.LoadInProgress))
                 return;
 
             if (frameCounter > 0)
@@ -219,6 +227,7 @@ namespace DawnVR.Modules.VR
             reflectionCamera = go.AddComponent<Camera>();
             reflectionCamera.enabled = false;
             reflectionCamera.cullingMask = (-17 & m_ReflectLayers.value & ~(1 << LayerMask.NameToLayer("EditorGizmo")) & ~(1 << LayerMask.NameToLayer("UI3D")) & ~(1 << LayerMask.NameToLayer("ObjectiveUI")));
+            reflectionCamera.stereoTargetEye = StereoTargetEyeMask.None;
             CopyCameraProperties(camera, reflectionCamera);
 
             void CopyCameraProperties(Camera src, Camera dest)

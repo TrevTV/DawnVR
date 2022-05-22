@@ -26,6 +26,10 @@ namespace Valve.VR
 {
     public class SteamVR_Fade : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Fade(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private Color currentColor = new Color(0, 0, 0, 0); // default starting color: black and fully transparent
         private Color targetColor = new Color(0, 0, 0, 0);  // default target color: black and fully transparent
         private Color deltaColor = new Color(0, 0, 0, 0);   // the delta-color is basically the "speed / second" at which the current color should change
@@ -116,7 +120,7 @@ namespace Valve.VR
             {
                 fadeMaterial.SetColor(fadeMaterialColorID, currentColor);
                 fadeMaterial.SetPass(0);
-                GL.Begin(GL.QUADS);
+                GL.Begin(7); // GL.QUADS
 
                 GL.Vertex3(-1, -1, 0);
                 GL.Vertex3(1, -1, 0);

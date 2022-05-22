@@ -1,12 +1,8 @@
 ﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 
 using UnityEngine;
-using System.Collections;
 using System;
-using Valve.VR;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Valve.VR
 {
@@ -18,7 +14,7 @@ namespace Valve.VR
     {
         public SteamVR_ActionSet() { }
 
-        [SerializeField]
+        //[SerializeField]
         private string actionSetPath;
 
         [NonSerialized]

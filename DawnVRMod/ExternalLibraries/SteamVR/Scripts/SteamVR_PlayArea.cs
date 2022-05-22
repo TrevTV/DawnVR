@@ -11,13 +11,16 @@ using Valve.VR;
 
 namespace Valve.VR
 {
-    [ExecuteInEditMode, RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class SteamVR_PlayArea : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_PlayArea(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public float borderThickness = 0.15f;
         public float wireframeHeight = 2.0f;
         public bool drawWireframeWhenSelectedOnly = false;
-        public bool drawInGame = true;
+        public bool drawInGame = false;
 
         public enum Size
         {
@@ -30,7 +33,6 @@ namespace Valve.VR
         public Size size;
         public Color color = Color.cyan;
 
-        [HideInInspector]
         public Vector3[] vertices;
 
         public static bool GetBounds(Size size, ref HmdQuad_t pRect)
@@ -257,7 +259,7 @@ namespace Valve.VR
                 // If we want the configured bounds of the user,
                 // we need to wait for tracking.
                 if (drawInGame && size == Size.Calibrated)
-                    StartCoroutine(UpdateBounds());
+                    this.RunCoroutine(UpdateBounds());
             }
         }
 

@@ -34,8 +34,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MelonLoader">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\MelonLoader.dll</HintPath>
+    <Reference Include="AssetsTools.NET, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\AssetsTools.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="MelonLoader, Version=0.5.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -66,6 +71,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Plugins"</PostBuildEvent>
+    <PostBuildEvent>COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Plugins"
+COPY "$(TargetPath)" "D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\Plugins"</PostBuildEvent>
   </PropertyGroup>
 </Project>

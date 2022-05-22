@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_TrackedObject : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_TrackedObject(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public enum EIndex
         {
             None = -1,
@@ -35,7 +39,7 @@ namespace Valve.VR
 
         public EIndex index;
 
-        [Tooltip("If not set, relative to parent")]
+        //[Tooltip("If not set, relative to parent")]
         public Transform origin;
 
         public bool isValid { get; private set; }

@@ -6,29 +6,33 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 
 namespace Valve.VR
 {
     public class SteamVR_Behaviour_Vector3 : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour_Vector3(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         /// <summary>The vector3 action to get data from</summary>
         public SteamVR_Action_Vector3 vector3Action;
 
         /// <summary>The device this action applies to. Any if the action is not device specific.</summary>
-        [Tooltip("The device this action should apply to. Any if the action is not device specific.")]
+        //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]
         public SteamVR_Input_Sources inputSource;
 
         /// <summary>Unity event that fires whenever the action's value has changed since the last update.</summary>
-        [Tooltip("Fires whenever the action's value has changed since the last update.")]
+        //[Tooltip("Fires whenever the action's value has changed since the last update.")]
         public SteamVR_Behaviour_Vector3Event onChange;
 
         /// <summary>Unity event that fires whenever the action's value has been updated</summary>
-        [Tooltip("Fires whenever the action's value has been updated.")]
+        //[Tooltip("Fires whenever the action's value has been updated.")]
         public SteamVR_Behaviour_Vector3Event onUpdate;
 
         /// <summary>Unity event that fires whenever the action's value has been updated and is non-zero</summary>
-        [Tooltip("Fires whenever the action's value has been updated and is non-zero.")]
+        //[Tooltip("Fires whenever the action's value has been updated and is non-zero.")]
         public SteamVR_Behaviour_Vector3Event onAxis;
 
         /// <summary>C# event that fires whenever the action's value has changed since the last update.</summary>

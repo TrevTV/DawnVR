@@ -24,13 +24,14 @@ namespace DawnVR.Modules
 
         public static void Init()
         {
+            string bundle = MelonLoader.MelonUtils.IsGameIl2Cpp() ? "data_rm" : "data";
+            AssetBundle dataBundle = ResourceLoader.GetAssetBundle(bundle);
+
             #region VRCameraRig
 
-            AssetBundle dataBundle = ResourceLoader.GetAssetBundle("data");
             VRCameraRig = dataBundle.LoadAssetWithHF<GameObject>("Assets/AssetBundleData/CameraRig/[VRCameraRig].prefab");
-            VRCameraRig.AddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
-            SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("CameraHolder/Controller (left)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
-            SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("CameraHolder/Controller (right)").gameObject.AddComponent<SteamVR_Behaviour_Pose>();
+            SteamVR_Behaviour_Pose pose1 = VRCameraRig.transform.Find("CameraHolder/Controller (left)").gameObject.GetOrAddComponent<SteamVR_Behaviour_Pose>();
+            SteamVR_Behaviour_Pose pose2 = VRCameraRig.transform.Find("CameraHolder/Controller (right)").gameObject.GetOrAddComponent<SteamVR_Behaviour_Pose>();
             pose1.poseAction = SteamVR_Actions._default.Pose;
             pose2.poseAction = SteamVR_Actions._default.Pose;
             pose1.inputSource = SteamVR_Input_Sources.LeftHand;
@@ -38,11 +39,12 @@ namespace DawnVR.Modules
             pose1.transform.Find("CustomModel (Chloe)/handpad").GetComponent<MeshRenderer>().material.shader = Shader.Find("Sprites/Default");
             DitherShader = pose1.transform.Find("CustomModel (Chloe)").GetComponentInChildren<SkinnedMeshRenderer>().material.shader;
             DitherShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            VRCameraRig.GetOrAddComponent<SteamVR_PlayArea>().drawInGame = shouldRenderCameraRig;
             if (shouldRenderCameraRig)
             {
                 Shader standard = Shader.Find("Standard");
-                pose1.transform.Find("Model").gameObject.AddComponent<SteamVR_RenderModel>().shader = standard;
-                pose2.transform.Find("Model").gameObject.AddComponent<SteamVR_RenderModel>().shader = standard;
+                pose1.transform.Find("Model").gameObject.GetOrAddComponent<SteamVR_RenderModel>().shader = standard;
+                pose2.transform.Find("Model").gameObject.GetOrAddComponent<SteamVR_RenderModel>().shader = standard;
             }
 
             #endregion

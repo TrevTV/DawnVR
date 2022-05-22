@@ -1,11 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 namespace DawnVR.Modules.VR.Handposes
 {
     public class HandposeChanger : MonoBehaviour
     {
+#if REMASTER
+        public HandposeChanger(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         // Start is called before the first frame update
         public Transform[] indexBones;
         public Transform[] middleBones;

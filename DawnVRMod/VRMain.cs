@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Linq;
 using Valve.VR;
 using System;
+using System.Net;
 
 namespace DawnVR
 {
@@ -14,7 +15,7 @@ namespace DawnVR
         public const string Name = "DawnVR";
         public const string Author = "trev (full credits in README)";
         public const string Company = null;
-        public const string Version = "0.2.2";
+        public const string Version = "0.3.0";
         public const string DownloadLink = null;
     }
 
@@ -30,6 +31,15 @@ namespace DawnVR
         {
             Preferences.Init();
 
+#if REMASTER
+            HarmonyInstance.Patch(
+                typeof(UnhollowerBaseLib.LogSupport).GetMethod("Warning", HarmonyLib.AccessTools.all),
+                typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.UnhollowerWarningPrefix)).ToNewHarmonyMethod());
+
+            foreach (var mb in Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
+                UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, false);
+#endif
+
             if (Preferences.CheckForUpdatesOnStart.Value)
                 CheckForUpdates();
 
@@ -40,7 +50,8 @@ namespace DawnVR
                 MelonLogger.Msg("Launch parameter \"-vrmode\" not set to OpenVR, not loading VR patches!");
                 if (Preferences.EnableInternalLogging.Value)
                     OutputRedirect.Init(HarmonyInstance);
-                //HarmonyPatches.InitNoVR(HarmonyInstance);
+                if (Preferences.RunNoVRHarmonyPatchesWhenDisabled.Value)
+                    HarmonyPatches.InitNoVR(HarmonyInstance);
                 vrEnabled = false;
                 return;
             }
@@ -51,7 +62,11 @@ namespace DawnVR
                 OutputRedirect.Init(HarmonyInstance);
 
             // This will always be active in case of hard to recreate errors preventing progress
+#if REMASTER
+            Application.add_logMessageReceived(new Action<string, string, LogType>(OnUnityLogReceived));
+#else
             Application.logMessageReceived += OnUnityLogReceived;
+#endif
         }
 
         private void OnUnityLogReceived(string condition, string stackTrace, LogType type)
@@ -71,6 +86,41 @@ namespace DawnVR
         {
             MelonLogger.Msg("Checking for updates...");
 
+#if REMASTER
+            try
+            {
+                System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
+                var pingReply = ping.Send("github.com");
+                if (pingReply.Status == System.Net.NetworkInformation.IPStatus.Success)
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        client.Headers["User-Agent"] = "DawnVR/" + BuildInfo.Version;
+                        string data = client.DownloadString(GithubApiUrl);
+                        var node = Newtonsoft.Json.Linq.JObject.Parse(data);
+                        Version version = new Version(node["tag_name"].ToString());
+
+                        if (version > new Version(BuildInfo.Version))
+                        {
+                            MelonLogger.Warning("============================================================");
+                            MelonLogger.Warning($"    A new version of DawnVR ({version}) is available!     ");
+                            MelonLogger.Warning("Download it here, https://github.com/TrevTV/DawnVR/releases");
+                            MelonLogger.Warning("============================================================");
+                        }
+                        else
+                            MelonLogger.Msg("Up to date.");
+                    }
+                }
+                else
+                {
+                    MelonLogger.Warning("You are not connected to the internet or GitHub is down, skipping update check.");
+                }
+            }
+            catch
+            {
+                MelonLogger.Warning("Failed to check for updates, skipping.");
+            }
+#else
             try
             {
                 string scriptPath = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "CheckForUpdate.ps1");
@@ -94,8 +144,8 @@ namespace DawnVR
                     return;
                 }
 
-                SimpleJSON.JSONNode node = SimpleJSON.JSON.Parse(returnVal);
-                Version version = new Version(node["tag_name"].Value);
+                var node = Newtonsoft.Json.Linq.JObject.Parse(returnVal);
+                Version version = new Version(node["tag_name"].ToString());
 
                 if (version > new Version(BuildInfo.Version))
                 {
@@ -111,6 +161,7 @@ namespace DawnVR
             {
                 MelonLogger.Warning("Failed to check for updates, skipping.");
             }
+#endif
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)

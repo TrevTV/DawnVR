@@ -18,7 +18,7 @@
 //=============================================================================
 
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 using Valve.VR;
 
 namespace Valve.VR
@@ -133,6 +133,7 @@ namespace Valve.VR
         {
             public void Listen(UnityAction<T0, T1> action) { this.AddListener(action); }
             public void Remove(UnityAction<T0, T1> action) { this.RemoveListener(action); }
+
             public void Send(T0 arg0, T1 arg1) { this.Invoke(arg0, arg1); }
         }
 
@@ -140,6 +141,7 @@ namespace Valve.VR
         {
             public void Listen(UnityAction<T0, T1, T2> action) { this.AddListener(action); }
             public void Remove(UnityAction<T0, T1, T2> action) { this.RemoveListener(action); }
+
             public void Send(T0 arg0, T1 arg1, T2 arg2) { this.Invoke(arg0, arg1, arg2); }
         }
 

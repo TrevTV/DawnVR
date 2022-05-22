@@ -7,12 +7,16 @@
 using UnityEngine;
 using System.Collections;
 using Valve.VR;
-
+using System;
 
 namespace Valve.VR
 {
     public class SteamVR_Render : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Render(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public SteamVR_ExternalCamera externalCamera;
         public string externalCameraConfigPath = "externalcamera.cfg";
 
@@ -308,19 +312,27 @@ namespace Valve.VR
 
         private void OnEnable()
         {
-            StartCoroutine(RenderLoop());
+            this.RunCoroutine(RenderLoop());
+
             SteamVR_Events.InputFocus.Listen(OnInputFocus);
             SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Listen(OnRequestScreenshot);
 
             if (SteamVR_Settings.instance.legacyMixedRealityCamera)
                 SteamVR_ExternalCamera_LegacyManager.SubscribeToNewPoses();
-
+#if REMASTER
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? new Action<Camera>(OnCameraPreCull)
+                    : Il2CppSystem.Delegate.Combine(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
+#else
 #if UNITY_2017_1_OR_NEWER
 		    Application.onBeforeRender += OnBeforeRender;
 #else
             Camera.onPreCull += OnCameraPreCull;
 #endif
 
+#endif
             if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess)
                 OpenVR.Screenshots.HookScreenshot(screenshotTypes);
             else
@@ -339,12 +351,21 @@ namespace Valve.VR
             SteamVR_Events.InputFocus.Remove(OnInputFocus);
             SteamVR_Events.System(EVREventType.VREvent_RequestScreenshot).Remove(OnRequestScreenshot);
 
+#if REMASTER
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? null
+                    : Il2CppSystem.Delegate.Remove(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
+#else
+            
+
 #if UNITY_2017_1_OR_NEWER
 		    Application.onBeforeRender -= OnBeforeRender;
 #else
             Camera.onPreCull -= OnCameraPreCull;
 #endif
-
+#endif
             if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeSuccess)
                 SteamVR_Events.Initialized.RemoveListener(OnSteamVRInitialized);
         }

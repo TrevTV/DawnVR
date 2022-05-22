@@ -12,6 +12,10 @@ namespace Valve.VR
 {
     public class SteamVR_ExternalCamera : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_ExternalCamera(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private SteamVR_Action_Pose cameraPose = null;
         private SteamVR_Input_Sources cameraInputSource = SteamVR_Input_Sources.Camera;
 
@@ -30,11 +34,11 @@ namespace Valve.VR
             public bool disableStandardAssets;
         }
 
-        [Space()]
+        //[Space()]
         public Config config;
         public string configPath;
 
-        [Tooltip("This will automatically activate the action set the specified pose belongs to. And deactivate it when this component is disabled.")]
+        //[Tooltip("This will automatically activate the action set the specified pose belongs to. And deactivate it when this component is disabled.")]
         public bool autoEnableDisableActionSet = true;
 
         public void ReadConfig()

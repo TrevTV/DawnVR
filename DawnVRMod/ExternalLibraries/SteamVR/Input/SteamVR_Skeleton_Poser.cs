@@ -11,6 +11,10 @@ namespace Valve.VR
 {
     public class SteamVR_Skeleton_Poser : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Skeleton_Poser(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         #region Editor Storage
         public bool poseEditorExpanded = true;
         public bool blendEditorExpanded = true;
@@ -23,19 +27,19 @@ namespace Valve.VR
         public SteamVR_Skeleton_Pose skeletonMainPose;
         public List<SteamVR_Skeleton_Pose> skeletonAdditionalPoses = new List<SteamVR_Skeleton_Pose>();
 
-        [SerializeField]
+        //[SerializeField]
         protected bool showLeftPreview = false;
 
-        [SerializeField]
+        //[SerializeField]
         protected bool showRightPreview = true; //show the right hand by default
 
-        [SerializeField]
+        //[SerializeField]
         protected GameObject previewLeftInstance;
 
-        [SerializeField]
+        //[SerializeField]
         protected GameObject previewRightInstance;
 
-        [SerializeField]
+        //[SerializeField]
         protected int previewPoseSelection = 0;
 
         public int blendPoseCount { get { return blendPoses.Length; } }

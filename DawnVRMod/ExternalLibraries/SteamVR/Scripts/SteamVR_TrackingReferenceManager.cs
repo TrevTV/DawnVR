@@ -6,6 +6,10 @@ namespace Valve.VR
 {
     public class SteamVR_TrackingReferenceManager : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_TrackingReferenceManager(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private Dictionary<uint, TrackingReferenceObject> trackingReferences = new Dictionary<uint, TrackingReferenceObject>();
 
         private void OnEnable()
@@ -42,7 +46,12 @@ namespace Valve.VR
 
                         trackingReferences.Add(deviceIndex, trackingReference);
 
+                        // thanks gompo
+#if REMASTER
+                        trackingReference.gameObject.SendMessage("SetDeviceIndex", new Il2CppSystem.Int32() { m_value = (int)deviceIndex }.BoxIl2CppObject(), SendMessageOptions.DontRequireReceiver);
+#else
                         trackingReference.gameObject.SendMessage("SetDeviceIndex", (int)deviceIndex, SendMessageOptions.DontRequireReceiver);
+#endif
                     }
                     else
                     {

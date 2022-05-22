@@ -12,15 +12,19 @@ namespace Valve.VR
 {
     public class SteamVR_Overlay : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Overlay(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public Texture texture;
 
-        [Tooltip("Size of overlay view.")]
+        //[Tooltip("Size of overlay view.")]
         public float scale = 3.0f;
 
-        [Tooltip("Distance from surface.")]
+        //[Tooltip("Distance from surface.")]
         public float distance = 1.25f;
 
-        [Tooltip("Opacity"), Range(0.0f, 1.0f)]
+        //[Tooltip("Opacity"), Range(0.0f, 1.0f)]
         public float alpha = 1.0f;
 
         public Vector4 uvOffset = new Vector4(0, 0, 1, 1);

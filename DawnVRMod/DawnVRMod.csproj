@@ -25,29 +25,52 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_OG|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release_OG\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyCSharp>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Assembly-CSharp-Public.dll</AssemblyCSharp>
+    <UnityEngine>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.dll</UnityEngine>
+    <UnityEngineUI>F:\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.UI.dll</UnityEngineUI>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
+    <OutputPath>bin\Release_RM\</OutputPath>
+    <DefineConstants>TRACE;REMASTER</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <AssemblyCSharp>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\Assembly-CSharp.dll</AssemblyCSharp>
+    <UnityEngine>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.CoreModule.dll</UnityEngine>
+    <UnityEngineUI>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.UI.dll</UnityEngineUI>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-Public">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Assembly-CSharp-Public.dll</HintPath>
+      <HintPath>$(AssemblyCSharp)</HintPath>
     </Reference>
     <Reference Include="MelonLoader">
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\MelonLoader\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Steamworks.NET">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\Steamworks.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,14 +79,46 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(UnityEngine)</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\Games\steamapps\common\Life is Strange - Before the Storm\Life is Strange - Before the Storm_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(UnityEngineUI)</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BONEWORKS\BONEWORKS\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\Il2CppSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerRuntimeLib">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyLoadingTools.cs" />
+    <Compile Include="Modules\RemasterSupport\IL2CPPFixes.cs" />
+    <Compile Include="Modules\RemasterSupport\ISerializationCallbackReceiver.cs" />
+    <Compile Include="Modules\RemasterSupport\MathfUnstrips.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\OutputRedirect.cs" />
     <Compile Include="Modules\Patches\CutsceneFixes.cs" />
@@ -77,6 +132,30 @@
     <Compile Include="Modules\Patches\InputOverrides.cs" />
     <Compile Include="Modules\Patches\Debug.cs" />
     <Compile Include="Modules\Preferences.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\ArgumentCache.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\BaseInvokableCall.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\CachedInvokableCall.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCall.2.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCall.3.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCall.4.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCall.5.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCall.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\InvokableCallList.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\PersistentCall.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\PersistentCallGroup.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\PersistentListenerMode.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityAction.2.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityAction.3.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityAction.4.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityAction.5.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityAction.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEvent.2.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEvent.3.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEvent.4.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEvent.5.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEvent.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEventBase.cs" />
+    <Compile Include="Modules\RemasterSupport\UnityEngine.Events\UnityEventCallState.cs" />
     <Compile Include="Modules\Resources.cs" />
     <Compile Include="Modules\VR\Handposes\Handpose.cs" />
     <Compile Include="Modules\VR\Handposes\HandposeChanger.cs" />
@@ -138,16 +217,12 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Behaviour.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Camera.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_CameraFlip.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_CameraMask.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Ears.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_EnumEqualityComparer.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Events.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_ExternalCamera.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_ExternalCamera_LegacyManager.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Fade.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Frustum.cs" />
-    <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_IK.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_LoadLevel.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Menu.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Overlay.cs" />
@@ -162,6 +237,7 @@
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_TrackingReferenceManager.cs" />
     <Compile Include="ExternalLibraries\SteamVR\Scripts\SteamVR_Utils.cs" />
+    <Compile Include="Modules\RemasterSupport\ObfuscationTools.cs" />
     <Compile Include="VRMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\VR\VRCamera.cs" />
@@ -180,8 +256,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\CheckForUpdate.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\data_rm" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Mods"</PostBuildEvent>
+    <PostBuildEvent>IF $(ConfigurationName) == Release_RM (
+COPY "$(TargetPath)" "D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\Mods"
+) ELSE (
+COPY "$(TargetPath)" "F:\Games\steamapps\common\Life is Strange - Before the Storm\Mods"
+)</PostBuildEvent>
   </PropertyGroup>
 </Project>

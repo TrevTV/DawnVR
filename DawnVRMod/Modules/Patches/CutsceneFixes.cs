@@ -1,9 +1,25 @@
 ﻿using UnityEngine;
 using DawnVR.Modules.VR;
-using System.Collections.Generic;
-using _15C6DD6D9._14FDF87F1;
-using _169E4A3E._165972D5F;
 using System;
+
+#if REMASTER
+using DataEditor.Graph;
+using PrototyperData.GraphObjects;
+using CriMana;
+#else
+using OverlayCookie = T_A7F99C25;
+using UITexture = T_D186D1CC;
+using Telescope = T_ADD17E7F;
+using TelescopePuzzle = T_24E8F007;
+using GameMaster = T_A6E913D1;
+using EditableDataObjectGraphedConnection = _169E4A3E._165972D5F.T_7808CA07;
+using SequenceGraphObject = _15C6DD6D9._14FDF87F1.T_F45060BF;
+using FreeroamGraphObject = _15C6DD6D9._14FDF87F1.T_BBB6DDD9;
+using FollowCamera = T_884A92DB;
+using Player = _1F28E2E62.T_E579AD8A;
+using CriManaMovieMaterial = T_DD163FE9;
+using DawnMainCamera = T_34182F31;
+#endif
 
 namespace DawnVR.Modules
 {
@@ -11,46 +27,48 @@ namespace DawnVR.Modules
     {
         private static bool hasDisabledMovieWindow;
 
-        public static void DisableSettingCurrentViewCookie(T_A7F99C25.eCookieChoices value)
+        public static void DisableSettingCurrentViewCookie(OverlayCookie.eCookieChoices value)
         {
-            foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<T_D186D1CC>())
+            foreach (var rend in GameObject.Find("/UIRoot/Camera/OverlayCookie/").GetComponentsInChildren<UITexture>())
                 rend.enabled = false;
 
             SetCurrentViewCookie(value);
         }
 
-        public static void SetCurrentViewCookie(T_A7F99C25.eCookieChoices cookie)
+        public static void SetCurrentViewCookie(OverlayCookie.eCookieChoices cookie)
         {
             switch (cookie)
             {
-                case T_A7F99C25.eCookieChoices.kNone:
+                case OverlayCookie.eCookieChoices.kNone:
                     VRRig.Instance.CutsceneHandler.EndCutscene();
                     if (VRRig.Instance?.ChloeComponent?.Camera != null)
                         VRRig.Instance.ChloeComponent.Camera.enabled = false;
                     break;
-                case T_A7F99C25.eCookieChoices.kBinoculars:
+                case OverlayCookie.eCookieChoices.kBinoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene();
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
-                case T_A7F99C25.eCookieChoices.kE3Binoculars:
+                case OverlayCookie.eCookieChoices.kE3Binoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene();
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
-                case T_A7F99C25.eCookieChoices.kE4Binoculars:
+                case OverlayCookie.eCookieChoices.kE4Binoculars:
                     VRRig.Instance.CutsceneHandler.SetupCutscene(true);
                     VRRig.Instance.ChloeComponent.Camera.enabled = true;
                     break;
             }
         }
 
-        public static void TelescopeRotate(T_ADD17E7F __instance)
+        public static void TelescopeRotate(Telescope __instance)
             => __instance.m_bottle = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject;
 
-        public static bool TelescopePuzzleUpdate(T_24E8F007 __instance)
+        public static bool TelescopePuzzleUpdate(TelescopePuzzle __instance)
         {
-            if (__instance._1A0F64CF1)
+            bool inited = ObfuscationTools.GetPropertyValue<bool>(__instance, "initialized");
+            if (inited)
             {
-                if (__instance._1372031B.activeInHierarchy)
+                __instance.SetFieldValue("m_Scope", VRRig.Instance.CutsceneHandler.AmuletGlassTransform.gameObject);
+                if (__instance.GetFieldValue<GameObject>("m_Scope").activeInHierarchy)
                 {
                     Vector3 localEulerAngles = VRRig.Instance.CutsceneHandler.AmuletGlassTransform.localEulerAngles;
                     float num = __instance.m_targetZRotation + __instance.m_errorRange + 1f;
@@ -59,7 +77,7 @@ namespace DawnVR.Modules
                     else
                         num = Mathf.Abs(localEulerAngles.z - __instance.m_targetZRotation);
 
-                    GameStateModel currentModel = T_A6E913D1.Instance.m_gameStateManager.GetCurrentModel();
+                    GameStateModel currentModel = GameMaster.Instance.m_gameStateManager.GetCurrentModel();
                     if (currentModel != null)
                         currentModel.SetValue(__instance.m_lensAngleVariable, (int)Mathf.Floor(num), false);
 
@@ -67,12 +85,13 @@ namespace DawnVR.Modules
                     if (num <= 0f)
                     {
                         Transform camTrans = VRRig.Instance.CutsceneHandler.CurrentCamera.transform;
-                        __instance._13E72D93B = new Ray(camTrans.position, camTrans.forward);
-                        RaycastHit[] array = Physics.RaycastAll(__instance._13E72D93B, __instance.m_maxRaycastDistance);
+                        Ray ray = new Ray(camTrans.position, camTrans.forward);
+                        __instance.SetFieldValue("ray", ray);
+                        RaycastHit[] array = Physics.RaycastAll(ray, __instance.m_maxRaycastDistance);
                         bool flag = false;
                         for (int i = 0; i < array.Length; i++)
                         {
-                            if (array[i].transform.gameObject.GetComponent<T_24E8F007>() != null)
+                            if (array[i].transform.gameObject.GetComponent<TelescopePuzzle>() != null)
                             {
                                 flag = true;
                                 break;
@@ -80,19 +99,23 @@ namespace DawnVR.Modules
                         }
                         if (!flag)
                         {
-                            __instance._1DB0E3B9C = 0f;
+                            __instance.SetFieldValue("m_timeHovering", 0f);
                             return false;
                         }
-                        __instance._1DB0E3B9C += Time.deltaTime;
-                        if (__instance._1DB0E3B9C >= __instance.m_hoverTime)
+                        __instance.SetFieldValue("m_timeHovering", __instance.GetFieldValue<float>("m_timeHovering") + Time.deltaTime);
+                        if (__instance.GetFieldValue<float>("m_timeHovering") >= __instance.m_hoverTime)
                         {
-                            List<T_7808CA07> outputConnections = T_A6E913D1.Instance.m_graphManager.CurrentGraphNode.outputConnections;
+                            var outputConnections = GameMaster.Instance.m_graphManager.CurrentGraphNode.outputConnections;
                             if (outputConnections != null && outputConnections.Count != 0)
                             {
-                                T_F45060BF t_F45060BF = null;
+                                SequenceGraphObject t_F45060BF = null;
                                 for (int j = 0; j < outputConnections.Count; j++)
                                 {
-                                    T_F45060BF t_F45060BF2 = outputConnections[j].to as T_F45060BF;
+#if REMASTER
+                                    SequenceGraphObject t_F45060BF2 = outputConnections[j].to.Cast<SequenceGraphObject>();
+#else
+                                    SequenceGraphObject t_F45060BF2 = outputConnections[j].to as SequenceGraphObject;
+#endif
                                     if (t_F45060BF2 != null)
                                     {
                                         string text = (t_F45060BF2.sequence == null) ? string.Empty : t_F45060BF2.sequence.nodeName;
@@ -110,11 +133,15 @@ namespace DawnVR.Modules
                                 if (t_F45060BF == null)
                                     return false;
 
-                                T_BBB6DDD9 t_BBB6DDD = T_A6E913D1.Instance.m_graphManager.CurrentGraphNode as T_BBB6DDD9;
-                                if (t_BBB6DDD != null)
+#if REMASTER
+                                FreeroamGraphObject frGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode.Cast<FreeroamGraphObject>();
+#else
+                                FreeroamGraphObject frGraphObj = GameMaster.Instance.m_graphManager.CurrentGraphNode as FreeroamGraphObject;
+#endif
+                                if (frGraphObj != null)
                                 {
-                                    t_BBB6DDD.m_exitGraphObject = t_F45060BF;
-                                    T_A6E913D1.Instance.m_graphManager.ExitCurrentNode();
+                                    frGraphObj.m_exitGraphObject = t_F45060BF;
+                                    GameMaster.Instance.m_graphManager.ExitCurrentNode();
                                 }
                             }
                         }
@@ -122,100 +149,96 @@ namespace DawnVR.Modules
                 }
             }
             else
-                __instance._1B350D183();
+                //__instance._1B350D183();
+                __instance.CallMethod("Init");
 
             return false;
         }
 
-        public static bool SetupFollowCameraMatrix(T_884A92DB __instance, Vector4 _1DD947C88, Vector4 _15E19D274)
+        public static bool SetupFollowCameraMatrix(FollowCamera __instance, Vector4 __0, Vector4 __1)
         {
             if (__instance.m_isLineLocked)
             {
-                if (__instance._19186BCE3)
+                if (__instance.GetFieldValue<bool>("m_reverseControls"))
                 {
-                    __instance._15479B337 *= -1f;
+                    __instance.SetFieldValue("m_rightH", __instance.GetFieldValue<float>("m_rightH") * -1f);
                 }
-                if (__instance._12E8B1EAF)
+                if (__instance.GetFieldValue<bool>("m_flattenControls"))
                 {
-                    __instance._15479B329 *= 0f;
+                    __instance.MultiplyFloatField("m_rightV", 0f);
                 }
-                if (__instance._15479B337 >= 0f && __instance._15479B329 >= 0f)
+                if (__instance.GetFieldValue<float>("m_rightH") >= 0f && __instance.GetFieldValue<float>("m_rightV") >= 0f)
                 {
-                    __instance._1C0908541 -= Mathf.Max(__instance._15479B337, __instance._15479B329);
+                    __instance.SubtractFromFloatField("m_lineLockLerp", Mathf.Max(__instance.GetFieldValue<float>("m_rightH"), __instance.GetFieldValue<float>("m_rightV")));
                 }
-                else if (__instance._15479B337 <= 0f && __instance._15479B329 <= 0f)
+                else if (__instance.GetFieldValue<float>("m_rightH") <= 0f && __instance.GetFieldValue<float>("m_rightV") <= 0f)
                 {
-                    __instance._1C0908541 -= Mathf.Min(__instance._15479B337, __instance._15479B329);
+                    __instance.SubtractFromFloatField("m_lineLockLerp", Mathf.Min(__instance.GetFieldValue<float>("m_rightH"), __instance.GetFieldValue<float>("m_rightV")));
                 }
-                __instance._1C0908541 = Mathf.Clamp01(__instance._1C0908541);
-                _1DD947C88 = Vector3.Lerp(__instance._18166372C, __instance._1854BFA4C, __instance._1C0908541);
+                __instance.SetFieldValue("m_lineLockLerp", Mathf.Clamp01(__instance.GetFieldValue<float>("m_lineLockLerp")));
+                __0 = Vector3.Lerp(__instance.GetFieldValue<Vector3>("m_lineFirstLockPoint"), __instance.GetFieldValue<Vector3>("m_lineLastLockPoint"), __instance.GetFieldValue<float>("m_lineLockLerp"));
                 //_1DD947C88 += __instance._111890643;
-                __instance._111890643 -= __instance._111890643 * ((Mathf.Abs(__instance._15479B337) + Mathf.Abs(__instance._15479B329)) * Time.deltaTime / 2f);
+                __instance.SubtractFromV3Field("m_lineLockOffset", __instance.GetFieldValue<Vector3>("m_lineLockOffset") * ((Mathf.Abs(__instance.GetFieldValue<float>("m_rightH")) + Mathf.Abs(__instance.GetFieldValue<float>("m_rightV"))) * Time.deltaTime / 2f));
             }
             else if (__instance.IsLocked)
             {
-                float num = -__instance._15479B337 * 57.29578f;
-                float num2 = __instance._15479B329 * 57.29578f;
-                __instance._1E9DAA452 += num;
-                __instance._1CFFF5F80 += num2;
-                ExtendedViewBase.GrabExtendedView(T_34182F31.main, ref __instance._1D9C76B26, ref __instance._1C89EAB96);
-                if (__instance._1C89EAB96 != null && T_1005C221.T_A9DD5E3E.IsExtendedViewAvailable())
+                float num = -__instance.GetFieldValue<float>("m_rightH") * 57.29578f;
+                float num2 = __instance.GetFieldValue<float>("m_rightV") * 57.29578f;
+                __instance.AddToFloatField("m_currentLockedHorizontal", num);
+                __instance.AddToFloatField("m_currentLockedVertical", num2);
+                Transform transform = __instance.GetFieldValue<GameObject>("templateObject").transform;
+                if (__instance.GetFieldValue<Vector3>("m_centeredAimDirection") != Vector3.zero)
                 {
-                    float num3 = T_34182F31.main.fieldOfView / 40f;
-                    float num4 = __instance._1C89EAB96.Yaw * num3;
-                    float num5 = __instance._1C89EAB96.Pitch * num3;
-                    __instance._1E9DAA452 += num4 - __instance._1DD2696DE;
-                    __instance._1CFFF5F80 += num5 - __instance._1CE82F9BB;
-                    __instance._1DD2696DE = num4;
-                    __instance._1CE82F9BB = num5;
-                }
-                Transform transform = __instance._11A7A7D26.transform;
-                if (__instance._1552E3BEF != Vector3.zero)
-                {
-                    transform.forward = __instance._1552E3BEF;
-                    __instance._13782B1A6 = Vector3.Angle(new Vector3(__instance._1552E3BEF.x, 0f, __instance._1552E3BEF.z), __instance.centeredAimDirection);
-                    if (__instance._1552E3BEF.y < 0f)
+                    Vector3 cad = __instance.GetFieldValue<Vector3>("m_centeredAimDirection");
+                    transform.forward = cad;
+                    __instance.SetFieldValue("m_lockedAimAngleOffset", Vector3.Angle(new Vector3(cad.x, 0f, cad.z), __instance.centeredAimDirection));
+                    if (cad.y < 0f)
                     {
-                        __instance._13782B1A6 *= -1f;
+                        __instance.MultiplyFloatField("m_lockedAimAngleOffset", -1f);
                     }
                 }
                 else
                 {
                     transform.forward = new Vector3(0f, 0f, 1f);
-                    __instance._13782B1A6 = 0f;
+                    __instance.SetFieldValue("m_lockedAimAngleOffset", 0f);
                 }
-                __instance._1CFFF5F80 = Mathf.Clamp(__instance._1CFFF5F80, -89.99f + __instance._13782B1A6, 89.99f + __instance._13782B1A6);
-                if (__instance._15234BCAB)
+                __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset"), 89.99f + __instance.GetFieldValue<float>("m_lockedAimAngleOffset")));
+                if (__instance.GetFieldValue<bool>("m_isRotationLimited"))
                 {
-                    if (__instance._1DC1D4026.x >= 0f && __instance._1DC1D4026.y >= 0f)
+                    Vector4 rpl = __instance.GetFieldValue<Vector4>("m_rotationPivotLimit");
+                    if (rpl.x >= 0f && rpl.y >= 0f)
                     {
-                        __instance._1E9DAA452 = Mathf.Clamp(__instance._1E9DAA452, -__instance._1DC1D4026.x, __instance._1DC1D4026.y);
+                        __instance.SetFieldValue("m_currentLockedHorizontal", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedHorizontal"), -rpl.x, rpl.y));
                     }
-                    if (__instance._1DC1D4026.z >= 0f && __instance._1DC1D4026.w >= 0f)
+                    if (rpl.z >= 0f && rpl.w >= 0f)
                     {
-                        __instance._1CFFF5F80 = Mathf.Clamp(__instance._1CFFF5F80, -__instance._1DC1D4026.z, __instance._1DC1D4026.w);
+                        __instance.SetFieldValue("m_currentLockedVertical", Mathf.Clamp(__instance.GetFieldValue<float>("m_currentLockedVertical"), -rpl.z, rpl.w));
                     }
                 }
-                if (__instance._122F739CA)
+                if (__instance.GetFieldValue<bool>("m_isPCInput"))
                 {
-                    __instance._1CDC44FE7 = __instance._1CFFF5F80;
-                    __instance._1DC9DF77C = __instance._1E9DAA452;
-                    transform.forward = Quaternion.AngleAxis(__instance._1E9DAA452, Vector3.up) * transform.forward;
+                    __instance.SetFieldValue("m_sAltitudeAngle", __instance.GetFieldValue<float>("m_currentLockedVertical"));
+                    __instance.SetFieldValue("m_sOrientAngle", __instance.GetFieldValue<float>("m_currentLockedHorizontal"));
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_currentLockedHorizontal"), Vector3.up) * transform.forward;
                     Vector3 axis = Vector3.Cross(Vector3.up, transform.forward);
-                    transform.forward = Quaternion.AngleAxis(__instance._1CFFF5F80, axis) * transform.forward;
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_currentLockedVertical"), axis) * transform.forward;
                 }
                 else
                 {
-                    __instance._1CDC44FE7 = Mathf.SmoothDamp(__instance._1CDC44FE7, __instance._1CFFF5F80, ref __instance._18346372D, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, __instance.m_maxViewChangeSpeed, __instance._19FA60FD3());
-                    __instance._1DC9DF77C = Mathf.SmoothDamp(__instance._1DC9DF77C, __instance._1E9DAA452, ref __instance._1293578B2, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, float.PositiveInfinity, __instance._19FA60FD3());
-                    transform.forward = Quaternion.AngleAxis(__instance._1DC9DF77C, Vector3.up) * transform.forward;
+                    float aav = 0;
+                    float oav = 0;
+                    __instance.SetFieldValue("m_sAltitudeAngle", Mathf.SmoothDamp(__instance.GetFieldValue<float>("m_sAltitudeAngle"), __instance.GetFieldValue<float>("m_currentLockedVertical"), ref aav, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, __instance.m_maxViewChangeSpeed, __instance.CallMethod<float>("InternalDeltaTime")));
+                    __instance.SetFieldValue("AltitudeAngleVelocity", aav);
+                    __instance.SetFieldValue("m_sOrientAngle", Mathf.SmoothDamp(__instance.GetFieldValue<float>("m_sOrientAngle"), __instance.GetFieldValue<float>("m_currentLockedHorizontal"), ref oav, __instance.m_camMomentumCarrythrough / __instance.m_joystickSensitivity, float.PositiveInfinity, __instance.CallMethod<float>("InternalDeltaTime")));
+                    __instance.SetFieldValue("OrientAngleVelocity", oav);
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_sOrientAngle"), Vector3.up) * transform.forward;
                     Vector3 axis2 = Vector3.Cross(Vector3.up, transform.forward);
-                    transform.forward = Quaternion.AngleAxis(__instance._1CDC44FE7, axis2) * transform.forward;
+                    transform.forward = Quaternion.AngleAxis(__instance.GetFieldValue<float>("m_sAltitudeAngle"), axis2) * transform.forward;
                 }
                 __instance.transform.forward = transform.forward;
                 return false;
             }
-            Vector4 vector = _1DD947C88 - _15E19D274;
+            Vector4 vector = __0 - __1;
             vector.Normalize();
             Vector4 vector2 = new Vector4(-vector.z, 0f, vector.x);
             vector2.Normalize();
@@ -223,42 +246,25 @@ namespace DawnVR.Modules
             vector3.Normalize();
             vector2 = Vector3.Cross(vector3, vector);
             vector2.Normalize();
-            __instance._146F8D839(_15E19D274, vector2, vector3, vector);
+            __instance.CallMethod("SetCameraMatrix", setCamMatrixTypes, __1, vector2, vector3, vector);
+
+            // don't ask me what this does because i have no idea. it only exists in the linux port
+#if !REMASTER
             if (!__instance.IsLocked)
             {
                 __instance._1DD2696DE = 0f;
                 __instance._1CE82F9BB = 0f;
             }
-            if (T_1005C221.T_A9DD5E3E.IsExtendedViewAvailable() && __instance.m_isCameraDriver && !T_A6E913D1.Instance.Paused && !__instance.m_isInteractionBlocked && __instance.IsLocked && (T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kFreeRoam || T_A6E913D1.Instance.m_gameModeManager.CurrentMode == eGameMode.kCustomization) && (!__instance.isFreeroamStart || __instance.m_isFreelook) && T_34182F31.main != null)
-            {
-                ExtendedViewBase.GrabExtendedView<ExtendedViewThirdPerson>(T_34182F31.main, ref __instance._1D9C76B26, ref __instance._1C89EAB96);
-                if (__instance._1C89EAB96 != null)
-                {
-                    float num6 = T_34182F31.main.fieldOfView / 40f;
-                    float num7 = __instance._1CFFF5F80 + __instance._1C89EAB96.Pitch * num6;
-                    float num8 = __instance._1E9DAA452 + __instance._1C89EAB96.Yaw * num6;
-                    if (__instance._15234BCAB)
-                    {
-                        if ((double)__instance._1DC1D4026.x >= 0.0 && (double)__instance._1DC1D4026.y >= 0.0)
-                        {
-                            num8 = Mathf.Clamp(num8, -__instance._1DC1D4026.x, __instance._1DC1D4026.y);
-                        }
-                        if ((double)__instance._1DC1D4026.z >= 0.0 && (double)__instance._1DC1D4026.w >= 0.0)
-                        {
-                            num7 = Mathf.Clamp(num7, -__instance._1DC1D4026.z, __instance._1DC1D4026.w);
-                        }
-                    }
-                    __instance.transform.forward = Quaternion.AngleAxis(num8, Vector3.up) * __instance.transform.forward;
-                    Vector3 axis3 = Vector3.Cross(Vector3.up, __instance.transform.forward);
-                    __instance.transform.forward = Quaternion.AngleAxis(num7, axis3) * __instance.transform.forward;
-                }
-            }
+#endif
             return false;
         }
 
-        public static void OnMovieWillRenderObject(_1F28E2E62.T_E579AD8A __instance, T_DD163FE9 _17BBCD6A6)
+        private static readonly Type[] setCamMatrixTypes = new Type[] { typeof(Vector4), typeof(Vector4), typeof(Vector4), typeof(Vector4) };
+
+        public static void OnMovieWillRenderObject(Player __instance, CriManaMovieMaterial __0)
         {
-            if (__instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Ready || __instance._1E67B0C9C == _1F28E2E62.T_E579AD8A.Status.Playing)
+            var status = __instance.status;
+            if (status == Player.Status.Ready || status == Player.Status.Playing)
             {
                 if (!hasDisabledMovieWindow)
                 {
@@ -266,8 +272,22 @@ namespace DawnVR.Modules
                     hasDisabledMovieWindow = true;
                 }
 
-                VRRig.Instance.CutsceneHandler.SetupCutscene(_17BBCD6A6.material);
+                VRRig.Instance.CutsceneHandler.SetupCutscene(__0.material);
             }
+        }
+
+        public static bool OnSetFOV(Camera __instance, float value)
+        {
+            if (__instance == DawnMainCamera.main)
+            {
+                if ((VRRig.Instance?.CutsceneHandler?.IsActive ?? false) && (VRRig.Instance?.CutsceneHandler.IsIn2D ?? false))
+                    VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = value;
+            }
+
+            if (__instance == VRRig.Instance?.CutsceneHandler?.CurrentCamera)
+                return true;
+
+            return false;
         }
     }
 }

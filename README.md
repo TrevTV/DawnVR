@@ -27,7 +27,8 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 
 ## Configurable Options
 
-### Turning
+### Movement/Turning
+- `MovementThumbstick` allows you to change the dominant hand for movement and UI interactions `(default: Left)`
 - `UseSmoothTurning` allows you to toggle smooth turning `(default: true)`
 - `SmoothTurnSpeed` allows you to change the speed of smooth turning, if enabled `(default: 120)`
 - `UseSnapTurning` allows you to toggle snap turning `(default: false)`
@@ -40,10 +41,13 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 ### Misc
 - `CheckForUpdatesOnStart` checks for any mod updates every time the game boots `(default: true)`
 - `Use2DCutsceneViewer` puts you in a bordered box for cutscenes, disabling this renders cutscenes in VR and allowing you to move your head around `(default: true)`
+- `AllowSkippingAnyCutscene` allows you to skip any cutscene regardless of you being in collector mode `(default: false)`
+- `DetachUIOnJournalOpen` disconnects the UI from the camera whenever the journal is opened, making it easier to read `(default: true)`
 
 ### Debugging
 - `EnableInternalLogging` allows you to redirect internal logging calls from the game and have them shown in the MelonLoader console `(default: false)`
 - `EnablePlayerCollisionVisualization` enables capsules that appear the the feet of Chloe, simply to visualize her NavMeshAgent verses the VRRig `(default: false)`
+- `RunNoVRHarmonyPatchesWhenDisabled` runs some Harmony patches specifically for non-VR testing, specifically skipping any cutscene and splash screen skipping `(default: false)`
 
 ## FAQ
 
@@ -51,7 +55,7 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 The resolution and FPS cap are determined by SteamVR, completely ignoring the game's settings. The other graphical options do effect visuals and performance.
 
 ### Can this be used on the Linux version?
-No, Deck Nine's offical release (the Windows version) was heavily obfuscated (as you can see in the code), so to make a version for the Linux build would require you to replace all of the obfuscated references with the clean names.
+Possibly, with the recent remaster supports, a lot of the code was modified both for IL2CPP support alongside replacing obfuscated names with their originals. If the code was modified to keep a lot of the remaster changes, but moved to Mono, it is possible for it to work.
 
 ### I am receiving a Initalization Error in the console on startup!
 Make sure you have the `-vrmode OpenVR` paramater setup and that SteamVR is open before launching the game. If neither of those are the issue, go into `Life is Strange - Before the Storm_Data` and delete the file `globalgamemanagers.bak` and restart the game.
@@ -64,6 +68,8 @@ By default, Mono doesn't trust any websites, including GitHub. The script is a j
 
 ## Licensing
 - [SteamVR Unity Plugin](https://github.com/ValveSoftware/steamvr_unity_plugin) licensed under the BSD 3-Clause license. See [LICENSE](https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/LICENSE) for the full license.
+- [AssetsTools.NET](https://github.com/nesrak1/AssetsTools.NET/) (included in compiled form) licensed under the MIT license. See [LICENSE](https://github.com/nesrak1/AssetsTools.NET/blob/master/LICENSE) for the full license.
+- [UnityCsReference](https://github.com/Unity-Technologies/UnityCsReference/) (only the UnityEngine.Events namespace, in decompiled form) licensed under the Unity Reference-Only License. See [Unity3D.com](https://unity3d.com/legal/licenses/Unity_Reference_Only_License) for the full license.
 
 ## Credits
 - [MrPurple](https://github.com/MrPurple6411) and [DrBibop](https://github.com/DrBibop) for the VREnabler code (though I have modified it to just extract a pre-modified globalgamemanagers)

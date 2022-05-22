@@ -12,9 +12,24 @@ using Valve.VR;
 
 namespace Valve.VR
 {
-    [ExecuteInEditMode]
     public class SteamVR_RenderModel : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_RenderModel(System.IntPtr ptr) : base(ptr)
+        {
+            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
+            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
+            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
+        }
+#else
+        public SteamVR_RenderModel()
+        {
+            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
+            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
+            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
+        }
+#endif
+
         public SteamVR_TrackedObject.EIndex index = SteamVR_TrackedObject.EIndex.None;
         protected SteamVR_Input_Sources inputSource;
 
@@ -22,19 +37,19 @@ namespace Valve.VR
             "the scene view for lining things up; using it at runtime is discouraged.  Use tracked device " +
             "index instead to ensure the correct model is displayed for all users.";
 
-        [Tooltip(modelOverrideWarning)]
+        //[Tooltip(modelOverrideWarning)]
         public string modelOverride;
 
-        [Tooltip("Shader to apply to model.")]
+        //[Tooltip("Shader to apply to model.")]
         public Shader shader;
 
-        [Tooltip("Enable to print out when render models are loaded.")]
+        //[Tooltip("Enable to print out when render models are loaded.")]
         public bool verbose = false;
 
-        [Tooltip("If available, break down into separate components instead of loading as a single mesh.")]
+        //[Tooltip("If available, break down into separate components instead of loading as a single mesh.")]
         public bool createComponents = true;
 
-        [Tooltip("Update transforms of components at runtime to reflect user action.")]
+        //[Tooltip("Update transforms of components at runtime to reflect user action.")]
         public bool updateDynamically = true;
 
         // Additional controller settings for showing scrollwheel, etc.
@@ -162,7 +177,7 @@ namespace Valve.VR
             var s = buffer.ToString();
             if (renderModelName != s)
             {
-                StartCoroutine(SetModelAsync(s));
+                this.RunCoroutine(SetModelAsync(s));
             }
         }
 
@@ -473,7 +488,7 @@ namespace Valve.VR
                 renderModels.FreeRenderModel(pRenderModel);
             else
 #endif
-                StartCoroutine(FreeRenderModel(pRenderModel));
+                this.RunCoroutine(FreeRenderModel(pRenderModel));
 
             return new RenderModel(mesh, material);
         }
@@ -625,13 +640,6 @@ namespace Valve.VR
         }
 
         SteamVR_Events.Action deviceConnectedAction, hideRenderModelsAction, modelSkinSettingsHaveChangedAction;
-
-        SteamVR_RenderModel()
-        {
-            deviceConnectedAction = SteamVR_Events.DeviceConnectedAction(OnDeviceConnected);
-            hideRenderModelsAction = SteamVR_Events.HideRenderModelsAction(OnHideRenderModels);
-            modelSkinSettingsHaveChangedAction = SteamVR_Events.SystemAction(EVREventType.VREvent_ModelSkinSettingsHaveChanged, OnModelSkinSettingsHaveChanged);
-        }
 
         void OnEnable()
         {

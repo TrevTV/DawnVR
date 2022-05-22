@@ -9,8 +9,8 @@ using Valve.VR;
 using System.IO;
 using System.Linq;
 
-#if UNITY_2017_2_OR_NEWER
-    using UnityEngine.XR;
+#if REMASTER
+using UnityEngine.XR;
 #else
 using XRSettings = UnityEngine.VR.VRSettings;
 using XRDevice = UnityEngine.VR.VRDevice;
@@ -672,8 +672,8 @@ namespace Valve.VR
             hmd.GetProjectionRaw(EVREye.Eye_Right, ref r_left, ref r_right, ref r_top, ref r_bottom);
 
             tanHalfFov = new Vector2(
-                Mathf.Max(-l_left, l_right, -r_left, r_right),
-                Mathf.Max(-l_top, l_bottom, -r_top, r_bottom));
+                MathfUnstrips.Max(-l_left, l_right, -r_left, r_right),
+                MathfUnstrips.Max(-l_top, l_bottom, -r_top, r_bottom));
 
             textureBounds = new VRTextureBounds_t[2];
 
@@ -692,7 +692,7 @@ namespace Valve.VR
             sceneHeight = sceneHeight / Mathf.Max(textureBounds[0].vMax - textureBounds[0].vMin, textureBounds[1].vMax - textureBounds[1].vMin);
 
             aspect = tanHalfFov.x / tanHalfFov.y;
-            fieldOfView = 2.0f * Mathf.Atan(tanHalfFov.y) * Mathf.Rad2Deg;
+            fieldOfView = 2.0f * Mathf.Atan(tanHalfFov.y) * MathfUnstrips.Rad2Deg;
 
             eyes = new SteamVR_Utils.RigidTransform[] {
             new SteamVR_Utils.RigidTransform(hmd.GetEyeToHeadTransform(EVREye.Eye_Left)),

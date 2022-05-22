@@ -1,10 +1,20 @@
 ﻿using Valve.VR;
 using UnityEngine;
+#if REMASTER
+using BrightnessSettingsManager = DawnSettingsManager.BrightnessSettingsManager;
+#else
+using DawnSettingsManager = T_1005C221;
+using BrightnessSettingsManager = T_1005C221.T_429306B8;
+#endif
 
 namespace DawnVR.Modules.VR
 {
     internal class VRCamera : MonoBehaviour
     {
+#if REMASTER
+        public VRCamera(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         public Camera Component;
         public Shader OverlayShader;
         public RenderTexture RenderToVRTexture;
@@ -24,7 +34,12 @@ namespace DawnVR.Modules.VR
             Component = GetComponent<Camera>();
             gameObject.AddComponent<SteamVR_Fade>();
 
+#if REMASTER
+            Component.allowHDR = true;
+#else
             Component.hdr = true;
+#endif
+
             Component.ResetAspect();
 
             Holder = transform.parent;
@@ -33,7 +48,8 @@ namespace DawnVR.Modules.VR
 
             Component.backgroundColor = Color.black;
             overlayEffectMaterial = new Material(Resources.StandardAssetsOverlayShader);
-            brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
+            overlayEffectMaterial.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            brightnessIntensity = BrightnessSettingsManager.GetBrightness();
 
             #region UI Renderer
 
@@ -49,7 +65,7 @@ namespace DawnVR.Modules.VR
             OverlayShader.hideFlags = HideFlags.DontUnloadUnusedAsset;
             uiRenderer.gameObject.SetActive(true);
 
-            #endregion
+#endregion
 
             CreateSpectatorCamera();
         }
@@ -58,7 +74,7 @@ namespace DawnVR.Modules.VR
         {
             Vector4 UV_Transform = new Vector4(1, 0, 0, 1);
             overlayEffectMaterial.SetVector("_UV_Transform", UV_Transform);
-            overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity - 1);
+            overlayEffectMaterial.SetFloat("_Intensity", brightnessIntensity);
             overlayEffectMaterial.SetTexture("_Overlay", Resources.WhitePixelTexture);
             Graphics.Blit(source, destination, overlayEffectMaterial, 3);
         }
@@ -73,7 +89,11 @@ namespace DawnVR.Modules.VR
             spectatorCamera = specTransform.gameObject.AddComponent<Camera>();
             CopyCameraProperties(Component, spectatorCamera);
             spectatorCamera.depth = 100;
+#if REMASTER
+            spectatorCamera.allowHDR = true;
+#else
             spectatorCamera.hdr = true;
+#endif
             spectatorCamera.stereoTargetEye = StereoTargetEyeMask.None;
             spectatorCamera.fieldOfView = Preferences.SpectatorFOV.Value;
             specTransform.localPosition = Vector3.zero;
@@ -93,13 +113,13 @@ namespace DawnVR.Modules.VR
             }
         }
 
-        public void ToggleUIRendererParent()
+        public void ToggleUIRendererParent(bool parentToHolder)
         {
             Transform uiRendTrans = uiRenderer.transform;
-            if (uiRendTrans.parent == transform)
+            if (parentToHolder)
             {
-                uiRendTrans.parent = VRRig.Instance.transform;
-                uiRendTrans.localPosition = new Vector3(0f, 1.5f, 2.25f);
+                uiRendTrans.parent = VRRig.Instance.Camera.Holder;
+                uiRendTrans.localPosition = new Vector3(0f, 1.5f, 1.5f);
                 uiRendTrans.localRotation = Quaternion.Euler(-270f, -90f, 90);
             }
             else
@@ -110,7 +130,7 @@ namespace DawnVR.Modules.VR
             }
         }
 
-        public void UpdateBrightness() => brightnessIntensity = T_1005C221.T_429306B8.GetBrightness();
+        public void UpdateBrightness() => brightnessIntensity = BrightnessSettingsManager.GetBrightness();
 
         public void BlockVision(bool block) => visionBlocker.SetActive(block);
 

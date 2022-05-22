@@ -572,7 +572,7 @@ public static class SteamVR_Utils
 					var uTarget = u * width / uTotal;
 
 					var vTargetOffset = 0;
-					var xOffset = -ipd / 2 * Mathf.Cos(pitch * Mathf.Deg2Rad);
+					var xOffset = -ipd / 2 * Mathf.Cos(pitch * MathfUnstrips.Deg2Rad);
 
 					for (int j = 0; j < 2; j++) // left, right
 					{
@@ -659,11 +659,11 @@ public static class SteamVR_Utils
 
 		// Preview
 		previewTexture.Apply();
-		System.IO.File.WriteAllBytes(previewFilename, previewTexture.EncodeToPNG());
+		//System.IO.File.WriteAllBytes(previewFilename, previewTexture.EncodeToPNG());
 
 		// VR
 		texture.Apply();
-		System.IO.File.WriteAllBytes(VRFilename, texture.EncodeToPNG());
+		//System.IO.File.WriteAllBytes(VRFilename, texture.EncodeToPNG());
 
 		// Cleanup.
 		if (camera != tempCamera)

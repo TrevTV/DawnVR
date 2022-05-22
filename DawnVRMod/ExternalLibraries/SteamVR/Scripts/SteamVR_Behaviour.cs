@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-#if UNITY_2017_2_OR_NEWER
-    using UnityEngine.XR;
+#if REMASTER
+using UnityEngine.XR;
 #else
 using XRSettings = UnityEngine.VR.VRSettings;
 using XRDevice = UnityEngine.VR.VRDevice;
@@ -16,6 +16,10 @@ namespace Valve.VR
 {
     public class SteamVR_Behaviour : MonoBehaviour
     {
+#if REMASTER
+        public SteamVR_Behaviour(System.IntPtr ptr) : base(ptr) { }
+#endif
+
         private const string openVRDeviceName = "OpenVR";
         public static bool forcingInitialization = false;
 
@@ -37,7 +41,6 @@ namespace Valve.VR
 
         public bool doNotDestroy = true;
 
-        [HideInInspector]
         public SteamVR_Render steamvr_render;
 
         internal static bool isPlaying = false;
@@ -112,7 +115,7 @@ namespace Valve.VR
                 if (XRSettings.loadedDeviceName == openVRDeviceName)
                     EnableOpenVR();
                 else
-                    initializeCoroutine = StartCoroutine(DoInitializeSteamVR(forceUnityVRToOpenVR));
+                    initializeCoroutine = this.RunCoroutine(DoInitializeSteamVR(forceUnityVRToOpenVR));
             }
             else
             {
@@ -191,12 +194,31 @@ namespace Valve.VR
 #else
         protected void OnEnable()
         {
+#if REMASTER
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? new Action<Camera>(OnCameraPreCull)
+                    : Il2CppSystem.Delegate.Combine(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
+#else
             Camera.onPreCull += OnCameraPreCull;
+#endif
             SteamVR_Events.System(EVREventType.VREvent_Quit).Listen(OnQuit);
+
         }
+
         protected void OnDisable()
         {
+#if REMASTER
+            Camera.onPreCull = (
+                    (ReferenceEquals(Camera.onPreCull, null))
+                    ? null
+                    : Il2CppSystem.Delegate.Remove(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
+                    );
+#else
             Camera.onPreCull -= OnCameraPreCull;
+#endif
+
             SteamVR_Events.System(EVREventType.VREvent_Quit).Remove(OnQuit);
         }
         protected void OnCameraPreCull(Camera cam)

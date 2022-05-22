@@ -11,97 +11,101 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_SkeletonCustom : SteamVR_Behaviour_Skeleton
     {
-        [SerializeField]
+#if REMASTER
+        public SteamVR_Behaviour_SkeletonCustom(System.IntPtr ptr) : base(ptr) { }
+#endif
+
+        //[SerializeField]
         protected Transform _wrist;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbMetacarpal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbProximal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbMiddle;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbDistal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbTip;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _thumbAux;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexMetacarpal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexProximal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexMiddle;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexDistal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexTip;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _indexAux;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleMetacarpal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleProximal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleMiddle;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleDistal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleTip;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _middleAux;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringMetacarpal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringProximal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringMiddle;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringDistal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringTip;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _ringAux;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyMetacarpal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyProximal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyMiddle;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyDistal;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyTip;
 
-        [SerializeField]
+        //[SerializeField]
         protected Transform _pinkyAux;
 
 

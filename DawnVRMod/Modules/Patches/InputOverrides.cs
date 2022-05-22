@@ -2,34 +2,19 @@
 using UnityEngine;
 using System.Linq;
 using Valve.VR;
+#if !REMASTER
+using InputManager = T_6FCAE66C;
+using KeyBinding = T_9005A419;
+using JoystickInputManager = T_D9E8342E;
+#endif
 
 namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        // used for unlocking UIRenderer from the headset
-        private const float delayBetweenPresses = 0.2f;
-        private static bool pressedFirstTime = false;
-        private static float lastPressedTime;
+        public static void ManagerInit(InputManager __instance) => __instance.SetFieldValue("m_overrideType", eControlType.kXboxOne);
 
-        public static void ManagerInit(T_6FCAE66C __instance) => __instance._1C6FBAE09 = eControlType.kXboxOne;
-
-        public static eInputState GetInputState_Binding(T_6FCAE66C inputManInstance, T_9005A419 binding)
-        {
-            if (inputManInstance.InputBlocked)
-                return eInputState.kNone;
-
-            for (int i = 0; i < binding.m_joystick.Count; i++)
-            {
-                eInputState buttonState = T_D9E8342E.Singleton.GetButtonState(binding.m_joystick[i]);
-                if (buttonState != eInputState.kNone)
-                    return buttonState;
-            }
-
-            return eInputState.kNone;
-        }
-
-        public static bool GetInputState_Enum(T_6FCAE66C __instance, ref eInputState __result, eGameInput _1561EDFFF)
+        public static bool GetInputState_Enum(InputManager __instance, ref eInputState __result, eGameInput __0)
         {
             if (__instance.InputBlocked)
             {
@@ -37,7 +22,7 @@ namespace DawnVR.Modules
                 return false;
             }
 
-            if (_1561EDFFF == eGameInput.kAny)
+            if (__0 == eGameInput.kAny)
             {
                 if (SteamVR_Input.actionsBoolean.Any((a) => a != SteamVR_Actions.default_HeadsetOnHead && a.stateDown))
                 {
@@ -50,10 +35,17 @@ namespace DawnVR.Modules
                     return false;
                 }
             }
-            else if (__instance.m_keyBindings.ContainsKey((int)_1561EDFFF))
+            else if (__instance.m_keyBindings.ContainsKey((int)__0))
             {
-                T_9005A419 keybinding = __instance.m_keyBindings[(int)_1561EDFFF];
-                __result = GetInputState_Binding(__instance, keybinding);
+                KeyBinding keyBinding = __instance.m_keyBindings[(int)__0];
+
+                for (int i = 0; i < keyBinding.m_joystick.Count; i++)
+                {
+                    eInputState buttonState = GetButtonState(keyBinding.m_joystick[i]);
+                    if (buttonState != eInputState.kNone)
+                        __result = buttonState;
+                }
+
                 return false;
             }
 
@@ -61,68 +53,42 @@ namespace DawnVR.Modules
             return false;
         }
 
-        public static bool GetButtonState(ref eInputState __result, eJoystickKey _13A42C455)
+        public static eInputState GetButtonState(eJoystickKey key)
         {
-            __result = eInputState.kNone;
-
-            switch (_13A42C455)
+            switch (key)
             {
                 case eJoystickKey.kNone:
                     break;
                 case eJoystickKey.kStart:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                 case eJoystickKey.kSelect:
-                    var inputState = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
-                    if (inputState == eInputState.kDown)
-                    {
-                        if (pressedFirstTime)
-                        {
-                            bool isDoublePress = Time.time - lastPressedTime <= delayBetweenPresses;
-                            if (isDoublePress)
-                            {
-                                VRRig.Instance.Camera.ToggleUIRendererParent();
-                                pressedFirstTime = false;
-                            }
-                        }
-                        else
-                            pressedFirstTime = true;
-                        lastPressedTime = Time.time;
-                    }
-
-                    if (pressedFirstTime && Time.time - lastPressedTime > delayBetweenPresses)
-                        __result = inputState;
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                 case eJoystickKey.kR1:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Right));
                 case eJoystickKey.kR2:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetGrip(VRInput.Hand.Right));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetGrip(VRInput.Hand.Right));
                 case eJoystickKey.kR3:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Right));
                 case eJoystickKey.kL1:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Left));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetTrigger(VRInput.Hand.Left));
                 case eJoystickKey.kL2:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetGrip(VRInput.Hand.Left));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetGrip(VRInput.Hand.Left));
                 case eJoystickKey.kL3:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonThumbstick(VRInput.Hand.Left));
                 case eJoystickKey.kAction1:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonX());
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonX());
                 case eJoystickKey.kAction2:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonY());
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonY());
+#if REMASTER
+                case eJoystickKey.kMenuBack:
+#endif
                 case eJoystickKey.kAction3:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonB());
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonB());
+#if REMASTER
+                case eJoystickKey.kMenuSelect:
+#endif
                 case eJoystickKey.kAction4:
-                    __result = VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonA());
-                    break;
+                    return VRInput.GetBooleanInputState(VRRig.Instance.Input.GetButtonA());
                 // are these used here?
                 case eJoystickKey.kPlatform:
                     break;
@@ -137,28 +103,29 @@ namespace DawnVR.Modules
                 default:
                     break;
             }
-            return false;
+
+            return eInputState.kNone;
         }
 
-        public static bool GetAxis(ref float __result, eJoystickKey _1BBA85C4E)
+        public static bool GetAxis(ref float __result, eJoystickKey __0)
         {
             __result = 0;
 
-            switch (_1BBA85C4E)
+            switch (__0)
             {
                 case eJoystickKey.kNone:
                     break;
                 case eJoystickKey.kLeftStickX:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Left).axis.x;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.x;
                     break;
                 case eJoystickKey.kLeftStickY:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Left).axis.y;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.y;
                     break;
                 case eJoystickKey.kRightStickX:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Right).axis.x;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.x;
                     break;
                 case eJoystickKey.kRightStickY:
-                    __result = VRRig.Instance.Input.GetThumbstickVector(VRInput.Hand.Right).axis.y;
+                    __result = VRRig.Instance.Input.GetThumbstickVector(Preferences.MovementThumbstick.Value).axis.y;
                     break;
                 // are these used here?
                 case eJoystickKey.kR1:
@@ -172,6 +139,7 @@ namespace DawnVR.Modules
                 default:
                     break;
             }
+
             return false;
         }
     }

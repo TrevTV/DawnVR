@@ -686,7 +686,7 @@ namespace Valve.VR
             InitAfterDeserialize();
         }
 
-        public static Quaternion steamVRFixUpRotation = Quaternion.AngleAxis(Mathf.PI * Mathf.Rad2Deg, Vector3.up);
+        public static Quaternion steamVRFixUpRotation = Quaternion.AngleAxis(MathfUnstrips.PI * MathfUnstrips.Rad2Deg, Vector3.up);
     }
 
     public class SteamVR_Action_Skeleton_Source_Map : SteamVR_Action_Pose_Source_Map<SteamVR_Action_Skeleton_Source>
@@ -1058,7 +1058,7 @@ namespace Valve.VR
             {
                 // Now that we're in the same handedness as Unity, rotate the root bone around the Y axis
                 // so that forward is facing down +Z
-                Quaternion qFixUpRot = Quaternion.AngleAxis(Mathf.PI * Mathf.Rad2Deg, Vector3.up);
+                Quaternion qFixUpRot = Quaternion.AngleAxis(MathfUnstrips.PI * MathfUnstrips.Rad2Deg, Vector3.up);
 
                 transforms[0].rot = qFixUpRot * transforms[0].rot;
             }

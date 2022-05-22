@@ -48,9 +48,15 @@ namespace DawnVR
 
         public static T LoadAssetWithHF<T>(this AssetBundle b, string name) where T : Object
         {
+#if REMASTER
+            Object asset = b.LoadAsset(name).Cast<Object>();
+            asset.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            return asset.Cast<T>();
+#else
             Object asset = b.LoadAsset<Object>(name);
             asset.hideFlags = HideFlags.DontUnloadUnusedAsset;
             return (T)asset;
+#endif
         }
     }
 }

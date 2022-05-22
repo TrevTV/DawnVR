@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
-using UnityEngine.Events;
+using DawnVR.Events;
 
 namespace Valve.VR
 {
@@ -17,10 +17,14 @@ namespace Valve.VR
     /// </summary>
     public class SteamVR_Behaviour_Boolean : MonoBehaviour
     {
-        [Tooltip("The SteamVR boolean action that this component should use")]
+#if REMASTER
+        public SteamVR_Behaviour_Boolean(System.IntPtr ptr) : base(ptr) { }
+#endif
+
+        //[Tooltip("The SteamVR boolean action that this component should use")]
         public SteamVR_Action_Boolean booleanAction;
 
-        [Tooltip("The device this action should apply to. Any if the action is not device specific.")]
+        //[Tooltip("The device this action should apply to. Any if the action is not device specific.")]
         public SteamVR_Input_Sources inputSource;
 
         /// <summary>This UnityEvent fires whenever a change happens in the action</summary>
