@@ -47,7 +47,7 @@ namespace DawnVR.Modules.VR
             switch (currentStep)
             {
                 case CalibrationStep.FindIRLHeight:
-					if (SteamVR_Input.actionsBoolean.Any((a) => a != SteamVR_Actions.default_HeadsetOnHead && a.stateDown))
+					if (IsAnyDown())
 					{
 						standingHeight = VRRig.Instance.Camera.transform.localPosition.y;
 						irlHeightObj.SetActive(false);
@@ -56,7 +56,7 @@ namespace DawnVR.Modules.VR
 					}
 					break;
                 case CalibrationStep.Calibrate:
-					if (SteamVR_Input.actionsBoolean.Any((a) => a != SteamVR_Actions.default_HeadsetOnHead && a.stateDown))
+					if (IsAnyDown())
                     {
 						HeightOffset = standingHeight - VRRig.Instance.Camera.transform.localPosition.y;
 						VRRig.Instance.SetHeightOffset(HeightOffset);
@@ -66,6 +66,16 @@ namespace DawnVR.Modules.VR
                     break;
             }
         }
+
+		private bool IsAnyDown()
+        {
+			return SteamVR_Input.actionsBoolean.Any(a =>
+            {
+				return a != SteamVR_Actions.default_HeadsetOnHead
+				&& !a.GetShortName().StartsWith("Bool_Thumbstick")
+				&& a.stateDown;
+            });
+		}
 
 		private enum CalibrationStep
         {
