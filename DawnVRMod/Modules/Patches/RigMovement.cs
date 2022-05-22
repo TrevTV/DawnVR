@@ -16,8 +16,8 @@ namespace DawnVR.Modules
 {
     internal static partial class HarmonyPatches
     {
-        private const float WALK_SPEED_MULT = 4f;
-        private const float SPRINT_SPEED_MULT = 2.5f;
+        private const float WALK_SPEED_MULT = 2.5f;
+        private const float SPRINT_SPEED_MULT = 4f;
 
         public static bool CharControllerMove(CharController __instance, Vector3 __0, bool __1)
         {
