@@ -139,7 +139,7 @@ namespace DawnVR.Modules
             PatchPre(typeof(DawnMainCamera).GetProperty("MainUICamera").GetGetMethod(), nameof(GetMainUICamera)); // fixes an uncommon null ref hopefully
             PatchPre(typeof(PostProcessingDofPass).GetMethod("OnRenderImage", AccessTools.all), nameof(DontRunMe)); // fixes a random null ref
             PatchPre(typeof(CriAtomListener).GetMethod("OnEnable", AccessTools.all), nameof(DestroyAtomListener)); // fixes audio crackling
-            PatchPre(typeof(CharController).GetMethod("SetAttachObjActive".ToMethodName(), AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
+            PatchPre(typeof(CharController).GetMethod("SetAttachObjActive", AccessTools.all), nameof(DontRunMe)); // prevents AttachObjects from displaying since they arent connected to the vr hands
             PatchPre(typeof(ST_ParallelHighlight).GetMethod("Trigger"), nameof(ParallelHighlightTrigger)); // fixes a random null ref
 #if REMASTER
             PatchPre(typeof(InteractToLeaveUI).GetMethod("Update"), nameof(InteractToLeaveUpdate)); // fixes this method using a recreation of InputManager::GetInputState(eGameInput) for whatever reason
