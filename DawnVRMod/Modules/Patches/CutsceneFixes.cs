@@ -279,7 +279,7 @@ namespace DawnVR.Modules
         {
             if (__instance == DawnMainCamera.main)
             {
-                if (VRRig.Instance?.CutsceneHandler?.IsActive ?? false)
+                if ((VRRig.Instance?.CutsceneHandler?.IsActive ?? false) && (VRRig.Instance?.CutsceneHandler.IsIn2D ?? false))
                     VRRig.Instance.CutsceneHandler.CurrentCamera.fieldOfView = value;
             }
 
