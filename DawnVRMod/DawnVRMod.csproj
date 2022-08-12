@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BONEWORKS\BONEWORKS\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem">
       <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\Managed\Il2CppSystem.dll</HintPath>

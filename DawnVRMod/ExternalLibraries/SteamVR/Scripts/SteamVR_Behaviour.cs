@@ -196,7 +196,7 @@ namespace Valve.VR
         {
 #if REMASTER
             Camera.onPreCull = (
-                    (ReferenceEquals(Camera.onPreCull, null))
+                    (Camera.onPreCull is null)
                     ? new Action<Camera>(OnCameraPreCull)
                     : Il2CppSystem.Delegate.Combine(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
                     );
@@ -211,7 +211,7 @@ namespace Valve.VR
         {
 #if REMASTER
             Camera.onPreCull = (
-                    (ReferenceEquals(Camera.onPreCull, null))
+                    (Camera.onPreCull is null)
                     ? null
                     : Il2CppSystem.Delegate.Remove(Camera.onPreCull, (Camera.CameraCallback)new Action<Camera>(OnCameraPreCull)).Cast<Camera.CameraCallback>()
                     );
