@@ -1,5 +1,6 @@
 ﻿using Valve.VR;
 using UnityEngine;
+using System.Collections;
 #if REMASTER
 using BrightnessSettingsManager = DawnSettingsManager.BrightnessSettingsManager;
 #else
@@ -23,6 +24,8 @@ namespace DawnVR.Modules.VR
         private Camera uiCamera;
         private GameObject uiRenderer;
         private GameObject visionBlocker;
+        private Material vignetteMat;
+        private GameObject vignetteGo;
 
         private Camera spectatorCamera;
 
@@ -45,6 +48,12 @@ namespace DawnVR.Modules.VR
             Holder = transform.parent;
             visionBlocker = transform.Find("VisionBlocker").gameObject;
             visionBlocker.SetActive(true);
+            vignetteGo = transform.Find("InvertedSphere").gameObject;
+            vignetteMat = transform.Find("InvertedSphere").GetComponent<MeshRenderer>().material;
+            //vignetteMat.SetFloat("_Inner", Preferences.VignetteInner.Value);
+            //vignetteMat.SetFloat("_Outter", Preferences.VignetteOuter.Value);
+            //vignetteGo.SetActive(false);
+            //vignetteGo.transform.localScale = Vector3.zero;
 
             Component.backgroundColor = Color.black;
             overlayEffectMaterial = new Material(Resources.StandardAssetsOverlayShader);
@@ -68,6 +77,18 @@ namespace DawnVR.Modules.VR
 #endregion
 
             CreateSpectatorCamera();
+        }
+
+        private void LateUpdate()
+        {
+            if (VRRig.Instance.ChloeComponent == null)
+                return;
+
+            var moveDir = VRRig.Instance.ChloeComponent.m_moveDirection;
+            if (moveDir != Vector3.zero)
+                LerpVignette(true);
+            else
+                LerpVignette(false);
         }
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -127,6 +148,49 @@ namespace DawnVR.Modules.VR
                 uiRendTrans.parent = transform;
                 uiRendTrans.localPosition = new Vector3(0f, 0f, 2.25f);
                 uiRendTrans.localRotation = Quaternion.Euler(-270f, -90f, 90);
+            }
+        }
+
+        private Coroutine lerpCoroute;
+        private bool vigState;
+
+        public void LerpVignette(bool enable)
+        {
+            if (vigState != enable)
+            {
+                if (lerpCoroute != null)
+                    MelonLoader.MelonCoroutines.Stop(lerpCoroute);
+
+                //lerpCoroute = (Coroutine)MelonLoader.MelonCoroutines.Start(enable ? CoLerp(0, 1, 0.3f) : CoLerp(1, 0, 0.3f));
+                if (!enable || Preferences.VignetteSmoothEnable.Value)
+                    lerpCoroute = (Coroutine)MelonLoader.MelonCoroutines.Start(
+                    enable
+                    ? CoLerp(Preferences.VignetteInner.Value, Preferences.VignetteOuter.Value, 0.3f)
+                    : CoLerp(0f, 0f, 0.3f));
+                else
+                {
+                    vignetteMat.SetFloat("_Inner", Preferences.VignetteInner.Value);
+                    vignetteMat.SetFloat("_Outter", Preferences.VignetteOuter.Value);
+                }
+
+                vigState = enable;
+            }
+
+            IEnumerator CoLerp(float endInnerVal, float endOuterVal, float duration)
+            {
+                float innerStartValue = !enable ? Preferences.VignetteInner.Value : 0f;
+                float outerStartValue = !enable ? Preferences.VignetteOuter.Value : 0f;
+
+                float timeElapsed = 0;
+                while (timeElapsed < duration)
+                {
+                    vignetteMat.SetFloat("_Inner", Mathf.Lerp(innerStartValue, endInnerVal, timeElapsed / duration));
+                    vignetteMat.SetFloat("_Outter", Mathf.Lerp(outerStartValue, endOuterVal, timeElapsed / duration));
+                    timeElapsed += Time.deltaTime;
+                    yield return null;
+                }
+                vignetteMat.SetFloat("_Inner", endInnerVal);
+                vignetteMat.SetFloat("_Outter", endOuterVal);
             }
         }
 

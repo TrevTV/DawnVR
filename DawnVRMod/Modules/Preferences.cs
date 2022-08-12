@@ -14,6 +14,11 @@ namespace DawnVR.Modules
         public static MelonPreferences_Entry<bool> UseSnapTurning { get; private set; }
         public static MelonPreferences_Entry<int> SnapTurnAngle { get; private set; }
 
+        public static MelonPreferences_Entry<bool> VignetteEnabled { get; private set; }
+        public static MelonPreferences_Entry<bool> VignetteSmoothEnable { get; private set; }
+        public static MelonPreferences_Entry<float> VignetteInner { get; private set; }
+        public static MelonPreferences_Entry<float> VignetteOuter { get; private set; }
+
         public static MelonPreferences_Entry<bool> SpectatorEnabled { get; private set; }
         public static MelonPreferences_Entry<int> SpectatorFOV { get; private set; }
 
@@ -33,6 +38,11 @@ namespace DawnVR.Modules
             SmoothTurnSpeed = category.CreateEntry(nameof(SmoothTurnSpeed), 120);
             UseSnapTurning = category.CreateEntry(nameof(UseSnapTurning), false);
             SnapTurnAngle = category.CreateEntry(nameof(SnapTurnAngle), 45);
+
+            VignetteEnabled = category.CreateEntry(nameof(VignetteEnabled), false);
+            VignetteSmoothEnable = category.CreateEntry(nameof(VignetteSmoothEnable), true);
+            VignetteInner = category.CreateEntry(nameof(VignetteInner), 1f);
+            VignetteOuter = category.CreateEntry(nameof(VignetteOuter), 0.2f);
 
             category = MelonPreferences.CreateCategory(spectatorCategoryName);
             SpectatorEnabled = category.CreateEntry(nameof(SpectatorEnabled), false);
