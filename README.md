@@ -24,6 +24,7 @@ Each VR controller's buttons are mapped to corresponding buttons that would be o
 ![WMR Motion Controller Diagram](./Assets/WMRControls.png)
 
 ## Configurable Options
+The configuration file is found at `<BTS Game Directory>/UserData/MelonPreferences.cfg` and can be opened by any text editor.
 
 ### Movement/Turning
 - `MovementThumbstick` allows you to change the dominant hand for movement and UI interactions `(default: Left)`
