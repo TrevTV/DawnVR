@@ -1,6 +1,8 @@
 # DawnVR [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S244CYE)
 VR mod for Life Is Strange: Before The Storm
 
+**With the release of 1.0.0, DawnVR will now be in maintenance mode, meaning there will not be any active development of new features (with some possible exceptions). Bug fixes may still be implemented from time to time.**
+
 ## Installation
 1. Follow the [Automated Installation guide](https://melonwiki.xyz/#/?id=automated-installation) on the MelonLoader wiki page, installing to the Life is Strange: Before the Storm exe.
    - If you do not know where your install's exe is, open Steam, find the game, right click it, and select Manage -> Browse Local Files, this will lead you to your game's installation.
