@@ -10,7 +10,7 @@ namespace Valve.VR
     /// Action sets are logical groupings of actions. Multiple sets can be active at one time.
     /// </summary>
     [Serializable]
-    public class SteamVR_ActionSet : IEquatable<SteamVR_ActionSet>, ISteamVR_ActionSet, ISerializationCallbackReceiver
+    public class SteamVR_ActionSet : IEquatable<SteamVR_ActionSet>, ISteamVR_ActionSet, ISerializationCallbackReceiverC
     {
         public SteamVR_ActionSet() { }
 
@@ -331,11 +331,11 @@ namespace Valve.VR
             return set1.Equals(set2);
         }
 
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        void ISerializationCallbackReceiverC.OnBeforeSerialize()
         {
         }
 
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        void ISerializationCallbackReceiverC.OnAfterDeserialize()
         {
             if (setData != null)
             {

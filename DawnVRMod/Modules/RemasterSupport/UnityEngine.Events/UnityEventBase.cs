@@ -10,7 +10,7 @@ namespace DawnVR.Events
 	/// </summary>
 	// Token: 0x0200038C RID: 908
 	[Serializable]
-	public abstract class UnityEventBase : ISerializationCallbackReceiver
+	public abstract class UnityEventBase : ISerializationCallbackReceiverC
 	{
 		// Token: 0x06002F1F RID: 12063 RVA: 0x0004BF74 File Offset: 0x0004A174
 		protected UnityEventBase()
@@ -21,12 +21,12 @@ namespace DawnVR.Events
 		}
 
 		// Token: 0x06002F20 RID: 12064 RVA: 0x0004BFAC File Offset: 0x0004A1AC
-		void ISerializationCallbackReceiver.OnBeforeSerialize()
+		void ISerializationCallbackReceiverC.OnBeforeSerialize()
 		{
 		}
 
 		// Token: 0x06002F21 RID: 12065 RVA: 0x0004BFB0 File Offset: 0x0004A1B0
-		void ISerializationCallbackReceiver.OnAfterDeserialize()
+		void ISerializationCallbackReceiverC.OnAfterDeserialize()
 		{
 			this.DirtyPersistentCalls();
 			this.m_TypeName = base.GetType().AssemblyQualifiedName;

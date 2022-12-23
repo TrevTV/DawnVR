@@ -27,7 +27,7 @@ namespace DawnVR
         private bool vrEnabled;
         private bool steamInitRunning;
 
-        public override void OnApplicationStart()
+        public override void OnInitializeMelon()
         {
             Preferences.Init();
 
@@ -36,7 +36,7 @@ namespace DawnVR
                 typeof(UnhollowerBaseLib.LogSupport).GetMethod("Warning", HarmonyLib.AccessTools.all),
                 typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.UnhollowerWarningPrefix)).ToNewHarmonyMethod());
 
-            foreach (var mb in Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
+            foreach (var mb in MelonAssembly.Assembly.GetTypes().Where(a => a.BaseType == typeof(MonoBehaviour)))
                 UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp(mb, false);
 #endif
 

@@ -6,7 +6,7 @@ namespace DawnVR.Events
 {
 	// Token: 0x02000380 RID: 896
 	[Serializable]
-	internal class ArgumentCache : ISerializationCallbackReceiver
+	internal class ArgumentCache : ISerializationCallbackReceiverC
     {
 		// Token: 0x06002EC3 RID: 11971 RVA: 0x0004AE48 File Offset: 0x00049048
 		public ArgumentCache()

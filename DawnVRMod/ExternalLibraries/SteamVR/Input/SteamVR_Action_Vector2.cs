@@ -13,7 +13,7 @@ namespace Valve.VR
     /// <summary>
     /// An analog action with two values generally from -1 to 1. Also provides a delta since the last update.
     /// </summary>
-    public class SteamVR_Action_Vector2 : SteamVR_Action_In<SteamVR_Action_Vector2_Source_Map, SteamVR_Action_Vector2_Source>, ISteamVR_Action_Vector2, ISerializationCallbackReceiver
+    public class SteamVR_Action_Vector2 : SteamVR_Action_In<SteamVR_Action_Vector2_Source_Map, SteamVR_Action_Vector2_Source>, ISteamVR_Action_Vector2, ISerializationCallbackReceiverC
     {
         public delegate void AxisHandler(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta);
         public delegate void ActiveChangeHandler(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, bool active);
@@ -170,11 +170,11 @@ namespace Valve.VR
             sourceMap[inputSource].onAxis -= functionToStopCalling;
         }
 
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        void ISerializationCallbackReceiverC.OnBeforeSerialize()
         {
         }
 
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        void ISerializationCallbackReceiverC.OnAfterDeserialize()
         {
             InitAfterDeserialize();
         }

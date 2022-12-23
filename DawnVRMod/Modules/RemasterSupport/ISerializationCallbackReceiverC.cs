@@ -1,6 +1,6 @@
 ﻿namespace UnityEngine
 {
-	public interface ISerializationCallbackReceiver
+	public interface ISerializationCallbackReceiverC
 	{
 		/// <summary>
 		///   <para>Implement this method to receive a callback before Unity serializes your object.</para>

@@ -84,6 +84,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>$(UnityEngineUI)</HintPath>
     </Reference>
+    <Reference Include="ValueTupleBridge">
+      <HintPath>D:\SteamLibrary\steamapps\common\LIS - Before the Storm Remastered\MelonLoader\ValueTupleBridge.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Release_RM|AnyCPU'">
     <Reference Include="Il2Cppmscorlib">
@@ -117,7 +120,7 @@
   <ItemGroup>
     <Compile Include="AssemblyLoadingTools.cs" />
     <Compile Include="Modules\RemasterSupport\IL2CPPFixes.cs" />
-    <Compile Include="Modules\RemasterSupport\ISerializationCallbackReceiver.cs" />
+    <Compile Include="Modules\RemasterSupport\ISerializationCallbackReceiverC.cs" />
     <Compile Include="Modules\RemasterSupport\MathfUnstrips.cs" />
     <Compile Include="Modules\HarmonyPatches.cs" />
     <Compile Include="Modules\OutputRedirect.cs" />

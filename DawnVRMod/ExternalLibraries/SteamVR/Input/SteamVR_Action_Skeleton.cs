@@ -15,7 +15,7 @@ namespace Valve.VR
     /// Skeleton Actions are our best approximation of where your hands are while holding vr controllers and pressing buttons. We give you 31 bones to help you animate hand models.
     /// For more information check out this blog post: https://steamcommunity.com/games/250820/announcements/detail/1690421280625220068
     /// </summary>
-    public class SteamVR_Action_Skeleton : SteamVR_Action_Pose_Base<SteamVR_Action_Skeleton_Source_Map, SteamVR_Action_Skeleton_Source>, ISteamVR_Action_Skeleton_Source, ISerializationCallbackReceiver
+    public class SteamVR_Action_Skeleton : SteamVR_Action_Pose_Base<SteamVR_Action_Skeleton_Source_Map, SteamVR_Action_Skeleton_Source>, ISteamVR_Action_Skeleton_Source, ISerializationCallbackReceiverC
     {
         public const int numBones = 31;
 
@@ -677,11 +677,11 @@ namespace Valve.VR
             sourceMap[SteamVR_Input_Sources.Any].onUpdate -= functionToStopCalling;
         }
 
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        void ISerializationCallbackReceiverC.OnBeforeSerialize()
         {
         }
 
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        void ISerializationCallbackReceiverC.OnAfterDeserialize()
         {
             InitAfterDeserialize();
         }

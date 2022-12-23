@@ -58,67 +58,6 @@ namespace Valve.VR
         }
 #endif
 
-        #region Enable / Disable
-
-        void OnDisable()
-        {
-            return;
-            SteamVR_Render.Remove(this);
-        }
-
-        void OnEnable()
-        {
-            return;
-            // Bail if no hmd is connected
-            var vr = SteamVR.instance;
-            if (vr == null)
-            {
-                if (head != null)
-                {
-                    head.GetComponent<SteamVR_TrackedObject>().enabled = false;
-                }
-
-                enabled = false;
-                return;
-            }
-
-            // Convert camera rig for native OpenVR integration.
-            var t = transform;
-            if (head != t)
-            {
-                //Expand();
-
-                t.parent = origin;
-
-                while (head.childCount > 0)
-                    head.GetChild(0).parent = t;
-
-                // Keep the head around, but parent to the camera now since it moves with the hmd
-                // but existing content may still have references to this object.
-                head.parent = t;
-                head.localPosition = Vector3.zero;
-                head.localRotation = Quaternion.identity;
-                head.localScale = Vector3.one;
-                head.gameObject.SetActive(false);
-
-                _head = t;
-            }
-
-            if (ears == null)
-            {
-                var e = transform.GetComponentInChildren<SteamVR_Ears>();
-                if (e != null)
-                    _ears = e.transform;
-            }
-
-            if (ears != null)
-                ears.GetComponent<SteamVR_Ears>().vrcam = this;
-
-            SteamVR_Render.Add(this);
-        }
-
-        #endregion
-
         #region Functionality to ensure SteamVR_Camera component is always the last component on an object
 
         void Awake()
