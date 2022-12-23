@@ -1,6 +1,7 @@
 ﻿using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using MelonLoader;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,7 +48,7 @@ namespace DawnVREnabler
                 }
                 else
                 {
-                    using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("DawnVREnabler.vr-ggm"))
+                    using (Stream manifestResourceStream = MelonAssembly.Assembly.GetManifestResourceStream("DawnVREnabler.vr-ggm"))
                     {
                         using (FileStream fileStream = new FileStream(ggmLocation, FileMode.Create, FileAccess.Write, FileShare.Delete))
                         {
@@ -71,7 +72,7 @@ namespace DawnVREnabler
                 if (!filePaths.Any((a) => a.Contains(asm)))
                 {
                     copiedPlugins = true;
-                    using (Stream manifestResourceStream = Assembly.GetManifestResourceStream("DawnVREnabler.VRPlugins." + asm))
+                    using (Stream manifestResourceStream = MelonAssembly.Assembly.GetManifestResourceStream("DawnVREnabler.VRPlugins." + asm))
                     {
                         using (FileStream fileStream = new FileStream(Path.Combine(PluginsPath, asm), FileMode.Create, FileAccess.Write, FileShare.Delete))
                         {
@@ -90,55 +91,41 @@ namespace DawnVREnabler
                 MelonLogger.Msg("VR plugins already present");
         }
 
+        // thanks nes
         private void ModifyGGM(string ggmPath, string exportPath)
         {
             AssetsManager am = new AssetsManager();
             AssetsFileInstance afi = am.LoadAssetsFile(ggmPath, false);
-            using (Stream stream = Assembly.GetManifestResourceStream("DawnVREnabler.TypeClassPackage.tpk"))
+            using (Stream stream = MelonAssembly.Assembly.GetManifestResourceStream("DawnVREnabler.TypeClassPackage.tpk"))
                 am.LoadClassPackage(stream);
-            am.LoadClassDatabaseFromPackage(afi.file.typeTree.unityVersion);
 
-            AssetFileInfoEx buildSettings = afi.table.GetAssetInfo(11);
-            AssetTypeValueField buildBaseField = am.GetTypeInstance(afi.file, buildSettings).GetBaseField();
-            AssetTypeValueField enabledVRDevices = buildBaseField.Get("enabledVRDevices").Get("Array");
-            AssetTypeTemplateField stringTemplate = enabledVRDevices.templateField.children[1];
-            AssetTypeValueField[] vrDevicesList = new AssetTypeValueField[] { StringField("None", stringTemplate), StringField("OpenVR", stringTemplate) };
-            enabledVRDevices.SetChildrenList(vrDevicesList);
+            am.LoadClassDatabaseFromPackage(afi.file.Metadata.UnityVersion);
 
-            byte[] vrAsset;
+            AssetFileInfo buildSettings = afi.file.GetAssetsOfType(AssetClassID.BuildSettings)[0];
+            AssetTypeValueField buildBaseField = am.GetBaseField(afi, buildSettings);
+            AssetTypeValueField enabledVRDevices = buildBaseField.Get("enabledVRDevices.Array");
+
+            var noneField = ValueBuilder.DefaultValueFieldFromArrayTemplate(enabledVRDevices);
+            noneField.AsString = "None";
+            enabledVRDevices.Children.Add(noneField);
+
+            var openVrField = ValueBuilder.DefaultValueFieldFromArrayTemplate(enabledVRDevices);
+            openVrField.AsString = "OpenVR";
+            enabledVRDevices.Children.Add(openVrField);
+
+            List<AssetsReplacer> reps = new List<AssetsReplacer>
+                {
+                    new AssetsReplacerFromMemory(afi.file, buildSettings, buildBaseField)
+                };
+
             using (MemoryStream memStream = new MemoryStream())
             using (AssetsFileWriter writer = new AssetsFileWriter(memStream))
             {
-                writer.bigEndian = false;
-                buildBaseField.Write(writer);
-                vrAsset = memStream.ToArray();
-            }
-            System.Collections.Generic.List<AssetsReplacer> rep = new System.Collections.Generic.List<AssetsReplacer>();
-            rep.Add(new AssetsReplacerFromMemory(0, buildSettings.index, (int)buildSettings.curFileType, 0xFFFF, vrAsset));
-            using (MemoryStream memStream = new MemoryStream())
-            using (AssetsFileWriter writer = new AssetsFileWriter(memStream))
-            {
-                afi.file.Write(writer, 0, rep, 0);
+                afi.file.Write(writer, 0, reps);
                 File.WriteAllBytes(exportPath, memStream.ToArray());
             }
 
-            using (AssetsFileWriter writer = new AssetsFileWriter(File.OpenWrite(exportPath)))
-            {
-                afi.file.Write(writer, 0, rep, 0);
-            }
-
-            afi.AssetsStream.Close();
-
-            AssetTypeValueField StringField(string str, AssetTypeTemplateField template)
-            {
-                return new AssetTypeValueField()
-                {
-                    children = null,
-                    childrenCount = 0,
-                    templateField = template,
-                    value = new AssetTypeValue(EnumValueTypes.ValueType_String, str)
-                };
-            }
+            am.UnloadAllAssetsFiles();
         }
 
         private bool CreateGameManagersBackup(string path)
