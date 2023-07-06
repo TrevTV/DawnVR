@@ -46,7 +46,7 @@ namespace DawnVREnabler
                     ModifyGGM(ggmLocation + ".bak", ggmLocation);
                     MelonLogger.Msg("Successfully modified GGM!");
                 }
-                else
+                else if (MelonLoader.InternalUtils.UnityInformationHandler.GameName == "Life is Strange: Before the Storm")
                 {
                     using (Stream manifestResourceStream = MelonAssembly.Assembly.GetManifestResourceStream("DawnVREnabler.vr-ggm"))
                     {
