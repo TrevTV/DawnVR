@@ -1,4 +1,4 @@
-# DawnVR [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S244CYE)
+# DawnVR
 VR mod for Life Is Strange: Before The Storm
 
 **With the release of 1.0.0, DawnVR will now be in maintenance mode, meaning there will not be any active development of new features (with some possible exceptions). Bug fixes may still be implemented from time to time.**
